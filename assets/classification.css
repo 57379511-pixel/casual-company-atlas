@@ -8,3 +8,16 @@
 .peer-mode .stage-top p{max-width:100%;line-height:1.6}
 .node .tier-badge-label{font-size:11px;font-weight:600;fill:#344e65}
 .node .tier-badge-bg{filter:drop-shadow(0 1px 2px #20344912)}
+.peer-controls{display:none;align-items:center;gap:8px}
+.graph-mode.peer-mode #filters>.peer-controls{display:flex!important}
+.peer-controls select{min-width:135px}
+.peer-controls #peerRole{max-width:225px}
+.peer-controls #peerPager{white-space:nowrap;font-size:12px;display:inline-flex;align-items:center;gap:4px}
+.peer-controls #peerPager[hidden]{display:none}
+.peer-controls button{border:1px solid #dce6ef;border-radius:6px;padding:5px 8px}
+.peer-controls button:disabled{opacity:.35;cursor:default}
+.graph-mode.peer-mode #filters{flex-wrap:wrap;overflow:visible}
+.graph-mode.peer-mode .faction-controls{flex:none;max-width:460px}
+.peer-mode #stage{overflow-y:auto;overflow-x:hidden}
+.peer-mode #network{flex:none;max-height:none;touch-action:pan-y}
+.peer-mode .stage-bottom{display:none}
