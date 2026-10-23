@@ -8,7 +8,7 @@ baseSelection=function(forList=false){
  if(state.group)arr=arr.filter(n=>groupMatch(n,state.group));
  if(state.query)arr=arr.filter(matches);
  if(state.scope==='all'||(forList&&state.listAll))return arr;
- const t=Number(state.scope);return t?arr.filter(n=>n.tier===t):(state.genre!=='all'||state.group)?arr:arr.filter(n=>n.tier>0&&n.tier<=2);
+ const t=Number(state.scope);return t?arr.filter(n=>n.tier===t):arr.filter(n=>n.tier>0&&n.tier<=2);
 };
 geoSelection=function(){
  let rows=DATA.nodes.filter(n=>n.originalRecord).filter(genreMatch);
@@ -50,17 +50,50 @@ showDetail=function(n){
  $('#detail .detail-header').after(section);
 };
 const classificationGraph=renderGraph;
+const isCategoryPeer=()=>!state.focus&&groupByName.get(state.group)?.analysisType==='categoryPeer';
+const classificationLayout=calculateLayout;
+calculateLayout=function(nodes,w,h){
+ state.tierBands=[];
+ if(!isCategoryPeer())return classificationLayout(nodes,w,h);
+ state.componentBoxes=[];
+ const pos=new Map();if(!nodes.length)return pos;
+ const width=Math.max(240,w-100),cols=Math.max(1,Math.floor((width-28)/120));
+ const bands=[1,2,3,4,5,0].map(t=>({tier:t,nodes:sorted(nodes.filter(n=>(n.tier||0)===t))})).filter(b=>b.nodes.length);
+ const heights=bands.map(b=>40+Math.ceil(b.nodes.length/cols)*104),total=heights.reduce((a,b)=>a+b,0)+(bands.length-1)*12;
+ const k=Math.min(1,Math.max(160,h-150)/total),x=24,top=112;let cursor=0;
+ bands.forEach((b,j)=>{const y=top+cursor*k,bh=heights[j]*k;
+  state.tierBands.push({x,y,w:width,h:bh,tier:b.tier,count:b.nodes.length});
+  b.nodes.forEach((n,i)=>{const column=i%cols,row=Math.floor(i/cols),rowCount=Math.min(cols,b.nodes.length-row*cols),cell=Math.min(150,(width-28)/rowCount);
+   pos.set(n.id,{id:n.id,x:x+width/2+(column-(rowCount-1)/2)*cell,y:y+(76+row*104)*k,r:({1:28,2:26,3:24,4:22,5:21}[n.tier]||21)*k});
+  });cursor+=heights[j]+12;
+ });return pos;
+};
 renderGraph=function(reset=true){
+ document.body.classList.toggle('peer-mode',state.mode==='graph'&&isCategoryPeer());
  classificationGraph(reset);if(state.mode!=='graph')return;
  const g=groupByName.get(state.group);
+ $('#graphTier').value=state.scope;
  if(!state.focus&&(state.genre!=='all'||g?.analysisType==='categoryPeer'))$('#stageSubtitle').textContent='按新表主营品类筛选；并列不代表资本关系。图标为公司代表产品，未按当前品类换图。';
  if(!state.focus&&state.genre!=='all'&&!state.group)$('#stageTitle').textContent=state.genre+' · 原表品类对象';
- if(!state.focus&&g?.analysisType==='categoryPeer'){$('#filterNote').textContent='原表主营品类 × 自研／研运一体 × 国内研发证据';}
+ if(isCategoryPeer()){
+  const names={1:'T0 · 标杆',2:'T1 · 头部',3:'T2 · 中坚',4:'T3 · 长尾',5:'T4 · 观察',0:'未分级'};
+  for(const b of state.tierBands||[]){$('#clusterLayer').append(svgEl('rect',{x:b.x,y:b.y,width:b.w,height:b.h,rx:12,fill:'#fff',stroke:colors[b.tier]||'#c8d2df','stroke-opacity':.4}));$('#clusterLayer').append(svgEl('text',{x:b.x+16,y:b.y+23,class:'tier-band-title',fill:'#405b70','font-size':13,'font-weight':600},names[b.tier]+' · '+b.count+' 家'));}
+  const summary=[1,2,3,4,5].map(t=>{const count=state.visible.filter(n=>n.tier===t).length;return count?'T'+(t-1)+'：'+count+'家':'';}).filter(Boolean).join('　');
+  $('#stageSubtitle').textContent=summary+'。按原表公司梯队分区，非单品类实力评级；图标为公司代表产品，非当前品类产品证明。';
+  $('#viewCount').textContent=state.visible.length+' 家公司 · '+state.edges.length+' 条已登记关系';
+  const summaryEl=$('#factionEvidence summary');if(summaryEl)summaryEl.textContent=g.name+' · 当前 '+state.visible.length+' / 分组 '+g.memberIds.length+' 个对象';
+  $('#filterNote').textContent='原表主营品类 × 自研／研运一体 × 国内研发证据';
+  $('#emptyState h3').textContent='当前梯队或搜索条件下没有公司';$('#emptyText').textContent='请切换“全部梯队”或清空搜索；不会用其他品类公司补位。';
+ }
 };
 const classificationAudit=renderAudit;
 renderAudit=function(){classificationAudit();const card=document.createElement('article');card.className='audit-card';card.innerHTML=`<div class="idline">2026-10-23 · 分类与T0修订</div><h3>${DATA.meta.t0SourceRecords}条T0记录 · ${DATA.meta.t0MapEntries}个T0地图入口</h3><p>${esc(DATA.meta.classificationPolicy)}</p><p>共${DATA.categories.length}个原表主营品类。二合与三消研发对标按主营品类、原表业务形态及已有研发证据交集重建。纯发行、资本背景和境外对标不会被当成国内研发公司。</p>`;$('#auditGrid').prepend(card);};
 $('#genre').setAttribute('aria-label','主营品类（严格按Excel）');
 $('#genre').options[0].textContent='全部主营品类';
+const graphTier=document.createElement('select');graphTier.id='graphTier';graphTier.setAttribute('aria-label','图谱研究梯队');graphTier.innerHTML='<option value="all">全部梯队</option><option value="key">头部优先（T0/T1）</option><option value="1">T0 标杆</option><option value="2">T1 头部</option><option value="3">T2 中坚</option><option value="4">T3 长尾</option><option value="5">T4 观察</option>';
+$('#filters').insertBefore(graphTier,$('#peopleToggle'));
+graphTier.onchange=()=>{state.scope=graphTier.value;state.listAll=false;state.focus=null;state.selected=null;closeDetail();refresh();};
+$('#genre').onchange=e=>{state.genre=e.target.value;state.group='';state.scope='all';state.listAll=false;state.focus=null;state.selected=null;closeDetail();refresh();};
 // Keep source labels intact; SLG is outside this atlas's selectable research scope.
 for(const option of [...$('#genre').options])if(option.value==='SLG')option.remove();
 $('#genre').title='按原表主营品类筛选；SLG不属于本次研究主题，不提供筛选入口';
@@ -68,5 +101,11 @@ $('#methodContent').insertAdjacentHTML('afterbegin','<p>品类筛选不提供SLG
 $('#methodContent').insertAdjacentHTML('afterbegin',`<p><strong>本版T0：${DATA.meta.t0SourceRecords}条原始记录；地图合并柠檬体系后为${DATA.meta.t0MapEntries}个入口。评级采用原表结果与V3标准，不自行重算或改档。</strong></p>`);
 const classificationGroupChange=$('#factionSelect').onchange;
 $('#factionSelect').onchange=e=>{state.genre='all';state.scope='all';state.audience='all';state.listAll=false;$('#genre').value='all';scopeControl.value='all';classificationGroupChange(e);};
+// Search can add/remove nodes: recalculate positions rather than reusing an old subset.
+const classificationSearch=$('#search').oninput,classificationClear=$('#clearSearch').onclick;
+$('#search').oninput=e=>{classificationSearch(e);if(state.mode==='graph')renderGraph();};
+$('#clearSearch').onclick=e=>{classificationClear(e);if(state.mode==='graph')renderGraph();};
+const classificationListTab=$('[data-mode="list"]'),classificationListClick=classificationListTab.onclick;
+classificationListTab.onclick=()=>{const keepFilter=!!state.group||state.genre!=='all'||Number(state.scope)>0;classificationListClick();if(keepFilter){state.listAll=false;refresh();}};
 $('#csvBtn').onclick=()=>{const rows=[['ID','商号','主体全称','主营品类（新表）','品类依据（新表）','业务形态（新表）','梯队（新表）','梯队依据（新表）','公开核查角色','原表产品','公开资料产品','核查结论','限制','来源'],...sorted(baseSelection(true).filter(matches)).map(n=>[n.id,n.name,n.full,n.category,n.categoryEvidence,n.business,n.originalTier,n.tierReason,n.role,n.originalProducts,n.verifiedProducts,n.claim,n.limitations,n.url])];const cell=v=>'"'+String(v??'').replace(/^[=+@-]/,s=>"'"+s).replaceAll('"','""')+'"';download(new Blob(['\ufeff'+rows.map(r=>r.map(cell).join(',')).join('\r\n')],{type:'text/csv;charset=utf-8'}),'公司清单-最新标签与梯队.csv');};
 refresh();

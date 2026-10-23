@@ -46,11 +46,11 @@
   if(e.target.closest('#viewBack,#viewHome'))return;
   if(e.target.closest('[data-mode],[data-scope],[data-geo-city],[data-city],[data-group],[data-company],[data-geo-company],[data-node],[data-focus],[data-edge],[data-close],#geoBack,#factionBack,#peopleToggle,#pendingToggle,#clearSearch,#auditShortcut'))begin();
  },true);
- document.addEventListener('change',e=>{if(e.target.closest('#genre,#factionSelect,#audience'))begin();},true);
+ document.addEventListener('change',e=>{if(e.target.closest('#genre,#factionSelect,#audience,#graphTier'))begin();},true);
  document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!$('#method').open){if($('#sidebar').classList.contains('mobile-open')){$('#sidebar').classList.remove('mobile-open');e.stopImmediatePropagation();return;}if($('#detail').classList.contains('open')){e.preventDefault();e.stopImmediatePropagation();back();}}if(e.key==='Enter'&&e.target.matches('tr[data-company]')){e.preventDefault();selectCompany(e.target.dataset.company);}},true);
  $('#viewBack').onclick=back;$('#viewHome').onclick=()=>action(()=>{detail=null;geoState.city=null;native.reset();native.setMode('geo');refresh();});
  window.addEventListener('popstate',e=>{if(e.state?.atlas===session&&entries[e.state.index]){pending=null;index=e.state.index;restore(entries[index]);}});
- $('#factionBack').onclick=()=>action(()=>{state.focus=null;state.selected=null;state.group='';detail=null;$('#detail').classList.remove('open');refresh();});
+ $('#factionBack').onclick=()=>action(()=>{state.focus=null;state.selected=null;state.group='';state.scope='key';state.genre='all';state.query='';state.listAll=false;$('#genre').value='all';$('#search').value='';detail=null;$('#detail').classList.remove('open');refresh();});
  $('.data-table thead th:last-child').textContent='角色与证据';
  entries=[snapshot()];save(entries[0],true);renderGeo();chrome();
 })();
