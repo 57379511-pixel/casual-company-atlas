@@ -9,7 +9,7 @@ const colors={1:'#c7a963',2:'#bd9959',3:'#7eacd9',4:'#a8a0c9',5:'#b6c4d2'};
 const tierName=n=>n.tier?n.rawTier:'关联主体';
 const tierClass=n=>({1:'head',2:'head',3:'second',4:'third'}[n.tier]||'');
 const initial=n=>/^[A-Za-z]/.test(n.name)?n.name.split(/\s+/).slice(0,2).map(s=>s[0]).join('').toUpperCase():n.name.slice(0,2);
-const iconHTML=(n,cls='mini-icon')=>n.icon?`<img class="${cls}" src="${n.icon.data}" alt="${esc(n.icon.title)} 游戏图标">`:`<span class="${cls}">${esc(initial(n))}</span>`;
+const iconHTML=(n,cls='mini-icon')=>n.icon?`<img class="${cls}" loading="lazy" decoding="async" src="${n.icon.data}" alt="${esc(n.icon.title)} 游戏图标">`:`<span class="${cls}">${esc(initial(n))}</span>`;
 const shortProduct=n=>String(n.products||'暂无产品资料').split(/[、；]/)[0];
 const urls=s=>[...new Set((Array.isArray(s)?s:String(s||'').split(/[\n；;\s]+/)).filter(v=>/^https?:\/\//i.test(v)))];
 const linksHTML=(s)=>urls(s).map((u,i)=>{let label;try{label=new URL(u).hostname.replace(/^www\./,'');}catch{label='来源';}return `<a class="source-link" target="_blank" rel="noopener noreferrer" href="${esc(u)}">${i+1}. ${esc(label)} ↗</a>`;}).join('');
