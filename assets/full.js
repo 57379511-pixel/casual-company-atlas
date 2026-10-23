@@ -1,7 +1,7 @@
 /* All source rows remain addressable; evidence is scoped to a fact, not a whole company. */
 state.audience='all';scopeControl.innerHTML='<option value="all">全部原始记录与补充</option><option value="developer">研发／研运证据</option><option value="publisher">发行／供应／运营</option><option value="source">原始MCP资料</option><option value="overseas">境外主体</option><option value="capital">资本与关联主体</option>';
-document.title='国内休闲游戏公司图谱 · 全量汇报版';
-$('.top-meta .date').innerHTML='<i class="dot"></i>汇报版 · 2026.10.23';
+document.title='国内休闲游戏公司图谱 · 增补汇报版';
+$('.top-meta .date').innerHTML='<i class="dot"></i>增补版 · 2026.10.23';
 $('.sidebar-top h2').textContent='全量公司与主体';
 $('.sidebar-top .tiny').textContent='保留363条原始记录。产品、法人和关联方分别展示。';
 $('#boundaryText').textContent=`363条原始记录全部保留 · ${DATA.meta.originalWithPublicEvidence}条获得限定公开补证 · 非全字段独立核实`;
