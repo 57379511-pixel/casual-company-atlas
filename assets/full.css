@@ -1,0 +1,8 @@
+.evidence-limit{font-size:12px!important;line-height:1.8;color:#6e7f8f;border-left:2px solid #c1d2dd;padding:2px 0 2px 10px}.relation-review{padding:15px 0;border-bottom:1px solid #e1e8ed}.relation-review summary{cursor:pointer;font-size:13px;line-height:1.7}.relation-review p{font-size:13px;line-height:1.9}.facts dd{overflow-wrap:anywhere}.company-nav-info em{font-style:normal;font-size:10px;color:#8293a2}.detail-section details .facts{font-size:11px}.audit-card .verdict{font-size:12px;line-height:1.8}.mini-icon{object-fit:cover}
+.graph-mode #filters>#pendingToggle,.graph-mode #filters>#peopleToggle{display:inline-flex!important}
+.graph-mode .faction-controls{width:auto;flex:1;max-width:460px}
+.graph-mode #filters{overflow-x:auto;flex-wrap:nowrap}
+.graph-mode .faction-controls select{width:240px;max-width:100%}
+.graph-mode .edge{opacity:.75;stroke-width:1.5px}
+.graph-mode #clusterLayer text{display:none}
+@media(max-width:760px){.graph-mode .faction-controls{min-width:270px}.graph-mode #filters{min-height:46px}.graph-mode #filters>#pendingToggle,.graph-mode #filters>#peopleToggle{font-size:10px}}

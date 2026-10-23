@@ -1,0 +1,22 @@
+:root{--ink:#233d4e;--muted:#718494;--accent:#327d7a}
+body{color:var(--ink);background:#edf2f5;font-family:"Atlas Sans","Microsoft YaHei UI","Microsoft YaHei",sans-serif}
+.top{background:#fff}.brand-mark{color:#397d7a}.kicker{letter-spacing:2px;color:#78918c}
+.date{font-variant-numeric:tabular-nums}.tab.active{color:#2d716d}.tab.active:after{background:#3c8880}
+.canvas-card{border-color:#dce6eb;box-shadow:0 8px 24px #243e4c04}.stage{background:#f7fafb}
+.stage-top strong{font-weight:600;letter-spacing:.3px}.stage-top p{color:#7c8e9a}.filters{gap:7px;flex-wrap:wrap}
+.filters select{font-family:inherit;font-size:12px;max-width:190px}.filter-note{font-size:11px}.faction-controls{max-width:315px}
+.faction-evidence{font-size:12px}.faction-evidence summary{color:#3d6d70}.mini-icon{border-radius:12px;box-shadow:0 2px 7px #223c4914;object-fit:cover;flex-shrink:0}
+.company-nav-info strong{font-weight:550}.company-nav-info small{font-size:10px}.company-nav-info em{color:#8597a3;font-size:9px}
+.company-item .rank{min-width:25px}.company-item{padding-top:12px;padding-bottom:12px}.sidebar-top{background:#f8fafb}
+.geo-main{background:linear-gradient(160deg,#fcfdfc,#f0f6f7)}.geo-heading h2{font-size:24px;font-weight:550;letter-spacing:.5px}.geo-heading p{max-width:520px;line-height:1.8}
+.geo-rail-header h3{font-weight:550}.geo-company{padding:13px 0}.geo-company .mini-icon{width:46px;height:46px;border-radius:12px}.geo-company .company-info strong{font-size:14px;font-weight:550}
+.geo-map-wrap{min-height:260px}.geo-company .tier-dot{font-size:10px}.geo-company .product-title{font-size:11px;color:#768c9a}
+.detail-header h2{font-size:25px;font-weight:600}.detail-section h3{font-weight:600;color:#3f6974}.detail-section p{font-size:13px;line-height:1.9}
+.product .mini-icon{width:62px;height:62px;border-radius:15px}.product strong{font-weight:550}.source-link{word-break:break-all}
+.facts{font-size:12px;line-height:1.8}.facts dd{word-break:break-word}.badge{font-size:11px}.aside-detail{background:#fff;box-shadow:-10px 0 35px #28485712}
+.audit-card{background:#fff;border:1px solid #e0e9ed}.audit-card h3{font-weight:550}.audit-card p{line-height:1.9}.verdict{background:#eef6f4;color:#337267}
+.correction{display:flex;gap:18px;padding:18px 0;border-bottom:1px solid #e5ecef}.correction>span{width:90px;flex-shrink:0;font-size:11px;color:#3d7b78;letter-spacing:.8px}.correction strong{font-size:13px;font-weight:550}.correction p{font-size:12px;line-height:1.9;color:#708592;margin:6px 0 0}
+[hidden]{display:none!important}.notice-bar{font-size:11px;line-height:1.8}.new-relations .relationship{display:inline-block;width:calc(50% - 12px);vertical-align:top;margin:6px}
+@media(max-width:1100px){.filter-note{display:none}.filters{gap:5px}.filters .pill{font-size:10px;padding:6px 8px}.geo-heading h2{font-size:21px}}
+@media(max-width:760px){.top{padding:15px}.top h1{font-size:18px}.top-meta .date{display:none}.top-meta .btn{padding:6px 8px;font-size:11px}.toolbar{gap:8px}.tab-set{overflow-x:auto;max-width:100%}.tab{font-size:12px;white-space:nowrap;padding:10px}.filters{padding:10px}.filters select{max-width:165px}.geo-heading h2{font-size:20px}.new-relations .relationship{width:100%;margin:5px 0}.correction{gap:10px}.correction>span{width:65px}.notice-bar{align-items:flex-start}.notice-bar button{min-width:120px}.aside-detail{width:100%;max-width:100%;inset:0}.facts{grid-template-columns:85px 1fr}.geo-rail{max-height:none}}
+@media print{.top-meta,.toolbar,.sidebar,.filters,.notice-bar,.aside-detail,.stage-tools{display:none!important}.workspace,.main,.canvas-card,.audit-pane{display:block!important;height:auto!important;overflow:visible!important}.audit-card,.correction{break-inside:avoid}.geo-pane.active{display:block!important}.geo-rail{max-height:none}.stage{height:700px}.app{height:auto!important}.audit-pane:not(.active),.list-pane:not(.active),.geo-pane:not(.active){display:none!important}}
