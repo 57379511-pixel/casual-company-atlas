@@ -1,7 +1,7 @@
 /* Claim-scoped reporting UI. Full source rows remain in the separately delivered archive. */
 state.audience='developer';
 const audienceNames={developer:'国内研发／研运',publisher:'发行与供应商',overseas:'境外对象',capital:'资本与服务',all:'全部汇报对象'};
-const audienceMatch=n=>state.audience==='all'||n.scope===state.audience||(state.audience==='publisher'&&n.scope==='brand');
+const audienceMatch=n=>state.audience==='source'?n.originalRecord&&!n.publicEvidence:state.audience==='all'||n.scope===state.audience||(state.audience==='publisher'&&n.scope==='brand');
 const field=(label,value)=>value?`<dt>${esc(label)}</dt><dd>${esc(value)}</dd>`:'';
 const productRole=n=>n.scope==='publisher'?'发行／供应产品':n.scope==='capital'?'集团关联产品':n.scope==='brand'?'工作室署名产品':'代表产品';
 const scopeControl=document.createElement('select');scopeControl.id='audience';scopeControl.setAttribute('aria-label','研究对象范围');scopeControl.innerHTML=Object.entries(audienceNames).map(([v,t])=>`<option value="${v}">${t}</option>`).join('');
