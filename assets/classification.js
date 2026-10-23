@@ -61,6 +61,10 @@ const classificationAudit=renderAudit;
 renderAudit=function(){classificationAudit();const card=document.createElement('article');card.className='audit-card';card.innerHTML=`<div class="idline">2026-10-23 · 分类与T0修订</div><h3>${DATA.meta.t0SourceRecords}条T0记录 · ${DATA.meta.t0MapEntries}个T0地图入口</h3><p>${esc(DATA.meta.classificationPolicy)}</p><p>共${DATA.categories.length}个原表主营品类。二合与三消研发对标按主营品类、原表业务形态及已有研发证据交集重建。纯发行、资本背景和境外对标不会被当成国内研发公司。</p>`;$('#auditGrid').prepend(card);};
 $('#genre').setAttribute('aria-label','主营品类（严格按Excel）');
 $('#genre').options[0].textContent='全部主营品类';
+// Keep source labels intact; SLG is outside this atlas's selectable research scope.
+for(const option of [...$('#genre').options])if(option.value==='SLG')option.remove();
+$('#genre').title='按原表主营品类筛选；SLG不属于本次研究主题，不提供筛选入口';
+$('#methodContent').insertAdjacentHTML('afterbegin','<p>品类筛选不提供SLG选项；原表中的SLG标签仍保留在公司资料与导出中，不删除相关公司或关系。</p>');
 $('#methodContent').insertAdjacentHTML('afterbegin',`<p><strong>本版T0：${DATA.meta.t0SourceRecords}条原始记录；地图合并柠檬体系后为${DATA.meta.t0MapEntries}个入口。评级采用原表结果与V3标准，不自行重算或改档。</strong></p>`);
 const classificationGroupChange=$('#factionSelect').onchange;
 $('#factionSelect').onchange=e=>{state.genre='all';state.scope='all';state.audience='all';state.listAll=false;$('#genre').value='all';scopeControl.value='all';classificationGroupChange(e);};
