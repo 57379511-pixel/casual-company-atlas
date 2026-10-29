@@ -82,7 +82,8 @@ renderGraph=function(reset=true){
  if(state.mode==='graph'){
   let height=$('#stage').clientHeight;
   if(isCategoryPeer()){const nodes=filteredGraph().nodes,cols=Math.max(1,Math.floor((Math.max(240,$('#stage').clientWidth-100)-28)/120)),counts=[1,2,3,4,5,0].map(t=>nodes.filter(n=>(n.tier||0)===t).length).filter(Boolean);height=Math.max(height,150+counts.reduce((sum,n)=>sum+40+Math.ceil(n/cols)*104,0)+Math.max(0,counts.length-1)*12);}
-  $('#network').style.height=isCategoryPeer()?height+'px':'100%';
+  if(state.routeActive){const cols=Math.max(1,Math.floor(($('#stage').clientWidth-70)/175));height=Math.max(height,210+Math.ceil(filteredGraph().nodes.length/cols)*150);}
+  $('#network').style.height=(isCategoryPeer()||state.routeActive)?height+'px':'100%';
  }
  classificationGraph(reset);if(state.mode!=='graph')return;
  const g=groupByName.get(state.group);
