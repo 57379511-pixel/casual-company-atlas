@@ -52,9 +52,9 @@ renderGeo=function(){
 const classificationDetail=showDetail;
 showDetail=function(n){
  classificationDetail(n);const section=document.createElement('section');section.className='detail-section classification-source';
- section.innerHTML=n.originalRecord?`<h3>最新工作簿分类</h3><dl class="facts">${field('主营品类',n.category)}${field('业务形态',n.business)}${field('品类依据',n.categoryEvidence)}</dl><p class="tiny">分类采用新表；公开核查角色独立保留，不由品类或图标反推自研。</p>`:'<h3>关联辅助主体</h3><p>未列入最新公司表，不参与主营品类筛选与T0名单。</p>';
- if(n.id==='G007'||n.id==='G053')section.innerHTML+=`<h3>柠檬体系展示</h3><p>地图统一使用“柠檬微趣”入口；关系图保留两个主体。原表标签：柠檬微趣为二合、解谜、消除；柠檬曲奇为三消。此处不互相覆盖标签，也不把两个工商主体合为一条。</p><button class="relationship" data-company="${n.id==='G007'?'G053':'G007'}">查看${n.id==='G007'?'柠檬曲奇':'柠檬微趣'}主体</button>`;
- const peer=groupByName.get(state.group);if(peer?.analysisType==='categoryPeer')section.innerHTML+=`<h3>本组纳入依据</h3><p>原表命中：${esc(String(n.category||'').split('、').filter(c=>peer.selectionCategories.includes(c)).join('、'))}。核查角色：${esc(n.role)}。原表业务形态与核查角色分别保留；入组不等于该品类的每款产品均已确认自研。</p>`;
+ section.innerHTML=n.originalRecord?`<h3>主营业务</h3><dl class="facts">${field('主营品类',n.category)}${field('业务形态',n.business)}</dl>${n.categoryEvidence?`<details class="detail-reference"><summary>查看品类依据</summary><p>${esc(n.categoryEvidence)}</p><p>原表分类与公开核查角色分别保留，品类标签不等于已确认自研。</p></details>`:''}`:'<h3>关联主体</h3>';
+ if(n.id==='G007'||n.id==='G053')section.innerHTML+=`<button class="relationship" data-company="${n.id==='G007'?'G053':'G007'}">查看${n.id==='G007'?'柠檬曲奇':'柠檬微趣'}</button>`;
+ const peer=groupByName.get(state.group);if(peer?.analysisType==='categoryPeer')section.innerHTML+=`<details class="detail-reference"><summary>查看本组纳入依据</summary><p>原表命中：${esc(String(n.category||'').split('、').filter(c=>peer.selectionCategories.includes(c)).join('、'))}。核查角色：${esc(n.role)}。入组不等于该品类的每款产品均已确认自研。</p></details>`;
  $('#detail .detail-header').after(section);
 };
 const classificationGraph=renderGraph;
