@@ -34,7 +34,7 @@
   const rows=DATA.nodes.filter(n=>n.originalRecord),known=rows.filter(n=>income(n).key!=='unscoped');
   $('#revenueCoverage').textContent=`研究记录：国内为主 ${rows.filter(n=>income(n).key==='domestic').length} · 海外为主 ${rows.filter(n=>income(n).key==='overseas').length} · 仅关系主体 ${rows.length-known.length}`;
   document.body.classList.toggle('route-mode',state.mode==='graph'&&state.routeActive);
-  if(state.routeActive)panel.open=true;renderRoute();
+  if(state.routeActive)panel.open=true;renderRoute();window.AtlasExperience?.sync();
  }
  function renderRoute(){
   if(!state.routeActive){$('#routeResult').replaceChildren();return;}
@@ -68,10 +68,10 @@
  const beforeMode=setMode;setMode=function(mode){beforeMode(mode);sync();};
  const beforeReset=reset;reset=function(){Object.assign(state,{revenue:'all',marketDirection:'all',routeActive:false,routeFrom:'',routeTo:'',routeEvidence:'public',routeDirection:'connectivity',routeKind:'all'});beforeReset();sync();};
  const beforeFocus=focusCompany;focusCompany=function(id){state.routeActive=false;beforeFocus(id);};
- for(const [id,key]of [['revenueFilter','revenue'],['marketDirection','marketDirection']])$('#'+id).onchange=e=>{state[key]=e.target.value;state.routeActive=false;state.focus=null;state.selected=null;state.peerPage=0;geoState.city=null;closeDetail();refresh();sync();};
+ for(const [id,key]of [['revenueFilter','revenue'],['marketDirection','marketDirection']])$('#'+id).onchange=e=>{state[key]=e.target.value;state.routeActive=false;state.focus=null;state.selected=null;state.peerPage=0;geoState.city=null;closeDetail();refresh();sync();panel.open=false;};
  $('#routeFind').onclick=()=>{const from=resolve($('#routeFrom').value),to=resolve($('#routeTo').value);if(!from||!to){$('#routeResult').textContent='请从建议列表选择公司，或输入唯一的公司全名／ID。';return;}Object.assign(state,{routeFrom:from,routeTo:to,routeActive:true,focus:null,selected:null,group:'',query:''});for(const key of ['routeEvidence','routeDirection','routeKind'])state[key]=$('#'+key).value;$('#search').value='';closeDetail();setMode('graph');refresh();$('#atlasCanvas').scrollTop=0;};
  $('#routeSwap').onclick=()=>{const a=$('#routeFrom').value;$('#routeFrom').value=$('#routeTo').value;$('#routeTo').value=a;state.routeFrom=resolve($('#routeFrom').value)||'';state.routeTo=resolve($('#routeTo').value)||'';if(state.routeActive)$('#routeFind').click();};
- $('#routeClear').onclick=()=>{state.routeActive=false;state.selected=null;closeDetail();refresh();sync();};
+ $('#routeClear').onclick=()=>{state.routeActive=false;state.selected=null;closeDetail();refresh();sync();panel.open=false;};
  for(const key of ['routeEvidence','routeDirection','routeKind'])$('#'+key).onchange=e=>{state[key]=e.target.value;if(state.routeActive){closeDetail();refresh();}};
  for(const key of ['routeFrom','routeTo'])$('#'+key).onchange=e=>{state[key]=resolve(e.target.value)||'';if(state.routeActive){state.routeActive=false;refresh();} };
  document.addEventListener('click',e=>{const b=e.target.closest('[data-route-start],[data-route-end]');if(!b)return;state[b.dataset.routeStart?'routeFrom':'routeTo']=b.dataset.routeStart||b.dataset.routeEnd;state.routeActive=false;closeDetail();setMode('graph');panel.open=true;sync();$('#'+(b.dataset.routeStart?'routeTo':'routeFrom')).focus();});
