@@ -1,7 +1,7 @@
 /* Separate evidence ledger; never overwrites workbook market labels or propagates to subsidiaries. */
 window.ATLAS_REVENUE = {
   reviewedAt: '2026-10-29',
-  policy: '按所列统计期、所列主体与业务口径，国内或海外收入占比超过50%归为该方向；仅代表该报告期。未取得可用拆分的记录为收入未判定，不用注册地、下载或原表市场方向代替。集团收入不下传到子公司，集团综合收入不等于休闲游戏收入。',
+  policy: '本台账仅存放有可比国内外收入拆分的披露，按所列统计期、主体与业务口径，以超过50%确定方向。其余主体的收入重心见独立方向台账，参考源表产品收入、国内与出海分级及市场表现。集团收入不下传到子公司，集团综合收入不等于休闲游戏收入。',
   records: {
     G001: {domestic:473, overseas:186, unit:'亿元', period:'2026 Q2', scope:'腾讯集团游戏业务', basis:'本土／国际市场游戏收入；非集团总收入，非单一工商主体', sources:[{title:'新华网：腾讯2026 Q2财报',url:'https://www.xinhuanet.com/tech/20260812/a1a5555bd774451592b94c57794202f4/c.html'},{title:'每日经济新闻：腾讯游戏二季度营收',url:'https://www.nbd.com.cn/articles/2026-08-13/4541383.html'}]},
     G002: {domestic:7809139135.84,overseas:14307900502.12,unit:'元',period:'2026 H1',scope:'世纪华通集团合并营业收入',basis:'内销／外销；含非游戏业务，不代表点点单体',sources:[{title:'深交所：2026半年报，第16页',url:'https://disc.static.szse.cn/disc/disk03/finalpage/2026-08-28/be9c0a31-3cd3-4b1d-a18d-e59f1d1da361.PDF#page=16'}]},
