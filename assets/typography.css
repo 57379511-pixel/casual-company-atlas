@@ -1,0 +1,46 @@
+/* Reading scale: names 18, content 14, labels 13, supporting text 12. */
+:root{--reading-ink:#29475b;--reading-secondary:#526777;--reading-muted:#5c7182}
+body{font-size:14px;line-height:1.6}button,input,select,textarea{line-height:1.6}
+#relationReader{grid-template-columns:250px minmax(0,1fr)}
+#rrGroups .rr-category-grid .rr-source-category,#rrGroups .rr-relations-directory .rr-group{min-height:40px;padding:8px;gap:8px}
+#rrGroups .rr-category-grid .rr-source-category strong,#rrGroups .rr-relations-directory .rr-group strong{font-size:14px;line-height:1.6;font-weight:400}
+#rrGroups .rr-category-grid .rr-source-category.active strong,#rrGroups .rr-relations-directory .rr-group.active strong{font-weight:600}
+#rrGroups .rr-category-grid .rr-source-category small,#rrGroups .rr-relations-directory .rr-group small{font-size:12px;color:var(--reading-secondary);line-height:1.6}
+#rrGroups h3,.directory-count-note{font-size:12px!important;color:var(--reading-muted)}
+.rr-directory-title{font-size:16px!important}.rr-group strong{font-size:14px}#rrSearch{font-size:14px}
+body[data-section] #rrMain .rr-heading p{font-size:14px;color:var(--reading-secondary);line-height:1.6}
+#gradeDirections strong{font-size:16px;font-weight:600}#gradeDirections span{font-size:13px;color:var(--reading-secondary)}
+#gradeMethod,.grade-thresholds{font-size:13px;color:var(--reading-secondary)}#gradeMethodBody p{line-height:1.7}
+#rrAdvanced>summary,.rr-options summary,.rr-actions button,.rr-kinds button{font-size:13px}
+.pr-grid{grid-template-columns:repeat(auto-fill,minmax(290px,1fr))}.pr-company-tile .pr-company{padding:18px;gap:12px}
+.pr-company-head{min-height:58px}.pr-company-head strong,.browse-company strong,.rr-component-heading strong{font-size:18px;font-weight:600;line-height:1.5}
+.pr-company-head small{font-size:14px;color:var(--reading-secondary);line-height:1.6}
+.pr-company-head .pr-icon-context{font-size:12px!important;color:var(--reading-muted)!important;line-height:1.6}
+.pr-grade-metric{font-size:14px;line-height:1.6;color:var(--reading-secondary)}
+.pr-company-foot{display:grid;grid-template-columns:1fr;align-items:start;gap:6px}
+.pr-grade-tag{font-size:13px;line-height:1.6}.market-grade-mode .pr-company-foot .revenue-tag{font-size:13px;line-height:1.6;justify-self:start}
+.pr-company-foot>span:last-child{font-size:12px;color:var(--reading-muted);max-width:none;white-space:normal}
+.pr-categories span{font-size:12px;color:var(--reading-secondary)}.pr-tier h3{font-size:16px;font-weight:600}
+.pr-tier header>span,.pr-footnote,.pr-card-actions button span,.pr-no-relations{font-size:12px;color:var(--reading-muted)}
+.pr-card-actions button{font-size:14px}.pr-controls label,.pr-controls select{font-size:14px;color:var(--reading-secondary)}
+#rrReadingBar,.rr-caption,#rrScope,.rr-caption>span:last-child,.rr-overview-intro,.rr-component-names{font-size:13px;color:var(--reading-secondary);line-height:1.6}
+.rr-component-count,.rr-footer,.rr-mobile-incoming{font-size:12px;color:var(--reading-muted)}
+#rrGraph .rr-company{width:240px;height:140px;padding:12px;gap:5px}
+#rrGraph .rr-company.is-focus{padding:11px}
+#rrGraph .rr-company-top strong,#rrMobile .rr-company-top strong{font-size:18px;line-height:24px;font-weight:600;-webkit-line-clamp:2}
+#rrGraph .rr-company-top em,.rr-company-top em{font-size:12px;line-height:1.5}
+#rrGraph .rr-company-product{height:32px;margin:2px 0;gap:8px}
+#rrGraph .rr-company-product .mini-icon{width:32px;height:32px;min-width:32px}
+#rrGraph .rr-company-product>span:last-child,.rr-company-product>span:last-child{font-size:14px;line-height:1.6;color:var(--reading-secondary)}
+#rrGraph .rr-company-bottom,.rr-company-bottom{font-size:12px;line-height:1.6}.rr-mobile-company summary{font-size:14px}
+.rr-mobile-edge b,.rr-mobile-edge span,.rr-edge-row{font-size:14px}.rr-edge-row strong,.rr-edge-row small{font-size:12px}
+#detail .detail-section p,#detail .facts,#detail .grade-detail-track p,.browse-company small{font-size:14px;line-height:1.7;color:var(--reading-secondary)}
+#detail .detail-section h3,.grade-detail-track>strong{font-size:16px}#detail summary,.executive-sources>summary{font-size:13px;color:var(--reading-secondary)}
+.tiny,.badge,.product span,.detail-reference,.navigation-hint,.navigation-path,.source-label{font-size:12px}
+.btn,#shareView,#allCompanies,.top-meta>[data-mode=audit]{font-size:13px}.navigation-actions #viewHome{font-size:12px}
+.browse-scope,.pr-empty,.geo-explain,.geo-heading p,.company-info small,.data-table td,.audit-card p{font-size:14px;color:var(--reading-secondary);line-height:1.6}
+.pr-grade-metric,.pr-grade-tag,.rr-group small{font-variant-numeric:tabular-nums}
+#rrPan{display:flex;align-items:center;justify-content:flex-end;gap:8px;font-size:12px;color:var(--reading-secondary);margin:8px 0}#rrPan[hidden],.rr-peer-cards #rrPan{display:none}#rrPan button:disabled{opacity:.4;cursor:default}
+@media(max-width:760px){#rrPan{display:none}}
+@media(max-width:1100px) and (min-width:761px){#relationReader{grid-template-columns:225px minmax(0,1fr)}}
+@media(max-width:760px){.pr-grid{grid-template-columns:minmax(0,1fr)}#rrSearch{font-size:16px}#rrGroups .rr-category-grid .rr-source-category,#rrGroups .rr-relations-directory .rr-group{min-height:44px;flex-wrap:wrap;gap:2px 8px}.pr-company-tile .pr-company{padding:16px}.pr-company-foot{grid-template-columns:1fr}#rrMain .rr-heading h2{line-height:1.45}#gradeDirections span{font-size:12px}.navigation-bar .btn{padding:7px;font-size:12px}.rr-mobile-company .rr-company{min-height:122px}.rr-caption>span:last-child{max-width:none;font-size:12px}.browse-company small{font-size:14px}}

@@ -54,7 +54,7 @@
    await document.fonts.ready;
    const load=url=>new Promise(resolve=>{const img=new Image();img.onload=()=>resolve(img);img.onerror=()=>resolve(null);img.src=url;});
    const icons=new Map(await Promise.all(nodes.map(async n=>[n.id,products.get(n.id).icon?await load(products.get(n.id).icon):null])));
-   const bands=[1,2,3,4,5,0].map(t=>({t,rows:nodes.filter(n=>AtlasGrades.tier(n,direction)===t)})).filter(b=>b.rows.length),w=1240,cw=280,ch=190,gap=16,cols=4;
+   const bands=[1,2,3,4,5,0].map(t=>({t,rows:nodes.filter(n=>AtlasGrades.tier(n,direction)===t)})).filter(b=>b.rows.length),w=1240,cw=378,ch=248,gap=16,cols=3;
    const h=120+bands.reduce((sum,b)=>sum+56+Math.ceil(b.rows.length/cols)*(ch+gap),0),scale=Math.min(2,16000/h,Math.sqrt(32000000/(w*h)));
    const canvas=document.createElement('canvas');canvas.width=Math.ceil(w*scale);canvas.height=Math.ceil(h*scale);const c=canvas.getContext('2d'),font=getComputedStyle(document.body).fontFamily;
    c.scale(scale,scale);c.fillStyle='#f5f8fb';c.fillRect(0,0,w,h);
@@ -63,8 +63,8 @@
    let y=95;for(const band of bands){text(AtlasGrades.labels[direction]+' '+tierNames[band.t]+' · '+band.rows.length+' 家',36,y+24,w-72,1,16,'#375b75',600);y+=44;
     band.rows.forEach((n,i)=>{const x=36+i%cols*(cw+gap),top=y+Math.floor(i/cols)*(ch+gap),r=income(n);c.beginPath();c.roundRect(x,top,cw,ch,10);c.fillStyle='white';c.fill();c.strokeStyle='#d5e2ec';c.lineWidth=1;c.stroke();
      const icon=icons.get(n.id);if(icon){c.save();c.beginPath();c.roundRect(x+16,top+17,44,44,10);c.clip();c.drawImage(icon,x+16,top+17,44,44);c.restore();}else text(initial(n),x+20,top+45,36,1,15,'#7b8f9e');
-     text(n.name,x+72,top+32,190,2,16,'#29475b',600);text(products.get(n.id).text||n.role,x+16,top+88,cw-32,2,12,'#718797');text(products.get(n.id).exact?'图示：本品类产品':'图标：公司代表作',x+16,top+126,cw-32,1,10,'#8a9aa5');
-     const g=groupByName.get(group),tags=String(n.category||'').split('、').filter(t=>g.selectionCategories.includes(t));text(tags.join(' · '),x+16,top+148,cw-32,1,11,'#607d92');text('公司'+AtlasGrades.labels[direction]+'评级 T'+AtlasGrades.entry(n,direction).tier+' · 收入重心：'+r.label,x+16,top+174,cw-32,1,11,r.color);
+     text(n.name,x+72,top+32,cw-88,2,18,'#29475b',600);text(products.get(n.id).text||n.role,x+16,top+92,cw-32,2,14,'#526777');text(products.get(n.id).exact?'图示：本品类产品':'图标：公司代表作',x+16,top+142,cw-32,1,12,'#5c7182');
+     const g=groupByName.get(group),tags=String(n.category||'').split('、').filter(t=>g.selectionCategories.includes(t));text(tags.join(' · '),x+16,top+170,cw-32,1,12,'#526777');text('公司'+AtlasGrades.labels[direction]+'评级 T'+AtlasGrades.entry(n,direction).tier,x+16,top+198,cw-32,1,13,'#29475b',600);text('收入重心：'+r.label,x+16,top+224,cw-32,1,13,r.color);
     });y+=Math.ceil(band.rows.length/cols)*(ch+gap)+12;
    }
    const blob=await new Promise(resolve=>canvas.toBlob(resolve,'image/png'));if(!blob)throw Error('PNG export failed');download(blob,title+'.png');notify('已保存当前品类公司与产品图标');

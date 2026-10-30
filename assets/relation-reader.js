@@ -5,6 +5,9 @@
  const panel=document.createElement('section');panel.id='relationReader';panel.hidden=true;
  panel.innerHTML=`<aside class="rr-directory"><div class="rr-directory-title">公司关系目录<small>选一组，逐层看关系</small></div><input id="rrSearch" aria-label="搜索关系组" placeholder="搜索公司或关系组"><div id="rrGroups"></div></aside><div class="rr-main" id="rrMain"><header class="rr-heading"><div class="rr-eyebrow">COMPANY RELATIONSHIPS</div><h2 id="rrTitle"></h2><p id="rrSummary"></p></header><div class="rr-controls"><div class="rr-kinds" role="group" aria-label="关系类型">${[['all','全部关系'],['capital','投资与交易'],['business','业务关联'],['people','人员履历']].map(([k,v])=>`<button data-rr-kind="${k}">${v}</button>`).join('')}</div><div class="rr-actions"><button id="rrExpand">展开整组关系</button><details class="rr-options"><summary>更多选项</summary><label><input id="rrMcp" type="checkbox">包含原始 MCP 关系</label><button id="rrOldGraph">完整网络视图</button></details></div></div><div id="rrOverview" hidden></div><div id="rrReadingBar" hidden></div><div class="rr-caption"><span id="rrScope"></span><span>实线：公开来源支持 · 虚线：原始 MCP 记录；箭头按原记录方向</span></div><div class="rr-scroll" id="rrScroll"><div id="rrGraph" role="img" aria-label="公司关系卡片图"></div></div><div class="rr-mobile" id="rrMobile"></div><div id="rrEmpty" class="rr-empty" hidden></div><section id="rrBranches" hidden></section><details class="rr-rows" id="rrRows"><summary id="rrRowsTitle">逐条关系与来源</summary><div id="rrEdges"></div></details><footer class="rr-footer">点击公司看资料，点击关系看依据。交易按标注时点解释。</footer></div>`;
  $('#stage').before(panel);
+ const pan=document.createElement('nav');pan.id='rrPan';pan.hidden=true;pan.setAttribute('aria-label','横向浏览关系图');pan.innerHTML='<span>横向查看完整关系</span><button class="btn" data-pan="-1" aria-label="向左查看关系图">← 左移</button><button class="btn" data-pan="1" aria-label="向右查看关系图">右移 →</button>';$('#rrScroll').before(pan);
+ const panState=()=>{const box=$('#rrScroll');pan.querySelector('[data-pan="-1"]').disabled=box.scrollLeft<=1;pan.querySelector('[data-pan="1"]').disabled=box.scrollLeft+box.clientWidth>=box.scrollWidth-1;};
+ pan.onclick=e=>{const b=e.target.closest('[data-pan]');if(b){const box=$('#rrScroll');box.scrollBy({left:Number(b.dataset.pan)*box.clientWidth*.75,behavior:'smooth'});}};$('#rrScroll').addEventListener('scroll',panState);
  let graph=null,signature='',serial=0,scheduled=0,graphReady=false,renderTask=Promise.resolve(),resolveRender=null;
  const eligible=()=>state.mode==='graph'&&!state.routeActive&&!state.readerNetwork;
  const income=n=>AtlasResearch.revenue(n,window.ATLAS_REVENUE);
@@ -39,7 +42,7 @@
   return `<article class="rr-mobile-company">${companyCard(n,n.id===m.focus)}${own.length?`<details><summary>${own.length} 条发出／关联记录</summary>${own.map(e=>`<button class="rr-mobile-edge" data-edge="${esc(e.id)}"><b>${e.directed?'→':'↔'} ${esc(byId.get(e.target).name)}</b><span>${esc(label(e))}</span></button>`).join('')}</details>`:''}${incoming.length?`<small class="rr-mobile-incoming">${incoming.length} 条来自其他主体的记录，见来源公司</small>`:''}</article>`;
  }).join('');}
  function presentation(m){
-  const p=AtlasExecutive.plan(m),overview=$('#rrOverview'),bar=$('#rrReadingBar'),branches=$('#rrBranches');
+  const p=AtlasExecutive.plan(m),overview=$('#rrOverview'),bar=$('#rrReadingBar'),branches=$('#rrBranches');if(p.overview||!p.graph.edges.length)pan.hidden=true;
   overview.hidden=!p.overview;bar.hidden=p.overview||!m.edges.length;
   $('#rrScroll').hidden=p.overview;$('#rrMobile').hidden=p.overview;$('#rrRows').hidden=p.overview;
   overview.innerHTML=p.overview?`<p class="rr-overview-intro">${p.groups.length} 组已收录的关联网络 · 点击一组展开；同品类不代表相互关联。</p><div class="rr-component-grid">${p.groups.map(c=>`<button class="rr-component" data-rr-component="${esc(c.id)}"><span class="rr-component-heading">${iconHTML(c.lead)}<strong>${esc(c.lead.name)}等</strong><span>展开 →</span></span><span class="rr-component-names">${c.nodes.filter(n=>n.id!==c.lead.id).slice(0,4).map(n=>esc(n.name)).join(' · ')}${c.nodes.length>5?' …':''}</span><span class="rr-component-count">${c.nodes.length} 个主体 · ${c.edges.length} 条关系</span></button>`).join('')}</div>`:'';
@@ -89,24 +92,24 @@
    const depth=new Map([[m.focus,0]]),queue=[m.focus];for(let i=0;i<queue.length;i++){const id=queue[i];for(const e of m.edges){const next=e.source===id?e.target:e.target===id?e.source:null;if(next&&!depth.has(next)){depth.set(next,depth.get(id)+1);queue.push(next);}}}
    const levels=new Map();for(const n of m.nodes){const level=depth.get(n.id)??0;if(!levels.has(level))levels.set(level,[]);levels.get(level).push(n);}
    const descendants=id=>m.edges.filter(e=>e.source===id&&e.directed).length;
-   for(const [level,rows] of levels){rows.sort((a,b)=>(a.id===m.focus?-1:b.id===m.focus?1:0)||descendants(b.id)-descendants(a.id)||((a.tier||9)-(b.tier||9))||a.name.localeCompare(b.name,'zh'));rows.forEach((n,i)=>positions.set(n.id,{x:120+level*350,y:75+i*130}));}
+   for(const [level,rows] of levels){rows.sort((a,b)=>(a.id===m.focus?-1:b.id===m.focus?1:0)||descendants(b.id)-descendants(a.id)||((a.tier||9)-(b.tier||9))||a.name.localeCompare(b.name,'zh'));rows.forEach((n,i)=>positions.set(n.id,{x:150+level*420,y:100+i*180}));}
   }
   const graphEdges=m.edges.map(e=>{
    const a=positions.get(e.source),b=positions.get(e.target),sameColumn=family&&a&&b&&a.x===b.x;
-   return {id:e.id,source:e.source,target:e.target,...(sameColumn?{type:'polyline'}:{}),style:{labelText:label(e),stroke:colors[C.kind(e)]||colors.pending,endArrow:e.directed===true,lineDash:e.evidenceLayer!=='public'?[5,4]:undefined,...(sameColumn?{controlPoints:[[a.x+160,a.y],[b.x+160,b.y]],labelMaxWidth:84,labelFontSize:11}: {})}};
+   return {id:e.id,source:e.source,target:e.target,...(sameColumn?{type:'polyline'}:{}),style:{labelText:label(e),stroke:colors[C.kind(e)]||colors.pending,endArrow:e.directed===true,lineDash:e.evidenceLayer!=='public'?[5,4]:undefined,...(sameColumn?{controlPoints:[[a.x+190,a.y],[b.x+190,b.y]],labelMaxWidth:112,labelFontSize:14}: {})}};
   });
   const instance=new G6.Graph({container:element,width,height:540,animation:false,autoResize:false,padding:24,
    data:{nodes:m.nodes.map(n=>({id:n.id,style:{innerHTML:companyCard(n,n.id===m.focus),...positions.get(n.id)}})),edges:graphEdges},
-   node:{type:'html',style:{size:[196,88],dx:-98,dy:-44}},
-   edge:{type:d=>d.type||'cubic-horizontal',style:{lineWidth:1.7,endArrowSize:8,labelFontSize:13,labelFontFamily:getComputedStyle(document.body).fontFamily,labelFontWeight:500,labelFill:'#304f65',labelAutoRotate:false,labelWordWrap:true,labelMaxWidth:170,labelMaxLines:3,labelBackground:true,labelBackgroundFill:'#f5f8fb',labelBackgroundRadius:5,labelPadding:[5,7],labelOffsetY:-14,cursor:'pointer'}},
+   node:{type:'html',style:{size:[240,140],dx:-120,dy:-70}},
+   edge:{type:d=>d.type||'cubic-horizontal',style:{lineWidth:1.7,endArrowSize:8,labelFontSize:14,labelFontFamily:getComputedStyle(document.body).fontFamily,labelFontWeight:500,labelFill:'#304f65',labelAutoRotate:false,labelWordWrap:true,labelMaxWidth:180,labelMaxLines:3,labelBackground:true,labelBackgroundFill:'#f5f8fb',labelBackgroundRadius:5,labelPadding:[5,7],labelOffsetY:-14,cursor:'pointer'}},
    ...(family?{}:{layout:{type:'dagre',rankdir:'LR',nodesep:38,ranksep:160}}),transforms:parallel.length?[{type:'process-parallel-edges',mode:'bundle',edges:parallel,distance:70}]:[],behaviors:[]});
   graph=instance;
   instance.on('edge:click',ev=>{const e=DATA.links.find(e=>e.id===ev.target.id);if(e)showEdge(e);});
   try{
    await instance.render();if(ticket!==serial||instance.destroyed)return;
    const points=m.nodes.map(n=>instance.getElementPosition(n.id)),xs=points.map(p=>p[0]),ys=points.map(p=>p[1]);
-   const naturalW=Math.max(width,Math.max(...xs)-Math.min(...xs)+260),naturalH=Math.max(260,Math.max(...ys)-Math.min(...ys)+150);
-   element.style.width=naturalW+'px';element.style.height=naturalH+'px';element.style.zoom=family?String(Math.max(.75,Math.min(1,width/naturalW))):'1';instance.setSize(naturalW,naturalH);await instance.fitCenter(false);graphReady=ticket===serial;
+   const naturalW=Math.max(width,Math.max(...xs)-Math.min(...xs)+320),naturalH=Math.max(260,Math.max(...ys)-Math.min(...ys)+200);
+   element.style.width=naturalW+'px';element.style.height=naturalH+'px';element.style.zoom='1';instance.setSize(naturalW,naturalH);await instance.fitCenter(false);graphReady=ticket===serial;pan.hidden=naturalW<=$('#rrScroll').clientWidth+1;panState();
   }catch(err){if(ticket!==serial||instance.destroyed)return;console.error('Relationship renderer:',err);element.style.height='0px';$('#rrRows').open=true;signature='';}
  }
  function schedule(){cancelAnimationFrame(scheduled);resolveRender?.();renderTask=new Promise(resolve=>{resolveRender=resolve;scheduled=requestAnimationFrame(()=>draw().finally(resolve));});}
@@ -154,14 +157,14 @@
    write($('#rrTitle').textContent,28,30,w-56,1,19,'#233e52',600);
    write($('#rrScope').textContent,28,51,w-56,1,12,'#748898');
    ctx.save();ctx.translate(0,64);for(const layer of layers)ctx.drawImage(layer.image,layer.x,layer.y,layer.w,layer.h);
-   for(const n of m.nodes){const p=points.get(n.id),x=p[0]-98,y=p[1]-44,r=income(n),focus=n.id===m.focus;
-    ctx.beginPath();ctx.roundRect(x,y,196,88,10);ctx.fillStyle='#fff';ctx.fill();ctx.strokeStyle=focus?'#3e79a6':'#cfdeea';ctx.lineWidth=focus?2:1;ctx.stroke();
-    write(n.name,x+12,y+23,147,1,14,'#29475b',600);write(n.tier?'T'+(n.tier-1):'关联',x+164,y+22,28,1,10,'#9b804c');
-    const icon=icons.get(n.id);if(icon){ctx.save();ctx.beginPath();ctx.roundRect(x+12,y+35,26,26,6);ctx.clip();ctx.drawImage(icon,x+12,y+35,26,26);ctx.restore();}
-    write(products(n)||n.role||'关系主体',x+44,y+46,140,1,10,'#7b8f9e');write(r.label,x+12,y+76,130,1,10,r.color||'#59788d');
+   for(const n of m.nodes){const p=points.get(n.id),x=p[0]-120,y=p[1]-70,r=income(n),focus=n.id===m.focus;
+    ctx.beginPath();ctx.roundRect(x,y,240,140,10);ctx.fillStyle='#fff';ctx.fill();ctx.strokeStyle=focus?'#3e79a6':'#cfdeea';ctx.lineWidth=focus?2:1;ctx.stroke();
+    write(n.name,x+12,y+26,178,2,18,'#29475b',600);write(n.tier?'T'+(n.tier-1):'关联',x+204,y+25,30,1,12,'#9b804c');
+    const icon=icons.get(n.id);if(icon){ctx.save();ctx.beginPath();ctx.roundRect(x+12,y+66,32,32,6);ctx.clip();ctx.drawImage(icon,x+12,y+66,32,32);ctx.restore();}
+    write(products(n)||n.role||'关系主体',x+54,y+86,174,1,14,'#526777');write(r.label,x+12,y+122,200,1,12,r.color||'#59788d');
 
    }
-   ctx.restore();write('箭头沿原记录方向；历史交易按披露时点解释。'+(state.pending?'含标注“原始记录”的 MCP 关系。':''),28,h+91,w-56,1,11,'#748898');
+   ctx.restore();write('箭头沿原记录方向；历史交易按披露时点解释。'+(state.pending?'含标注“原始记录”的 MCP 关系。':''),28,h+91,w-56,1,12,'#526777');
    projection.other.forEach((e,i)=>write(byId.get(e.source).name+(e.directed?' → ':' — ')+byId.get(e.target).name+'：'+label(e),28,h+116+i*26,w-56,1,12,colors[C.kind(e)]||'#526f84'));
    const blob=await new Promise(resolve=>canvas.toBlob(resolve,'image/png'));if(!blob)throw Error('PNG export failed');download(blob,'公司关系图谱-'+$('#rrTitle').textContent.replace(/[\\/:*?"<>|]/g,'-')+'.png');notify('已保存当前关系图谱，含公司与产品图标');
   }catch(err){console.error('Relationship export:',err);notify('图片导出失败，请稍后重试');}finally{button.disabled=false;}
