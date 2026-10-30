@@ -43,16 +43,19 @@
   const own=m.edges.filter(e=>e.source===n.id),incoming=m.edges.filter(e=>e.target===n.id);
   return `<article class="rr-mobile-company">${companyCard(n,n.id===m.focus)}${own.length?`<details><summary>${own.length} 条发出／关联记录</summary>${own.map(e=>`<button class="rr-mobile-edge" data-edge="${esc(e.id)}"><b>${e.directed?'→':'↔'} ${esc(byId.get(e.target).name)}</b><span>${esc(label(e))}${e.evidenceLayer==='public'?'':' · 原始记录'}</span></button>`).join('')}</details>`:''}${incoming.length?`<small class="rr-mobile-incoming">${incoming.length} 条来自其他主体的记录，见来源公司</small>`:''}</article>`;
  }).join('');}
+ // Do not replace unchanged disclosure DOM during layout-only redraws.
+ const contentCache=new WeakMap();
+ function renderContent(element,html){if(contentCache.get(element)===html)return;contentCache.set(element,html);element.innerHTML=html;}
  function presentation(m){
   const p=AtlasExecutive.plan(m),overview=$('#rrOverview'),bar=$('#rrReadingBar'),branches=$('#rrBranches');if(p.overview||!p.graph.edges.length)pan.hidden=true;
   overview.hidden=!p.overview;bar.hidden=p.overview||!m.edges.length;
   $('#rrScroll').hidden=p.overview;$('#rrMobile').hidden=p.overview;$('#rrRows').hidden=p.overview;
-  overview.innerHTML=p.overview?`<p class="rr-overview-intro">${p.groups.length} 组已收录的关联网络 · 点击一组展开；同品类不代表相互关联。</p><div class="rr-component-grid">${p.groups.map(c=>`<button class="rr-component" data-rr-component="${esc(c.id)}"><span class="rr-component-heading">${iconHTML(c.lead)}<strong>${esc(c.lead.name)}等</strong><span>展开 →</span></span><span class="rr-component-names">${c.nodes.filter(n=>n.id!==c.lead.id).slice(0,4).map(n=>esc(n.name)).join(' · ')}${c.nodes.length>5?' …':''}</span><span class="rr-component-count">${c.nodes.length} 个主体 · ${c.edges.length} 条关系</span></button>`).join('')}</div>`:'';
-  bar.innerHTML=`${p.component?'<button class="btn" data-rr-component="">← 返回本品类全部关系组</button>':''}<span class="rr-desktop-reading">${p.backbone?'投资与交易主线':'已收录关系'} · ${p.graph.nodes.length} 个主体 / ${p.graph.edges.length} 条${p.other.length?'；另有 '+p.other.length+' 条人员／业务记录':''}</span><span class="rr-mobile-reading">按公司逐条阅读 · ${p.scope.nodes.length} 个主体 / ${p.scope.edges.length} 条关系</span>${p.scope.edges.some(e=>AtlasRelations.kind(e)==='capital')&&p.scope.edges.some(e=>AtlasRelations.kind(e)!=='capital')?`<button class="btn" id="rrAllLinks">${state.readerAllLinks?'收起为投资主线':'所有关系叠加显示'}</button>`:''}`;
+  renderContent(overview,p.overview?`<p class="rr-overview-intro">${p.groups.length} 组已收录的关联网络 · 点击一组展开；同品类不代表相互关联。</p><div class="rr-component-grid">${p.groups.map(c=>`<button class="rr-component" data-rr-component="${esc(c.id)}"><span class="rr-component-heading">${iconHTML(c.lead)}<strong>${esc(c.lead.name)}等</strong><span>展开 →</span></span><span class="rr-component-names">${c.nodes.filter(n=>n.id!==c.lead.id).slice(0,4).map(n=>esc(n.name)).join(' · ')}${c.nodes.length>5?' …':''}</span><span class="rr-component-count">${c.nodes.length} 个主体 · ${c.edges.length} 条关系</span></button>`).join('')}</div>`:'');
+  renderContent(bar,`${p.component?'<button class="btn" data-rr-component="">← 返回本品类全部关系组</button>':''}<span class="rr-desktop-reading">${p.backbone?'投资与交易主线':'已收录关系'} · ${p.graph.nodes.length} 个主体 / ${p.graph.edges.length} 条${p.other.length?'；另有 '+p.other.length+' 条人员／业务记录':''}</span><span class="rr-mobile-reading">按公司逐条阅读 · ${p.scope.nodes.length} 个主体 / ${p.scope.edges.length} 条关系</span>${p.scope.edges.some(e=>AtlasRelations.kind(e)==='capital')&&p.scope.edges.some(e=>AtlasRelations.kind(e)!=='capital')?`<button class="btn" id="rrAllLinks">${state.readerAllLinks?'收起为投资主线':'所有关系叠加显示'}</button>`:''}`);
   branches.hidden=p.overview||!p.other.length;
-  branches.innerHTML=p.other.length?`<h3>其他关联 · ${p.other.length} 条</h3><p>以下单独列出，不并入投资层级。</p>`+['business','people','pending'].map(kind=>{const edges=p.other.filter(e=>AtlasRelations.kind(e)===kind);return edges.length?`<details><summary>${{business:'业务与产品关联',people:'人员与团队履历',pending:'其他关系记录'}[kind]} · ${edges.length} 条</summary>${edgeRows({...m,edges})}</details>`:'';}).join(''):'';
-  $('#rrMobile').innerHTML=mobile(p.scope);
-  $('#rrEdges').innerHTML=edgeRows(p.scope);$('#rrRowsTitle').textContent=`逐条阅读与查证 · ${p.scope.edges.length} 条`;
+  renderContent(branches,p.other.length?`<h3>其他关联 · ${p.other.length} 条</h3><p>以下单独列出，不并入投资层级。</p>`+['business','people','pending'].map(kind=>{const edges=p.other.filter(e=>AtlasRelations.kind(e)===kind);return edges.length?`<details><summary>${{business:'业务与产品关联',people:'人员与团队履历',pending:'其他关系记录'}[kind]} · ${edges.length} 条</summary>${edgeRows({...m,edges})}</details>`:'';}).join(''):'');
+  renderContent($('#rrMobile'),mobile(p.scope));
+  renderContent($('#rrEdges'),edgeRows(p.scope));$('#rrRowsTitle').textContent=`逐条阅读与查证 · ${p.scope.edges.length} 条`;
   return p;
  }
  function sync(){
@@ -71,7 +74,6 @@
   for(const b of panel.querySelectorAll('[data-rr-kind]')){b.classList.toggle('active',state.readerKind===b.dataset.rrKind);b.setAttribute('aria-pressed',String(state.readerKind===b.dataset.rrKind));}
   $('#rrMcp').checked=state.pending;$('#rrEmpty').hidden=!!m.edges.length;
   $('#rrEmpty').textContent=m.remaining?'当前聚焦公司没有此类直接关系；展开整组查看其余已收录关系。':'当前筛选下没有已收录关系，可切换关系类型或清除筛选。';
-  $('#rrRowsTitle').textContent=`逐条阅读与查证 · ${m.edges.length} 条`;$('#rrEdges').innerHTML=edgeRows(m);$('#rrMobile').innerHTML=mobile(m);
   state.visible=m.nodes;state.edges=m.edges;$('#viewCount').textContent=m.nodes.length+' 个主体 · '+m.edges.length+' 条关系';
   $('#revenueCoverage').textContent='当前关系组 · 全部收入方向';
   if(state.revenue!=='all')$('#revenueCoverage').textContent='关系至少一端匹配：'+{domestic:'国内为主',overseas:'海外为主',balanced:'国内海外并重',unscoped:'仅关系主体'}[state.revenue];
@@ -129,7 +131,8 @@
  $('#rrOldGraph').onclick=()=>{state.readerNetwork=true;renderGraph();};
  const back=document.createElement('button');back.id='rrReturn';back.className='btn';back.textContent='返回关系阅读';$('#filters').append(back);back.onclick=()=>{state.readerNetwork=false;if(isCategoryPeer()){state.group=defaultGroup;state.audience='all';state.genre='all';state.scope='all';state.focus=null;}refresh();};
  window.addEventListener('resize',()=>{if(eligible())schedule();});
- const resize=new ResizeObserver(()=>{if(eligible())schedule();});resize.observe($('#rrScroll'));
+ let observedWidth=0;
+ const resize=new ResizeObserver(([entry])=>{const width=entry.contentRect.width;if(width<=0||Math.abs(width-observedWidth)<1)return;observedWidth=width;if(eligible())schedule();});resize.observe($('#rrScroll'));
  const originalExport=$('#exportBtn').onclick;
  $('#exportBtn').onclick=async()=>{
   if(!eligible())return originalExport();
