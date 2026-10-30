@@ -1,14 +1,14 @@
 /* View history contains only UI state, never company data or evidence. */
 (()=>{
  const names={geo:'地域分布',graph:'关系图谱',list:'公司清单',audit:'证据与口径'};
- const keys=['mode','scope','genre','group','query','people','pending','selected','focus','listAll','navQuery','audience','peerPage','revenue','marketDirection','routeActive','routeFrom','routeTo','routeEvidence','routeDirection','routeKind'];
- const scrollIds=['geoPane','geoRail','listPane','auditPane','companyNav','detail','stage','routePanel','atlasCanvas'];
+ const keys=['mode','scope','genre','group','query','people','pending','selected','focus','listAll','navQuery','audience','peerPage','revenue','marketDirection','routeActive','routeFrom','routeTo','routeEvidence','routeDirection','routeKind','readerKind','readerExpanded','readerFocus','readerSearch','readerNetwork'];
+ const scrollIds=['geoPane','geoRail','listPane','auditPane','companyNav','detail','stage','routePanel','atlasCanvas','rrMain','rrScroll','rrGroups'];
  const session='atlas-'+Date.now();let entries=[],index=0,restoring=false,pending=null,detail=null,lastTrigger=null;
  const bar=document.createElement('nav');bar.className='navigation-bar';bar.setAttribute('aria-label','浏览路径');
  bar.innerHTML='<div class="navigation-actions"><button id="viewBack" aria-label="返回上一页" disabled>← 返回</button><button id="viewHome">全国概览</button></div><div class="navigation-path" id="viewPath" aria-live="polite"></div><span class="navigation-hint">返回后保留筛选与浏览位置</span>';
  $('.toolbar').after(bar);
  const native={setMode,showDetail,showEdge,selectCompany,focusCompany,closeDetail,renderGeo,reset};
- const snapshot=()=>({values:Object.fromEntries(keys.map(k=>[k,state[k]])),city:geoState.city,detail:$('#detail').classList.contains('open')?detail:null,transform:{...state.transform},scroll:Object.fromEntries(scrollIds.map(id=>[id,$('#'+id)?.scrollTop||0])),focus:lastTrigger});
+ const snapshot=()=>({values:Object.fromEntries(keys.map(k=>[k,state[k]])),city:geoState.city,detail:$('#detail').classList.contains('open')?detail:null,transform:{...state.transform},scroll:Object.fromEntries(scrollIds.map(id=>[id,$('#'+id)?.scrollTop||0])),scrollX:Object.fromEntries(scrollIds.map(id=>[id,$('#'+id)?.scrollLeft||0])),focus:lastTrigger});
  const same=(a,b)=>JSON.stringify([a.values,a.city,a.detail])===JSON.stringify([b.values,b.city,b.detail]);
  const save=(s,replace=false)=>{try{history[replace?'replaceState':'pushState']({atlas:session,index,snapshot:s},'');}catch{/* Local-file hosts may restrict history; in-page history still works. */}};
  const title=s=>s.detail?(s.detail.kind==='company'?byId.get(s.detail.id)?.name+'详情':'关系详情'):s.values.focus?byId.get(s.values.focus)?.name+'关系':s.city&&s.values.mode==='geo'?s.city+'名单':names[s.values.mode];
@@ -27,7 +27,7 @@
   native.setMode(state.mode);refresh();
   if(detail?.kind==='company')native.showDetail(byId.get(detail.id));else if(detail?.kind==='edge')native.showEdge(DATA.links.find(e=>e.id===detail.id));else $('#detail').classList.remove('open');
   state.transform={...s.transform};applyTransform();chrome();
-  requestAnimationFrame(()=>{if(state.mode==='graph'){state.transform={...s.transform};applyTransform();}for(const id of scrollIds)if($('#'+id))$('#'+id).scrollTop=s.scroll[id]||0;const target=s.detail?$('#detail [data-history-back]'):s.focus?document.querySelector(s.focus):$('#viewBack');target?.focus({preventScroll:true});restoring=false;});
+  requestAnimationFrame(async()=>{await window.AtlasRelationReader?.whenReady();if(state.mode==='graph'){state.transform={...s.transform};applyTransform();}for(const id of scrollIds)if($('#'+id)){$('#'+id).scrollTop=s.scroll[id]||0;$('#'+id).scrollLeft=s.scrollX?.[id]||0;}const target=s.detail?$('#detail [data-history-back]'):s.focus?document.querySelector(s.focus):$('#viewBack');target?.focus({preventScroll:true});restoring=false;});
  }
  function back(){finish();if(index>0){entries[index]=snapshot();save(entries[index],true);if(history.state?.atlas===session)history.back();else{index--;restore(entries[index]);}}else if($('#detail').classList.contains('open'))closeDetail();}
  setMode=mode=>action(()=>{detail=null;return native.setMode(mode);});
@@ -44,9 +44,9 @@
  document.addEventListener('click',e=>{const target=e.target.closest('button,[data-node],[data-company],.edge-hit');if(target){for(const attr of ['data-geo-company','data-company','data-node','data-edge'])if(target.hasAttribute(attr)){lastTrigger='['+attr+'="'+CSS.escape(target.getAttribute(attr))+'"]';break;}}
   if(e.target.closest('[data-history-back]')){e.preventDefault();e.stopImmediatePropagation();back();return;}
   if(e.target.closest('#viewBack,#viewHome'))return;
-  if(e.target.closest('[data-mode],[data-scope],[data-geo-city],[data-city],[data-group],[data-company],[data-geo-company],[data-node],[data-focus],[data-edge],[data-close],#geoBack,#factionBack,#peopleToggle,#pendingToggle,#clearSearch,#auditShortcut,#peerPrev,#peerNext,#clearViewFilters,#routeFind,#routeClear,#routeSwap,[data-route-start],[data-route-end]'))begin();
+  if(e.target.closest('[data-mode],[data-scope],[data-geo-city],[data-city],[data-group],[data-company],[data-geo-company],[data-node],[data-focus],[data-edge],[data-close],#geoBack,#factionBack,#peopleToggle,#pendingToggle,#clearSearch,#auditShortcut,#peerPrev,#peerNext,#clearViewFilters,[data-rr-group],[data-rr-kind],#rrExpand,#rrOldGraph,#rrReturn,#routeFind,#routeClear,#routeSwap,[data-route-start],[data-route-end]'))begin();
  },true);
- document.addEventListener('change',e=>{if(e.target.closest('#genre,#factionSelect,#audience,#graphTier,#peerRole,#peerCategory,#revenueFilter,#marketDirection,#routeFrom,#routeTo,#routeEvidence,#routeDirection,#routeKind'))begin();},true);
+ document.addEventListener('change',e=>{if(e.target.closest('#rrMcp,#genre,#factionSelect,#audience,#graphTier,#peerRole,#peerCategory,#revenueFilter,#marketDirection,#routeFrom,#routeTo,#routeEvidence,#routeDirection,#routeKind'))begin();},true);
  document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!$('#method').open){if($('#sidebar').classList.contains('mobile-open')){$('#sidebar').classList.remove('mobile-open');e.stopImmediatePropagation();return;}if($('#detail').classList.contains('open')){e.preventDefault();e.stopImmediatePropagation();back();}}if(e.key==='Enter'&&e.target.matches('tr[data-company]')){e.preventDefault();selectCompany(e.target.dataset.company);}},true);
  $('#viewBack').onclick=back;$('#viewHome').onclick=()=>action(()=>{detail=null;geoState.city=null;native.reset();$('#routePanel').open=false;native.setMode('geo');refresh();});
  window.addEventListener('popstate',e=>{if(e.state?.atlas===session&&entries[e.state.index]){pending=null;index=e.state.index;restore(entries[index]);}});
