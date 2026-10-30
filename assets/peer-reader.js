@@ -31,7 +31,7 @@
  function change(){state.peerPage=0;state.selected=null;closeDetail();refresh();}
  board.addEventListener('click',e=>{const b=e.target.closest('[data-peer-view]');if(!b)return;state.peerView=b.dataset.peerView;if(state.peerView==='relations'){state.pending=true;state.readerExpanded=true;}change();});
  const groupChange=$('#factionSelect').onchange;
- $('#factionSelect').onchange=e=>{const g=groupByName.get(e.target.value);state.readerKind='all';state.readerExpanded=!!g?.companyFamily;if(g?.companyFamily)state.pending=true;groupChange(e);};
+ $('#factionSelect').onchange=e=>{const g=groupByName.get(e.target.value);state.readerKind='all';state.readerExpanded=!g?.analysisType;if(!g?.analysisType)state.pending=true;groupChange(e);};
  $('#prRole').onchange=e=>{state.audience=e.target.value;scopeControl.value=state.audience;change();};
  $('#prCategory').onchange=e=>{state.genre=e.target.value;$('#genre').value=state.genre;change();};
  $('#prTier').onchange=e=>{state.scope=e.target.value;state.listAll=false;change();};

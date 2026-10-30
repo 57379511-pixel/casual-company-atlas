@@ -18,7 +18,12 @@
   const families=groups.filter(g=>g.companyFamily),primary=groups.filter(g=>!g.raw&&!g.analysisType&&!g.companyFamily),peers=groups.filter(g=>g.analysisType==='categoryPeer'),raw=groups.filter(g=>g.raw&&!g.companyFamily&&!g.supersededBy);
   const companies=query?DATA.nodes.filter(n=>[n.name,n.full,n.id,n.alias,n.originalProducts,n.verifiedProducts].join(' ').toLowerCase().includes(query)):[];
   const results=companies.length?'<h3>匹配公司 · '+companies.length+'</h3>'+companies.slice(0,12).map(n=>`<button class="rr-search-company" data-company="${esc(n.id)}"><strong>${esc(n.name)}</strong><small>${esc(products(n)||n.full)}</small></button>`).join(''):'';
-  $('#rrGroups').innerHTML=results+section('品类研发对标',peers)+section('公司系与关联团队',families)+section('重点关系',primary)+(raw.length?`<details><summary>其他原表分组 · ${raw.length}</summary>${section('原表分组',raw)}</details>`:'')||'<p class="rr-no-results">没有匹配的公司或关系组。</p>';
+  const all=[...families,...primary],pinned=['指色系 · 投资与关联团队','腾讯 · 历史投资与团队','豪腾 · 产品与创业团队'];
+  const featured=pinned.map(name=>all.find(g=>g.name===name)).filter(Boolean),current=all.find(g=>g.name===state.group);
+  if(current&&!featured.includes(current))featured.push(current);
+  const more=all.filter(g=>!featured.includes(g)),open=$('#rrMoreGroups')?.open;
+  $('#rrGroups').innerHTML=query?(results+section('相关品类',peers)+section('相关公司系',all)+section('原表分组',raw)||'<p class="rr-no-results">没有匹配结果，试试公司简称或产品名。</p>'):
+   section('按品类看',peers)+section('公司系',featured)+`<details id="rrMoreGroups" ${open?'open':''}><summary>查看全部公司系</summary>${section('公司系与关联团队',more)}${section('其他原表分组',raw)}</details>`;
   $('#rrSearch').value=state.readerSearch;
  }
  const label=e=>e.type.replace(/持股[\d.]+%（公开工商平台记录）/g,'投资／持股').replace(/（原始MCP记录）/g,'').replace('共同任职／自然人关联','共同任职').replace('同法定代表人线索','同法人记录')+(/^\d{4}(?:-\d{2})?(?:-\d{2})?$/.test(e.time||'')&&!e.type.includes(e.time.slice(0,4))?' · '+e.time:'')+(e.evidenceLayer==='public'?'':' · 原表');
@@ -87,7 +92,7 @@
  }
  function schedule(){cancelAnimationFrame(scheduled);resolveRender?.();renderTask=new Promise(resolve=>{resolveRender=resolve;scheduled=requestAnimationFrame(()=>draw().finally(resolve));});}
  const oldRender=renderGraph;renderGraph=function(reset=true){if(eligible()){sync();schedule();return;}sync();oldRender(reset);};
- const oldMode=setMode;setMode=function(mode){if(mode==='graph'&&!state.routeActive&&!state.group&&!state.focus&&!state.readerNetwork){state.group=defaultGroup;state.scope='all';}oldMode(mode);sync();if(eligible())schedule();};
+ const oldMode=setMode;setMode=function(mode){if(mode==='graph'&&!state.routeActive&&!state.group&&!state.focus&&!state.readerNetwork){state.group=defaultGroup;state.scope='all';state.readerExpanded=true;state.pending=true;}oldMode(mode);sync();if(eligible())schedule();};
  const oldReset=reset;reset=function(){Object.assign(state,{readerKind:'all',readerExpanded:false,readerFocus:'',readerSearch:'',readerNetwork:false});$('.rr-options').open=false;oldReset();};
  $('#rrSearch').oninput=e=>{state.readerSearch=e.target.value;directory();};
  panel.addEventListener('click',e=>{const group=e.target.closest('[data-rr-group]'),kind=e.target.closest('[data-rr-kind]');
