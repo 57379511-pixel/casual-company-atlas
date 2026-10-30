@@ -16,7 +16,7 @@
   const g=groupByName.get(state.group),nodes=selection();
   const universe=AtlasGrades.universe();
   $('#rrMain .rr-eyebrow').textContent='CATEGORY BENCHMARKS';
-  $('#rrTitle').textContent=AtlasGrades.labels[state.gradeDirection]+'分级 · '+(g.allCategories?'公司总览':g.name.split(' · ')[0]);
+  $('#rrTitle').textContent=AtlasGrades.labels[state.gradeDirection]+'分级 · '+(g.allCategories?'公司总览':g.name.split(' · ')[0])+(g.navigationBundle&&state.genre!=='all'?' · '+state.genre:'');
   $('#rrSummary').textContent=`${nodes.length} 家公司 · ${state.audience==='developer'?'研发／研运':'全部角色'} · 按公司${AtlasGrades.labels[state.gradeDirection]}评级排序`;
   viewSwitch.querySelector('[data-peer-view="cards"]').textContent='公司对标 · '+nodes.length;viewSwitch.querySelector('[data-peer-view="relations"]').textContent='公司关系图';
   const relations=state.peerView==='relations';for(const b of viewSwitch.querySelectorAll('[data-peer-view]'))b.setAttribute('aria-pressed',String(b.dataset.peerView===state.peerView));

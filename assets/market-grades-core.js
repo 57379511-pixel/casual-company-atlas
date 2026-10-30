@@ -31,6 +31,12 @@
  const tags=n=>String((companyById.get(AtlasExecutive.canonical(n.id))||n).category||'').split('、').filter(c=>sourceTags.has(c));
  const allGroup={...template,name:'全部品类 · 公司总览',displayName:'全部品类',category:'全部品类',allCategories:true,sourceCategory:false,selectionCategories:categoryOrder,memberIds:companyRows.map(n=>n.id),researchMemberIds:companyRows.filter(n=>n.scope==='developer').map(n=>n.id),description:'按公司去重，展示全部业务品类。',selectionRule:'公司按既有主体映射合并展示，评级按国内与海外方向独立排序。'};
  DATA.groups.push(allGroup);groupByName.set(allGroup.name,allGroup);$('#factionSelect').add(new Option(allGroup.name,allGroup.name));
+ // Navigation union only: keep the original categories and deep links intact.
+ const mergedCategories=['二合','三消','消除'];
+ const mergedRows=companyRows.filter(n=>mergedCategories.some(c=>String(n.category||'').split('、').includes(c)));
+ const mergedGroup={...template,name:'合成与消除 · 品类合集',displayName:'合成与消除',category:'合成与消除',sourceCategory:false,navigationBundle:true,categoryOrder:-1,selectionCategories:mergedCategories,memberIds:mergedRows.map(n=>n.id),researchMemberIds:mergedRows.filter(n=>n.scope==='developer').map(n=>n.id),description:'二合、三消与消除公司的去重合集。',selectionRule:'任一原始标签命中即可纳入；公司只列一次，国内海外独立评级。'};
+ DATA.groups.push(mergedGroup);groupByName.set(mergedGroup.name,mergedGroup);$('#factionSelect').add(new Option(mergedGroup.name,mergedGroup.name));
+ for(const g of DATA.groups)if(g.sourceCategory&&g.selectionCategories.length===1&&mergedCategories.includes(g.selectionCategories[0]))g.navigationParent=mergedGroup.name;
  const record=n=>ledger.records[n.id];
  const entry=(n,d=state.gradeDirection)=>record(n)?.[d];
  const tier=(n,d=state.gradeDirection)=>entry(n,d)?.tier==null?null:entry(n,d).tier+1;
@@ -51,5 +57,5 @@
   if(d==='domestic')return e.basis==='domestic_monitor_rule'?'消除类监控名单入选':`在榜 ${m.listedProducts} 款 · 最长 ${m.longestDays} 天`;
   return [['休闲榜累计',m.casual10QRevenueUSD,m.casual10QDownloads],['超休闲榜7Q',m.hypercasual7QRevenueUSD,m.hypercasual7QDownloads]].filter(([,a,b])=>a!=null||b!=null).map(([label,a,b])=>label+'：'+[a!=null?'收入 '+amount(a):'',b!=null?'下载 '+downloads(b):''].filter(Boolean).join(' · ')).join('\n');
  }
- window.AtlasGrades={companyRows,tags,allGroup,ledger,labels,record,entry,tier,pool,universe,select,metric,amount,downloads};
+ window.AtlasGrades={companyRows,tags,allGroup,mergedGroup,ledger,labels,record,entry,tier,pool,universe,select,metric,amount,downloads};
 })();
