@@ -5,16 +5,16 @@
     "originalCompanies": 363,
     "originalRelations": 160,
     "originalGroups": 40,
-    "reportObjects": 385,
+    "reportObjects": 391,
     "domesticResearchObjects": 49,
-    "reportLinks": 177,
+    "reportLinks": 186,
     "iconCount": 287,
     "notice": "363条原始记录全部保留；公开补证仅确认各条明确列出的事实，不等于363家公司及其全部字段均已独立核实。无真实图标时保留简称标识，不用同名游戏代替。",
     "edition": "标签与T0修订版 · 2026-10-23",
     "originalIconCount": 284,
     "originalWithPublicEvidence": 339,
     "originalMcpOnly": 24,
-    "publicLinks": 51,
+    "publicLinks": 60,
     "mcpLinks": 126,
     "relationReviews": 160,
     "relationshipPolicy": "确认关系存在即可连线，不要求披露持股比例。股东、人员、体系与产品合作按实际证据分别表达；不把未披露比例补为100%。",
@@ -24,7 +24,9 @@
     "categoryCount": 20,
     "mapOriginalEntries": 362,
     "sourceWorkbookSHA256": "1e165679e883c656ba043155755d1d2e247de4c2e187adc2eb234910ff7c88b0",
-    "peerSelectionPolicy": "主营品类决定候选池；核查角色独立筛选。原表发行／平台标签不再否决已有研发／研运资料；全量品类公司不自动等同研发商。"
+    "peerSelectionPolicy": "主营品类决定候选池；核查角色独立筛选。原表发行／平台标签不再否决已有研发／研运资料；全量品类公司不自动等同研发商。",
+    "relationSupplementDate": "2026-10-30",
+    "relationSupplementCount": 9
   },
   "nodes": [
     {
@@ -46906,6 +46908,282 @@
       "verifiedProducts": "",
       "degree": 1,
       "supplementalCategory": "关联主体"
+    },
+    {
+      "id": "AUX:zhiyou",
+      "name": "指游互娱",
+      "full": "广州市指游互娱科技有限公司",
+      "city": "广州",
+      "scope": "capital",
+      "products": "",
+      "verifiedProducts": "",
+      "category": "",
+      "claim": "公开工商平台披露的投资关联主体",
+      "urls": [
+        "https://m.shuidi.cn/company-3f7c2012322d945748b382813786da01.html"
+      ],
+      "sourceIds": [
+        "AUX:zhiyou"
+      ],
+      "alias": "AUX:zhiyou",
+      "brand": "指游互娱",
+      "rawTier": "关联主体",
+      "tier": 0,
+      "originalTier": "",
+      "tierReason": "原表外关联主体，不参与原表分级。",
+      "tierStatus": "关联主体",
+      "confidence": "公开工商平台记录",
+      "role": "投资关联主体",
+      "external": true,
+      "reviewed": true,
+      "source": "水滴信用公开股东／对外投资记录",
+      "url": "https://m.shuidi.cn/company-3f7c2012322d945748b382813786da01.html",
+      "note": "只确认所引用页面的投资关系；不据经营范围判定具体研发品类或产品。",
+      "raw": {},
+      "provenance": {
+        "sheet": "2026-10-30公开补证",
+        "row": 0
+      },
+      "degree": 0,
+      "reviewDate": "2026-10-30",
+      "originalRecord": false,
+      "sourceStatus": "公开关系补证",
+      "publicEvidence": true,
+      "canonicalId": "AUX:zhiyou",
+      "publicSources": [
+        "https://m.shuidi.cn/company-3f7c2012322d945748b382813786da01.html"
+      ],
+      "limitations": "第三方工商数据库记录，非官方实时工商快照；不计入363条原始记录。"
+    },
+    {
+      "id": "AUX:qianyu",
+      "name": "浅鱼",
+      "full": "长沙浅鱼网络科技有限公司",
+      "city": "长沙",
+      "scope": "capital",
+      "products": "",
+      "verifiedProducts": "",
+      "category": "",
+      "claim": "公开工商平台披露的投资关联主体",
+      "urls": [
+        "https://m.shuidi.cn/company-35dd7f60a80f83b12384ec094eb93001.html"
+      ],
+      "sourceIds": [
+        "AUX:qianyu"
+      ],
+      "alias": "AUX:qianyu",
+      "brand": "浅鱼",
+      "rawTier": "关联主体",
+      "tier": 0,
+      "originalTier": "",
+      "tierReason": "原表外关联主体，不参与原表分级。",
+      "tierStatus": "关联主体",
+      "confidence": "公开工商平台记录",
+      "role": "投资关联主体",
+      "external": true,
+      "reviewed": true,
+      "source": "水滴信用公开股东／对外投资记录",
+      "url": "https://m.shuidi.cn/company-35dd7f60a80f83b12384ec094eb93001.html",
+      "note": "只确认所引用页面的投资关系；不据经营范围判定具体研发品类或产品。",
+      "raw": {},
+      "provenance": {
+        "sheet": "2026-10-30公开补证",
+        "row": 0
+      },
+      "degree": 0,
+      "reviewDate": "2026-10-30",
+      "originalRecord": false,
+      "sourceStatus": "公开关系补证",
+      "publicEvidence": true,
+      "canonicalId": "AUX:qianyu",
+      "publicSources": [
+        "https://m.shuidi.cn/company-35dd7f60a80f83b12384ec094eb93001.html"
+      ],
+      "limitations": "第三方工商数据库记录，非官方实时工商快照；不计入363条原始记录。"
+    },
+    {
+      "id": "AUX:yuanmeng",
+      "name": "元梦",
+      "full": "长沙元梦网络科技有限公司",
+      "city": "长沙",
+      "scope": "capital",
+      "products": "",
+      "verifiedProducts": "",
+      "category": "",
+      "claim": "公开工商平台披露的投资关联主体",
+      "urls": [
+        "https://m.shuidi.cn/company-9d00fdf9d43a47a3dc936b76cf971301.html"
+      ],
+      "sourceIds": [
+        "AUX:yuanmeng"
+      ],
+      "alias": "AUX:yuanmeng",
+      "brand": "元梦",
+      "rawTier": "关联主体",
+      "tier": 0,
+      "originalTier": "",
+      "tierReason": "原表外关联主体，不参与原表分级。",
+      "tierStatus": "关联主体",
+      "confidence": "公开工商平台记录",
+      "role": "投资关联主体",
+      "external": true,
+      "reviewed": true,
+      "source": "水滴信用公开股东／对外投资记录",
+      "url": "https://m.shuidi.cn/company-9d00fdf9d43a47a3dc936b76cf971301.html",
+      "note": "只确认所引用页面的投资关系；不据经营范围判定具体研发品类或产品。",
+      "raw": {},
+      "provenance": {
+        "sheet": "2026-10-30公开补证",
+        "row": 0
+      },
+      "degree": 0,
+      "reviewDate": "2026-10-30",
+      "originalRecord": false,
+      "sourceStatus": "公开关系补证",
+      "publicEvidence": true,
+      "canonicalId": "AUX:yuanmeng",
+      "publicSources": [
+        "https://m.shuidi.cn/company-9d00fdf9d43a47a3dc936b76cf971301.html"
+      ],
+      "limitations": "第三方工商数据库记录，非官方实时工商快照；不计入363条原始记录。"
+    },
+    {
+      "id": "AUX:moshang",
+      "name": "漠上",
+      "full": "长沙漠上网络科技有限公司",
+      "city": "长沙",
+      "scope": "capital",
+      "products": "",
+      "verifiedProducts": "",
+      "category": "",
+      "claim": "公开工商平台披露的投资关联主体",
+      "urls": [
+        "https://m.shuidi.cn/company-35dd7f60a80f83b12384ec094eb93001.html"
+      ],
+      "sourceIds": [
+        "AUX:moshang"
+      ],
+      "alias": "AUX:moshang",
+      "brand": "漠上",
+      "rawTier": "关联主体",
+      "tier": 0,
+      "originalTier": "",
+      "tierReason": "原表外关联主体，不参与原表分级。",
+      "tierStatus": "关联主体",
+      "confidence": "公开工商平台记录",
+      "role": "投资关联主体",
+      "external": true,
+      "reviewed": true,
+      "source": "水滴信用公开股东／对外投资记录",
+      "url": "https://m.shuidi.cn/company-35dd7f60a80f83b12384ec094eb93001.html",
+      "note": "只确认所引用页面的投资关系；不据经营范围判定具体研发品类或产品。",
+      "raw": {},
+      "provenance": {
+        "sheet": "2026-10-30公开补证",
+        "row": 0
+      },
+      "degree": 0,
+      "reviewDate": "2026-10-30",
+      "originalRecord": false,
+      "sourceStatus": "公开关系补证",
+      "publicEvidence": true,
+      "canonicalId": "AUX:moshang",
+      "publicSources": [
+        "https://m.shuidi.cn/company-35dd7f60a80f83b12384ec094eb93001.html"
+      ],
+      "limitations": "第三方工商数据库记录，非官方实时工商快照；不计入363条原始记录。"
+    },
+    {
+      "id": "AUX:jinbo",
+      "name": "津波",
+      "full": "长沙津波网络科技有限公司",
+      "city": "长沙",
+      "scope": "capital",
+      "products": "",
+      "verifiedProducts": "",
+      "category": "",
+      "claim": "公开工商平台披露的投资关联主体",
+      "urls": [
+        "https://m.shuidi.cn/company-35dd7f60a80f83b12384ec094eb93001.html"
+      ],
+      "sourceIds": [
+        "AUX:jinbo"
+      ],
+      "alias": "AUX:jinbo",
+      "brand": "津波",
+      "rawTier": "关联主体",
+      "tier": 0,
+      "originalTier": "",
+      "tierReason": "原表外关联主体，不参与原表分级。",
+      "tierStatus": "关联主体",
+      "confidence": "公开工商平台记录",
+      "role": "投资关联主体",
+      "external": true,
+      "reviewed": true,
+      "source": "水滴信用公开股东／对外投资记录",
+      "url": "https://m.shuidi.cn/company-35dd7f60a80f83b12384ec094eb93001.html",
+      "note": "只确认所引用页面的投资关系；不据经营范围判定具体研发品类或产品。",
+      "raw": {},
+      "provenance": {
+        "sheet": "2026-10-30公开补证",
+        "row": 0
+      },
+      "degree": 0,
+      "reviewDate": "2026-10-30",
+      "originalRecord": false,
+      "sourceStatus": "公开关系补证",
+      "publicEvidence": true,
+      "canonicalId": "AUX:jinbo",
+      "publicSources": [
+        "https://m.shuidi.cn/company-35dd7f60a80f83b12384ec094eb93001.html"
+      ],
+      "limitations": "第三方工商数据库记录，非官方实时工商快照；不计入363条原始记录。"
+    },
+    {
+      "id": "AUX:yuanzhi",
+      "name": "元指",
+      "full": "长沙元指网络科技有限公司",
+      "city": "长沙",
+      "scope": "capital",
+      "products": "",
+      "verifiedProducts": "",
+      "category": "",
+      "claim": "公开工商平台披露的投资关联主体",
+      "urls": [
+        "https://m.shuidi.cn/company-9d00fdf9d43a47a3dc936b76cf971301.html"
+      ],
+      "sourceIds": [
+        "AUX:yuanzhi"
+      ],
+      "alias": "AUX:yuanzhi",
+      "brand": "元指",
+      "rawTier": "关联主体",
+      "tier": 0,
+      "originalTier": "",
+      "tierReason": "原表外关联主体，不参与原表分级。",
+      "tierStatus": "关联主体",
+      "confidence": "公开工商平台记录",
+      "role": "投资关联主体",
+      "external": true,
+      "reviewed": true,
+      "source": "水滴信用公开股东／对外投资记录",
+      "url": "https://m.shuidi.cn/company-9d00fdf9d43a47a3dc936b76cf971301.html",
+      "note": "只确认所引用页面的投资关系；不据经营范围判定具体研发品类或产品。",
+      "raw": {},
+      "provenance": {
+        "sheet": "2026-10-30公开补证",
+        "row": 0
+      },
+      "degree": 0,
+      "reviewDate": "2026-10-30",
+      "originalRecord": false,
+      "sourceStatus": "公开关系补证",
+      "publicEvidence": true,
+      "canonicalId": "AUX:yuanzhi",
+      "publicSources": [
+        "https://m.shuidi.cn/company-9d00fdf9d43a47a3dc936b76cf971301.html"
+      ],
+      "limitations": "第三方工商数据库记录，非官方实时工商快照；不计入363条原始记录。"
     }
   ],
   "links": [
@@ -51324,6 +51602,240 @@
       "originalIds": [],
       "semanticKind": "capital",
       "directed": true
+    },
+    {
+      "id": "R14:001",
+      "source": "G239",
+      "target": "AUX:zhiyou",
+      "type": "投资／持股",
+      "originalType": "投资／持股",
+      "kind": "capital",
+      "semanticKind": "capital",
+      "directed": true,
+      "time": "公开页面记录；查阅2026-10-30",
+      "info": "指色网络对外投资栏与指游互娱股东栏均列指色网络持股70%。",
+      "confidence": "公开工商平台记录",
+      "url": "https://m.shuidi.cn/company-2122a10c51dcc06a727bd6e611f77418.html\nhttps://m.shuidi.cn/company-3f7c2012322d945748b382813786da01.html",
+      "citation": "https://m.shuidi.cn/company-2122a10c51dcc06a727bd6e611f77418.html\nhttps://m.shuidi.cn/company-3f7c2012322d945748b382813786da01.html",
+      "status": "已取得公开来源支持；范围以本条依据为准",
+      "note": "水滴信用第三方工商平台公开记录；上下游页面同属一个数据库，不作为两个独立来源。仅确认页面所载投资关系，不保证查阅日现时持股，也不将间接参股解释为集团控制。比例保留在依据中，不作为主图标签。",
+      "inferred": false,
+      "added": true,
+      "reviewDate": "2026-10-30",
+      "provenance": {
+        "sheet": "2026-10-30公开补证",
+        "row": 1
+      },
+      "originalIds": [],
+      "evidenceLayer": "public"
+    },
+    {
+      "id": "R14:002",
+      "source": "G235",
+      "target": "AUX:qianyu",
+      "type": "投资／持股",
+      "originalType": "投资／持股",
+      "kind": "capital",
+      "semanticKind": "capital",
+      "directed": true,
+      "time": "公开页面记录；查阅2026-10-30",
+      "info": "指创对外投资栏与浅鱼股东栏均列指创持股35%。",
+      "confidence": "公开工商平台记录",
+      "url": "https://m.shuidi.cn/company-84308c8641a20c3445b3a29833c19701.html\nhttps://m.shuidi.cn/company-35dd7f60a80f83b12384ec094eb93001.html",
+      "citation": "https://m.shuidi.cn/company-84308c8641a20c3445b3a29833c19701.html\nhttps://m.shuidi.cn/company-35dd7f60a80f83b12384ec094eb93001.html",
+      "status": "已取得公开来源支持；范围以本条依据为准",
+      "note": "水滴信用第三方工商平台公开记录；上下游页面同属一个数据库，不作为两个独立来源。仅确认页面所载投资关系，不保证查阅日现时持股，也不将间接参股解释为集团控制。比例保留在依据中，不作为主图标签。",
+      "inferred": false,
+      "added": true,
+      "reviewDate": "2026-10-30",
+      "provenance": {
+        "sheet": "2026-10-30公开补证",
+        "row": 2
+      },
+      "originalIds": [],
+      "evidenceLayer": "public"
+    },
+    {
+      "id": "R14:003",
+      "source": "G235",
+      "target": "AUX:yuanmeng",
+      "type": "投资／持股",
+      "originalType": "投资／持股",
+      "kind": "capital",
+      "semanticKind": "capital",
+      "directed": true,
+      "time": "公开页面记录；查阅2026-10-30",
+      "info": "指创对外投资栏与元梦股东栏均列指创持股28%。",
+      "confidence": "公开工商平台记录",
+      "url": "https://m.shuidi.cn/company-84308c8641a20c3445b3a29833c19701.html\nhttps://m.shuidi.cn/company-9d00fdf9d43a47a3dc936b76cf971301.html",
+      "citation": "https://m.shuidi.cn/company-84308c8641a20c3445b3a29833c19701.html\nhttps://m.shuidi.cn/company-9d00fdf9d43a47a3dc936b76cf971301.html",
+      "status": "已取得公开来源支持；范围以本条依据为准",
+      "note": "水滴信用第三方工商平台公开记录；上下游页面同属一个数据库，不作为两个独立来源。仅确认页面所载投资关系，不保证查阅日现时持股，也不将间接参股解释为集团控制。比例保留在依据中，不作为主图标签。",
+      "inferred": false,
+      "added": true,
+      "reviewDate": "2026-10-30",
+      "provenance": {
+        "sheet": "2026-10-30公开补证",
+        "row": 3
+      },
+      "originalIds": [],
+      "evidenceLayer": "public"
+    },
+    {
+      "id": "R14:004",
+      "source": "AUX:qianyu",
+      "target": "AUX:moshang",
+      "type": "投资／持股",
+      "originalType": "投资／持股",
+      "kind": "capital",
+      "semanticKind": "capital",
+      "directed": true,
+      "time": "公开页面记录；查阅2026-10-30",
+      "info": "浅鱼公开对外投资栏列长沙漠上网络科技有限公司，投资比例100%。",
+      "confidence": "公开工商平台记录",
+      "url": "https://m.shuidi.cn/company-35dd7f60a80f83b12384ec094eb93001.html",
+      "citation": "https://m.shuidi.cn/company-35dd7f60a80f83b12384ec094eb93001.html",
+      "status": "已取得公开来源支持；范围以本条依据为准",
+      "note": "水滴信用第三方工商平台公开记录；上下游页面同属一个数据库，不作为两个独立来源。仅确认页面所载投资关系，不保证查阅日现时持股，也不将间接参股解释为集团控制。比例保留在依据中，不作为主图标签。",
+      "inferred": false,
+      "added": true,
+      "reviewDate": "2026-10-30",
+      "provenance": {
+        "sheet": "2026-10-30公开补证",
+        "row": 4
+      },
+      "originalIds": [],
+      "evidenceLayer": "public"
+    },
+    {
+      "id": "R14:005",
+      "source": "AUX:qianyu",
+      "target": "AUX:jinbo",
+      "type": "投资／持股",
+      "originalType": "投资／持股",
+      "kind": "capital",
+      "semanticKind": "capital",
+      "directed": true,
+      "time": "公开页面记录；查阅2026-10-30",
+      "info": "浅鱼公开对外投资栏列长沙津波网络科技有限公司，投资比例100%。",
+      "confidence": "公开工商平台记录",
+      "url": "https://m.shuidi.cn/company-35dd7f60a80f83b12384ec094eb93001.html",
+      "citation": "https://m.shuidi.cn/company-35dd7f60a80f83b12384ec094eb93001.html",
+      "status": "已取得公开来源支持；范围以本条依据为准",
+      "note": "水滴信用第三方工商平台公开记录；上下游页面同属一个数据库，不作为两个独立来源。仅确认页面所载投资关系，不保证查阅日现时持股，也不将间接参股解释为集团控制。比例保留在依据中，不作为主图标签。",
+      "inferred": false,
+      "added": true,
+      "reviewDate": "2026-10-30",
+      "provenance": {
+        "sheet": "2026-10-30公开补证",
+        "row": 5
+      },
+      "originalIds": [],
+      "evidenceLayer": "public"
+    },
+    {
+      "id": "R14:006",
+      "source": "AUX:yuanmeng",
+      "target": "AUX:yuanzhi",
+      "type": "投资／持股",
+      "originalType": "投资／持股",
+      "kind": "capital",
+      "semanticKind": "capital",
+      "directed": true,
+      "time": "公开页面记录；查阅2026-10-30",
+      "info": "元梦公开对外投资栏列长沙元指网络科技有限公司，投资比例99%。",
+      "confidence": "公开工商平台记录",
+      "url": "https://m.shuidi.cn/company-9d00fdf9d43a47a3dc936b76cf971301.html",
+      "citation": "https://m.shuidi.cn/company-9d00fdf9d43a47a3dc936b76cf971301.html",
+      "status": "已取得公开来源支持；范围以本条依据为准",
+      "note": "水滴信用第三方工商平台公开记录；上下游页面同属一个数据库，不作为两个独立来源。仅确认页面所载投资关系，不保证查阅日现时持股，也不将间接参股解释为集团控制。比例保留在依据中，不作为主图标签。",
+      "inferred": false,
+      "added": true,
+      "reviewDate": "2026-10-30",
+      "provenance": {
+        "sheet": "2026-10-30公开补证",
+        "row": 6
+      },
+      "originalIds": [],
+      "evidenceLayer": "public"
+    },
+    {
+      "id": "R14:007",
+      "source": "G063",
+      "target": "G062",
+      "type": "肥鹅健身房 · 产品运营关联",
+      "originalType": "肥鹅健身房 · 产品运营关联",
+      "kind": "business",
+      "semanticKind": "business",
+      "directed": false,
+      "time": "页面版本5.9.1；查阅2026-10-30",
+      "info": "TapTap同一产品详情列供应商为北京豪腾嘉科科技有限公司、App核准主办方为北京豪腾创想科技有限公司。",
+      "confidence": "公开来源限定补证",
+      "url": "https://www.taptap.cn/app/232158/all-info",
+      "citation": "https://www.taptap.cn/app/232158/all-info",
+      "status": "已取得公开来源支持；范围以本条依据为准",
+      "note": "只确认同一产品两个公开主体角色，不推导股权、研发归属或原表共同任职关系。",
+      "inferred": false,
+      "added": true,
+      "reviewDate": "2026-10-30",
+      "provenance": {
+        "sheet": "2026-10-30公开补证",
+        "row": 7
+      },
+      "originalIds": [],
+      "evidenceLayer": "public"
+    },
+    {
+      "id": "R14:008",
+      "source": "G063",
+      "target": "G059",
+      "type": "张佳旭 · 创始人任职履历",
+      "originalType": "张佳旭 · 创始人任职履历",
+      "kind": "people",
+      "semanticKind": "people",
+      "directed": false,
+      "time": "2017–2021任职；2021创办简游",
+      "info": "2022年报道转述长治学院展板：张佳旭2017至2021年在北京豪腾嘉科科技有限公司任游戏制作人，2021年创办北京简游科技有限公司；华中师范大学案例库另载其曾在豪腾嘉科任职。",
+      "confidence": "公开来源限定补证",
+      "url": "https://www.thepaper.cn/newsDetail_forward_20057853\nhttps://media-ethic.ccnu.edu.cn/info/1054/3203.htm",
+      "citation": "https://www.thepaper.cn/newsDetail_forward_20057853\nhttps://media-ethic.ccnu.edu.cn/info/1054/3203.htm",
+      "status": "已取得公开来源支持；范围以本条依据为准",
+      "note": "人员职业履历，不代表豪腾持股或控制简游；不将豪腾嘉科科技与豪腾嘉科软件混为同一主体。",
+      "inferred": false,
+      "added": true,
+      "reviewDate": "2026-10-30",
+      "provenance": {
+        "sheet": "2026-10-30公开补证",
+        "row": 8
+      },
+      "originalIds": [],
+      "evidenceLayer": "public"
+    },
+    {
+      "id": "R14:009",
+      "source": "AUX:microsoft",
+      "target": "G007",
+      "type": "齐伟 · 创始人任职履历",
+      "originalType": "齐伟 · 创始人任职履历",
+      "kind": "people",
+      "semanticKind": "people",
+      "directed": false,
+      "time": "2008年前任职；2020年披露",
+      "info": "央广网2020年齐伟人物介绍明确其曾就职微软亚洲工程院，2008年创办柠檬微趣。",
+      "confidence": "公开来源限定补证",
+      "url": "https://www.cnr.cn/list/finance/20201112/t20201112_525327262.shtml",
+      "citation": "https://www.cnr.cn/list/finance/20201112/t20201112_525327262.shtml",
+      "status": "已取得公开来源支持；范围以本条依据为准",
+      "note": "只确认创始人履历，不代表微软对柠檬微趣投资、持股或共同控制。",
+      "inferred": false,
+      "added": true,
+      "reviewDate": "2026-10-30",
+      "provenance": {
+        "sheet": "2026-10-30公开补证",
+        "row": 9
+      },
+      "originalIds": [],
+      "evidenceLayer": "public"
     }
   ],
   "groups": [
@@ -51813,6 +52325,53 @@
       "selectionRule": "品类候选：严格按原表主营品类标签命中 解谜、消除、超休闲、找茬、休闲综合，不以原表业务形态或补证角色排除。默认研发／研运视图：仅展示已有国内研发／研运资料的记录；不再要求原表业务形态同时为自研或研运一体。可切换原表品类全量，其他角色及境外记录仅作对照。公司层研发证据不等于每个命中品类、每款产品均已确认自研。"
     },
     {
+      "name": "指色系 · 投资与关联团队",
+      "displayName": "指色系",
+      "rootId": "G239",
+      "slug": "zhise",
+      "companyFamily": true,
+      "memberIds": [
+        "G074",
+        "G233",
+        "G235",
+        "G236",
+        "G237",
+        "G238",
+        "G239",
+        "G269",
+        "AUX:zhiyou",
+        "AUX:qianyu",
+        "AUX:yuanmeng",
+        "AUX:moshang",
+        "AUX:jinbo",
+        "AUX:yuanzhi"
+      ],
+      "description": "沿指色网络与指创的投资关系逐层展开，保留原表人员关联；参股与团队关联分别标明。",
+      "summary": "指色网络 → 指创 → 浅鱼／元梦 → 下游主体；投资链与人员关联分色展示。",
+      "dimension": "投资链与人员关联",
+      "provenance": {
+        "sheet": "原表指色系与公开增补",
+        "row": 0
+      }
+    },
+    {
+      "name": "豪腾 · 产品与创业团队",
+      "displayName": "豪腾与简游",
+      "rootId": "G063",
+      "slug": "hortor",
+      "companyFamily": true,
+      "memberIds": [
+        "G062",
+        "G063",
+        "G058",
+        "G059",
+        "AUX:leiting",
+        "AUX:gbit"
+      ],
+      "description": "肥鹅健身房运营主体、简游创始人履历与雷霆历史投资，分别按来源表达；不是单一控股集团。",
+      "summary": "豪腾产品主体 → 简游创始人履历；并列展示雷霆／吉比特历史投资。"
+    },
+    {
       "name": "腾讯 · 历史投资与团队",
       "memberIds": [
         "G001",
@@ -51904,7 +52463,8 @@
       "name": "柠檬 · 产品运营",
       "memberIds": [
         "G007",
-        "G053"
+        "G053",
+        "AUX:microsoft"
       ],
       "description": "地图合并为柠檬微趣入口；关系图保留柠檬微趣、柠檬曲奇两个主体及已补证的产品运营关联。股权不新增推断。",
       "dimension": "证据关系／赛道对标",
@@ -52219,7 +52779,8 @@
           "id": "G269"
         }
       ],
-      "unresolvedMembers": []
+      "unresolvedMembers": [],
+      "supersededBy": "指色系 · 投资与关联团队"
     },
     {
       "name": "原表 · 量X系",
@@ -52290,7 +52851,12 @@
           "id": "G346"
         }
       ],
-      "unresolvedMembers": []
+      "unresolvedMembers": [],
+      "companyFamily": true,
+      "displayName": "量X系",
+      "groupLabel": "人员与业务关联",
+      "summary": "沿用原表关联分组，逐条展示股权、人员与业务关系；同组不等于共同控制。",
+      "rootId": "G213"
     },
     {
       "name": "原表 · 腾讯系",
@@ -52463,7 +53029,12 @@
           "id": "G300"
         }
       ],
-      "unresolvedMembers": []
+      "unresolvedMembers": [],
+      "companyFamily": true,
+      "displayName": "指上系",
+      "groupLabel": "投资与关联团队",
+      "summary": "沿用原表关联分组，逐条展示股权、人员与业务关系；同组不等于共同控制。",
+      "rootId": "G101"
     },
     {
       "name": "原表 · 多比特系",
@@ -52514,7 +53085,12 @@
           "id": "G242"
         }
       ],
-      "unresolvedMembers": []
+      "unresolvedMembers": [],
+      "companyFamily": true,
+      "displayName": "多比特系",
+      "groupLabel": "投资与关联团队",
+      "summary": "沿用原表关联分组，逐条展示股权、人员与业务关系；同组不等于共同控制。",
+      "rootId": "G017"
     },
     {
       "name": "原表 · 周锋系",
@@ -52565,7 +53141,12 @@
           "id": "G197"
         }
       ],
-      "unresolvedMembers": []
+      "unresolvedMembers": [],
+      "companyFamily": true,
+      "displayName": "周锋系",
+      "groupLabel": "投资与关联团队",
+      "summary": "沿用原表关联分组，逐条展示股权、人员与业务关系；同组不等于共同控制。",
+      "rootId": "G175"
     },
     {
       "name": "原表 · 乐顽系",
@@ -52616,7 +53197,12 @@
           "id": "G161"
         }
       ],
-      "unresolvedMembers": []
+      "unresolvedMembers": [],
+      "companyFamily": true,
+      "displayName": "乐顽系",
+      "groupLabel": "投资与关联团队",
+      "summary": "沿用原表关联分组，逐条展示股权、人员与业务关系；同组不等于共同控制。",
+      "rootId": "G087"
     },
     {
       "name": "原表 · 吴守春系",
@@ -52667,7 +53253,12 @@
           "id": "G143"
         }
       ],
-      "unresolvedMembers": []
+      "unresolvedMembers": [],
+      "companyFamily": true,
+      "displayName": "吴守春系",
+      "groupLabel": "人员与业务关联",
+      "summary": "沿用原表关联分组，逐条展示股权、人员与业务关系；同组不等于共同控制。",
+      "rootId": "G137"
     },
     {
       "name": "原表 · 雅禾系",
@@ -52718,7 +53309,12 @@
           "id": "G361"
         }
       ],
-      "unresolvedMembers": []
+      "unresolvedMembers": [],
+      "companyFamily": true,
+      "displayName": "雅禾系",
+      "groupLabel": "投资与关联团队",
+      "summary": "沿用原表关联分组，逐条展示股权、人员与业务关系；同组不等于共同控制。",
+      "rootId": "G359"
     },
     {
       "name": "原表 · 蒋益午系",
@@ -52769,7 +53365,12 @@
           "id": "G347"
         }
       ],
-      "unresolvedMembers": []
+      "unresolvedMembers": [],
+      "companyFamily": true,
+      "displayName": "蒋益午系",
+      "groupLabel": "人员与业务关联",
+      "summary": "沿用原表关联分组，逐条展示股权、人员与业务关系；同组不等于共同控制。",
+      "rootId": "G240"
     },
     {
       "name": "原表 · 乘游系",
@@ -52820,7 +53421,12 @@
           "id": "G296"
         }
       ],
-      "unresolvedMembers": []
+      "unresolvedMembers": [],
+      "companyFamily": true,
+      "displayName": "乘游系",
+      "groupLabel": "投资与关联团队",
+      "summary": "沿用原表关联分组，逐条展示股权、人员与业务关系；同组不等于共同控制。",
+      "rootId": "G174"
     },
     {
       "name": "原表 · 李慧慧系",
@@ -52866,7 +53472,12 @@
           "id": "G099"
         }
       ],
-      "unresolvedMembers": []
+      "unresolvedMembers": [],
+      "companyFamily": true,
+      "displayName": "李慧慧系",
+      "groupLabel": "人员与业务关联",
+      "summary": "沿用原表关联分组，逐条展示股权、人员与业务关系；同组不等于共同控制。",
+      "rootId": "G085"
     },
     {
       "name": "原表 · 一克系",
@@ -52912,7 +53523,12 @@
           "id": "G291"
         }
       ],
-      "unresolvedMembers": []
+      "unresolvedMembers": [],
+      "companyFamily": true,
+      "displayName": "一克系",
+      "groupLabel": "投资与关联团队",
+      "summary": "沿用原表关联分组，逐条展示股权、人员与业务关系；同组不等于共同控制。",
+      "rootId": "G027"
     },
     {
       "name": "原表 · 陈丹丹系",
@@ -52958,7 +53574,12 @@
           "id": "G329"
         }
       ],
-      "unresolvedMembers": []
+      "unresolvedMembers": [],
+      "companyFamily": true,
+      "displayName": "陈丹丹系",
+      "groupLabel": "人员与业务关联",
+      "summary": "沿用原表关联分组，逐条展示股权、人员与业务关系；同组不等于共同控制。",
+      "rootId": "G313"
     },
     {
       "name": "原表 · 张泽系",
@@ -52999,7 +53620,12 @@
           "id": "G035"
         }
       ],
-      "unresolvedMembers": []
+      "unresolvedMembers": [],
+      "companyFamily": true,
+      "displayName": "张泽系",
+      "groupLabel": "人员与业务关联",
+      "summary": "沿用原表关联分组，逐条展示股权、人员与业务关系；同组不等于共同控制。",
+      "rootId": "G031"
     },
     {
       "name": "原表 · 王圣宏系",
@@ -53040,7 +53666,12 @@
           "id": "G044"
         }
       ],
-      "unresolvedMembers": []
+      "unresolvedMembers": [],
+      "companyFamily": true,
+      "displayName": "王圣宏系",
+      "groupLabel": "人员与业务关联",
+      "summary": "沿用原表关联分组，逐条展示股权、人员与业务关系；同组不等于共同控制。",
+      "rootId": "G037"
     },
     {
       "name": "原表 · 赵晓磊系",
@@ -53081,7 +53712,12 @@
           "id": "G054"
         }
       ],
-      "unresolvedMembers": []
+      "unresolvedMembers": [],
+      "companyFamily": true,
+      "displayName": "赵晓磊系",
+      "groupLabel": "人员与业务关联",
+      "summary": "沿用原表关联分组，逐条展示股权、人员与业务关系；同组不等于共同控制。",
+      "rootId": "G051"
     },
     {
       "name": "原表 · 邓雪系",
@@ -53122,7 +53758,12 @@
           "id": "G057"
         }
       ],
-      "unresolvedMembers": []
+      "unresolvedMembers": [],
+      "companyFamily": true,
+      "displayName": "邓雪系",
+      "groupLabel": "人员与业务关联",
+      "summary": "沿用原表关联分组，逐条展示股权、人员与业务关系；同组不等于共同控制。",
+      "rootId": "G056"
     },
     {
       "name": "原表 · 关旭东系",
@@ -53163,7 +53804,12 @@
           "id": "G059"
         }
       ],
-      "unresolvedMembers": []
+      "unresolvedMembers": [],
+      "companyFamily": true,
+      "displayName": "关旭东系",
+      "groupLabel": "投资与关联团队",
+      "summary": "沿用原表关联分组，逐条展示股权、人员与业务关系；同组不等于共同控制。",
+      "rootId": "G058"
     },
     {
       "name": "原表 · 郭贺轩系",
@@ -53204,7 +53850,12 @@
           "id": "G063"
         }
       ],
-      "unresolvedMembers": []
+      "unresolvedMembers": [],
+      "companyFamily": true,
+      "displayName": "郭贺轩系",
+      "groupLabel": "人员与业务关联",
+      "summary": "沿用原表关联分组，逐条展示股权、人员与业务关系；同组不等于共同控制。",
+      "rootId": "G062"
     },
     {
       "name": "原表 · 曾振华系",
@@ -53245,7 +53896,12 @@
           "id": "G231"
         }
       ],
-      "unresolvedMembers": []
+      "unresolvedMembers": [],
+      "companyFamily": true,
+      "displayName": "曾振华系",
+      "groupLabel": "人员与业务关联",
+      "summary": "沿用原表关联分组，逐条展示股权、人员与业务关系；同组不等于共同控制。",
+      "rootId": "G067"
     },
     {
       "name": "原表 · 曾煜系",
@@ -53286,7 +53942,12 @@
           "id": "G073"
         }
       ],
-      "unresolvedMembers": []
+      "unresolvedMembers": [],
+      "companyFamily": true,
+      "displayName": "曾煜系",
+      "groupLabel": "人员与业务关联",
+      "summary": "沿用原表关联分组，逐条展示股权、人员与业务关系；同组不等于共同控制。",
+      "rootId": "G068"
     },
     {
       "name": "原表 · 李海憬系",
@@ -53327,7 +53988,12 @@
           "id": "G202"
         }
       ],
-      "unresolvedMembers": []
+      "unresolvedMembers": [],
+      "companyFamily": true,
+      "displayName": "李海憬系",
+      "groupLabel": "人员与业务关联",
+      "summary": "沿用原表关联分组，逐条展示股权、人员与业务关系；同组不等于共同控制。",
+      "rootId": "G082"
     },
     {
       "name": "原表 · 赵芳芳系",
@@ -53368,7 +54034,12 @@
           "id": "G144"
         }
       ],
-      "unresolvedMembers": []
+      "unresolvedMembers": [],
+      "companyFamily": true,
+      "displayName": "赵芳芳系",
+      "groupLabel": "人员与业务关联",
+      "summary": "沿用原表关联分组，逐条展示股权、人员与业务关系；同组不等于共同控制。",
+      "rootId": "G097"
     },
     {
       "name": "原表 · 钟磊系",
@@ -53409,7 +54080,12 @@
           "id": "G120"
         }
       ],
-      "unresolvedMembers": []
+      "unresolvedMembers": [],
+      "companyFamily": true,
+      "displayName": "钟磊系",
+      "groupLabel": "人员与业务关联",
+      "summary": "沿用原表关联分组，逐条展示股权、人员与业务关系；同组不等于共同控制。",
+      "rootId": "G104"
     },
     {
       "name": "原表 · 张宇洪系",
@@ -53450,7 +54126,12 @@
           "id": "G168"
         }
       ],
-      "unresolvedMembers": []
+      "unresolvedMembers": [],
+      "companyFamily": true,
+      "displayName": "张宇洪系",
+      "groupLabel": "投资与关联团队",
+      "summary": "沿用原表关联分组，逐条展示股权、人员与业务关系；同组不等于共同控制。",
+      "rootId": "G131"
     },
     {
       "name": "原表 · 王武系",
@@ -53491,7 +54172,12 @@
           "id": "G254"
         }
       ],
-      "unresolvedMembers": []
+      "unresolvedMembers": [],
+      "companyFamily": true,
+      "displayName": "王武系",
+      "groupLabel": "投资与关联团队",
+      "summary": "沿用原表关联分组，逐条展示股权、人员与业务关系；同组不等于共同控制。",
+      "rootId": "G134"
     },
     {
       "name": "原表 · 张帆系",
@@ -53532,7 +54218,12 @@
           "id": "G149"
         }
       ],
-      "unresolvedMembers": []
+      "unresolvedMembers": [],
+      "companyFamily": true,
+      "displayName": "张帆系",
+      "groupLabel": "人员与业务关联",
+      "summary": "沿用原表关联分组，逐条展示股权、人员与业务关系；同组不等于共同控制。",
+      "rootId": "G145"
     },
     {
       "name": "原表 · 彭琪雯系",
@@ -53573,7 +54264,12 @@
           "id": "G169"
         }
       ],
-      "unresolvedMembers": []
+      "unresolvedMembers": [],
+      "companyFamily": true,
+      "displayName": "彭琪雯系",
+      "groupLabel": "人员与业务关联",
+      "summary": "沿用原表关联分组，逐条展示股权、人员与业务关系；同组不等于共同控制。",
+      "rootId": "G163"
     },
     {
       "name": "原表 · 林宗伟系",
@@ -53614,7 +54310,12 @@
           "id": "G203"
         }
       ],
-      "unresolvedMembers": []
+      "unresolvedMembers": [],
+      "companyFamily": true,
+      "displayName": "林宗伟系",
+      "groupLabel": "投资与关联团队",
+      "summary": "沿用原表关联分组，逐条展示股权、人员与业务关系；同组不等于共同控制。",
+      "rootId": "G182"
     },
     {
       "name": "原表 · 谢智龙系",
@@ -53655,7 +54356,12 @@
           "id": "G191"
         }
       ],
-      "unresolvedMembers": []
+      "unresolvedMembers": [],
+      "companyFamily": true,
+      "displayName": "谢智龙系",
+      "groupLabel": "人员与业务关联",
+      "summary": "沿用原表关联分组，逐条展示股权、人员与业务关系；同组不等于共同控制。",
+      "rootId": "G183"
     },
     {
       "name": "原表 · 栗学勇系",
@@ -53737,7 +54443,12 @@
           "id": "G252"
         }
       ],
-      "unresolvedMembers": []
+      "unresolvedMembers": [],
+      "companyFamily": true,
+      "displayName": "周绍宇系",
+      "groupLabel": "投资与关联团队",
+      "summary": "沿用原表关联分组，逐条展示股权、人员与业务关系；同组不等于共同控制。",
+      "rootId": "G217"
     },
     {
       "name": "原表 · 李力系",
@@ -53778,7 +54489,12 @@
           "id": "G227"
         }
       ],
-      "unresolvedMembers": []
+      "unresolvedMembers": [],
+      "companyFamily": true,
+      "displayName": "李力系",
+      "groupLabel": "人员与业务关联",
+      "summary": "沿用原表关联分组，逐条展示股权、人员与业务关系；同组不等于共同控制。",
+      "rootId": "G226"
     },
     {
       "name": "原表 · 侯添乐系",
@@ -53819,7 +54535,12 @@
           "id": "G242"
         }
       ],
-      "unresolvedMembers": []
+      "unresolvedMembers": [],
+      "companyFamily": true,
+      "displayName": "侯添乐系",
+      "groupLabel": "人员与业务关联",
+      "summary": "沿用原表关联分组，逐条展示股权、人员与业务关系；同组不等于共同控制。",
+      "rootId": "G241"
     },
     {
       "name": "原表 · 冼诚斌系",
@@ -53860,7 +54581,12 @@
           "id": "G265"
         }
       ],
-      "unresolvedMembers": []
+      "unresolvedMembers": [],
+      "companyFamily": true,
+      "displayName": "冼诚斌系",
+      "groupLabel": "人员与业务关联",
+      "summary": "沿用原表关联分组，逐条展示股权、人员与业务关系；同组不等于共同控制。",
+      "rootId": "G257"
     },
     {
       "name": "原表 · 游玩边界系",
@@ -53901,7 +54627,12 @@
           "id": "G358"
         }
       ],
-      "unresolvedMembers": []
+      "unresolvedMembers": [],
+      "companyFamily": true,
+      "displayName": "游玩边界系",
+      "groupLabel": "投资与关联团队",
+      "summary": "沿用原表关联分组，逐条展示股权、人员与业务关系；同组不等于共同控制。",
+      "rootId": "G358"
     },
     {
       "name": "原表 · 零散同法人组(待深查)",

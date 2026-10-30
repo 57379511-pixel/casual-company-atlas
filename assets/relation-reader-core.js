@@ -5,15 +5,20 @@
  function select(data,options={}){
   const byId=new Map(data.nodes.map(n=>[n.id,n])),canonical=id=>data.aliases[id]||id;
   const g=data.groups.find(g=>g.name===options.group);
-  const ids=new Set((g?.memberIds||[]).map(canonical));
+  const ids=new Set((options.seedIds||g?.memberIds||[]).map(canonical));
   const all=data.links.filter(e=>(options.pending||e.evidenceLayer==='public')&&(options.people!==false||kind(e)!=='people'));
-  const focus=canonical(options.focus||options.readerFocus||anchors[g?.name]||g?.memberIds[0]||'G001');
-  let pool=options.focus?all.filter(e=>e.source===focus||e.target===focus):all.filter(e=>ids.has(e.source)&&ids.has(e.target));
+  const focus=canonical(options.focus||options.readerFocus||g?.rootId||anchors[g?.name]||(options.seedIds?options.seedIds[0]:g?.memberIds[0])||'G001');
+  let pool=options.seedIds?all.filter(e=>ids.has(e.source)||ids.has(e.target)):options.focus?all.filter(e=>e.source===focus||e.target===focus):all.filter(e=>ids.has(e.source)&&ids.has(e.target));
+  if(options.seedIds&&options.expanded){
+   // Expand only explicitly recorded company families, never all companies sharing a genre.
+   const familyIds=new Set(ids);for(const family of data.groups.filter(g=>g.companyFamily))if(family.memberIds.some(id=>ids.has(canonical(id))))for(const id of family.memberIds)familyIds.add(canonical(id));
+   pool=all.filter(e=>ids.has(e.source)||ids.has(e.target)||(familyIds.has(e.source)&&familyIds.has(e.target)));
+  }
   if(options.match)pool=pool.filter(e=>options.match(byId.get(e.source))||options.match(byId.get(e.target)));
   const available=pool;
   pool=pool.filter(e=>!options.kind||options.kind==='all'||kind(e)===options.kind);
-  const edges=options.expanded?pool:pool.filter(e=>e.source===focus||e.target===focus);
-  const visible=new Set(edges.flatMap(e=>[e.source,e.target]));if(byId.has(focus))visible.add(focus);
+  const edges=options.expanded||options.seedIds?pool:pool.filter(e=>e.source===focus||e.target===focus);
+  const visible=new Set(edges.flatMap(e=>[e.source,e.target]));if(!options.seedIds&&byId.has(focus))visible.add(focus);
   return {group:g,focus,nodes:data.nodes.filter(n=>visible.has(n.id)),edges,available,remaining:pool.length-edges.length};
  }
  root.AtlasRelations={select,kind,anchors};

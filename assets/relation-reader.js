@@ -1,43 +1,44 @@
 /* G6-backed company cards with explicit, source-preserving relationship labels. */
 (()=>{
  const C=window.AtlasRelations,defaultGroup='腾讯 · 历史投资与团队';
- Object.assign(state,{readerKind:'all',readerExpanded:false,readerFocus:'',readerSearch:'',readerNetwork:false});
+ Object.assign(state,{readerKind:'all',readerExpanded:false,readerFocus:'',readerSearch:'',readerNetwork:false,peerView:'cards'});
  const panel=document.createElement('section');panel.id='relationReader';panel.hidden=true;
  panel.innerHTML=`<aside class="rr-directory"><div class="rr-directory-title">公司关系目录<small>选一组，逐层看关系</small></div><input id="rrSearch" aria-label="搜索关系组" placeholder="搜索公司或关系组"><div id="rrGroups"></div></aside><div class="rr-main" id="rrMain"><header class="rr-heading"><div class="rr-eyebrow">COMPANY RELATIONSHIPS</div><h2 id="rrTitle"></h2><p id="rrSummary"></p></header><div class="rr-controls"><div class="rr-kinds" role="group" aria-label="关系类型">${[['all','全部关系'],['capital','投资与交易'],['business','业务关联'],['people','人员履历']].map(([k,v])=>`<button data-rr-kind="${k}">${v}</button>`).join('')}</div><div class="rr-actions"><button id="rrExpand">展开整组关系</button><details class="rr-options"><summary>更多选项</summary><label><input id="rrMcp" type="checkbox">包含原始 MCP 关系</label><button id="rrOldGraph">完整网络视图</button></details></div></div><div class="rr-caption"><span id="rrScope"></span><span>有箭头：按原记录方向 · 无箭头：关联</span></div><div class="rr-scroll" id="rrScroll"><div id="rrGraph" role="img" aria-label="公司关系卡片图"></div></div><div class="rr-mobile" id="rrMobile"></div><div id="rrEmpty" class="rr-empty" hidden></div><details class="rr-rows" id="rrRows"><summary id="rrRowsTitle">逐条关系与来源</summary><div id="rrEdges"></div></details><footer class="rr-footer">点击公司看资料，点击关系看依据。交易按标注时点解释。</footer></div>`;
  $('#stage').before(panel);
  let graph=null,signature='',serial=0,scheduled=0,graphReady=false,renderTask=Promise.resolve(),resolveRender=null;
  const eligible=()=>state.mode==='graph'&&!state.routeActive&&!state.readerNetwork;
  const income=n=>AtlasResearch.revenue(n,window.ATLAS_REVENUE);
- const model=()=>C.select(DATA,{group:state.group||defaultGroup,focus:state.focus,readerFocus:state.readerFocus,kind:state.readerKind,expanded:state.readerExpanded,pending:state.pending,people:true,match:n=>AtlasResearch.matches(n,state,window.ATLAS_REVENUE)});
- const groupEdges=g=>C.select(DATA,{group:g.name,pending:state.pending,expanded:true}).edges;
+ const model=()=>C.select(DATA,{group:state.group||defaultGroup,focus:state.focus,readerFocus:state.readerFocus,kind:state.readerKind,expanded:state.readerExpanded,pending:state.pending,people:true,...(isCategoryPeer()?{seedIds:window.AtlasPeerReader.selection().map(n=>n.id)}:{match:n=>AtlasResearch.matches(n,state,window.ATLAS_REVENUE)})});
+ const groupEdges=g=>C.select(DATA,{group:g.name,pending:g.companyFamily?true:state.pending,expanded:true}).edges;
  const products=n=>String(n.verifiedProducts||n.originalProducts||n.products||'').split(/[；;、]/).filter(Boolean).slice(0,2).join(' · ');
  function directory(){
   const query=(state.readerSearch||state.query).trim().toLowerCase();
   const groups=DATA.groups.filter(g=>[g.name,...g.memberIds.map(id=>byId.get(id)?.name||'')].join(' ').toLowerCase().includes(query));
-  const section=(name,rows)=>rows.length?`<h3>${name}</h3>`+rows.map(g=>`<button class="rr-group ${!state.focus&&(state.group||defaultGroup)===g.name?'active':''}" data-rr-group="${esc(g.name)}"><strong>${esc(g.name.split(' · ')[0])}</strong><span>${esc(g.name.split(' · ')[1]||'公司关系')}</span><small>${g.analysisType==='categoryPeer'?'品类对标':groupEdges(g).length+' 条关系'}</small></button>`).join(''):'';
-  const primary=groups.filter(g=>!g.raw&&!g.analysisType),peers=groups.filter(g=>g.analysisType==='categoryPeer'),raw=groups.filter(g=>g.raw);
+  const section=(name,rows)=>rows.length?`<h3>${name}</h3>`+rows.map(g=>`<button class="rr-group ${!state.focus&&(state.group||defaultGroup)===g.name?'active':''}" data-rr-group="${esc(g.name)}"><strong>${esc((g.displayName||g.name).split(' · ')[0])}</strong><span>${esc(g.companyFamily?(g.groupLabel||'投资 · 团队 · 业务'):g.name.split(' · ')[1]||'公司关系')}</span><small>${g.analysisType==='categoryPeer'?'品类对标':groupEdges(g).length+' 条关系'}</small></button>`).join(''):'';
+  const families=groups.filter(g=>g.companyFamily),primary=groups.filter(g=>!g.raw&&!g.analysisType&&!g.companyFamily),peers=groups.filter(g=>g.analysisType==='categoryPeer'),raw=groups.filter(g=>g.raw&&!g.companyFamily&&!g.supersededBy);
   const companies=query?DATA.nodes.filter(n=>[n.name,n.full,n.id,n.alias,n.originalProducts,n.verifiedProducts].join(' ').toLowerCase().includes(query)):[];
   const results=companies.length?'<h3>匹配公司 · '+companies.length+'</h3>'+companies.slice(0,12).map(n=>`<button class="rr-search-company" data-company="${esc(n.id)}"><strong>${esc(n.name)}</strong><small>${esc(products(n)||n.full)}</small></button>`).join(''):'';
-  $('#rrGroups').innerHTML=results+section('品类研发对标',peers)+section('重点关系',primary)+(raw.length?`<details><summary>原表关系组 · ${raw.length}</summary>${section('原表分组',raw)}</details>`:'')||'<p class="rr-no-results">没有匹配的公司或关系组。</p>';
+  $('#rrGroups').innerHTML=results+section('品类研发对标',peers)+section('公司系与关联团队',families)+section('重点关系',primary)+(raw.length?`<details><summary>其他原表分组 · ${raw.length}</summary>${section('原表分组',raw)}</details>`:'')||'<p class="rr-no-results">没有匹配的公司或关系组。</p>';
   $('#rrSearch').value=state.readerSearch;
  }
- const label=e=>e.type+(/^\d{4}(?:-\d{2})?(?:-\d{2})?$/.test(e.time||'')&&!e.type.includes(e.time.slice(0,4))?' · '+e.time:'')+(e.evidenceLayer==='public'?'':' · 原表');
+ const label=e=>e.type.replace(/持股[\d.]+%（公开工商平台记录）/g,'投资／持股').replace(/（原始MCP记录）/g,'').replace('共同任职／自然人关联','共同任职').replace('同法定代表人线索','同法人记录')+(/^\d{4}(?:-\d{2})?(?:-\d{2})?$/.test(e.time||'')&&!e.type.includes(e.time.slice(0,4))?' · '+e.time:'')+(e.evidenceLayer==='public'?'':' · 原表');
  const colors={capital:'#3a7e75',business:'#477fb0',people:'#8a68a3',pending:'#9b8050'};
  function companyCard(n,focus){const r=income(n);return `<button class="rr-company ${focus?'is-focus':''}" data-company="${esc(n.id)}" aria-label="查看 ${esc(n.name)} 的公司资料"><span class="rr-company-top"><strong>${esc(n.name)}</strong><em>${n.tier?'T'+(n.tier-1):'关联主体'}</em></span><span class="rr-company-product">${iconHTML(n)}<span>${esc(products(n)||n.role||'关系主体')}</span></span><span class="rr-company-bottom"><span class="revenue-${r.key}">${esc(r.label)}</span><span>${focus?'当前聚焦':'查看资料 ›'}</span></span></button>`;}
  function edgeRows(m){return m.edges.map(e=>`<button class="rr-edge-row" data-edge="${esc(e.id)}"><span>${esc(byId.get(e.source).name)}</span><strong style="color:${colors[C.kind(e)]||colors.pending}">${e.directed?'→':'—'} ${esc(label(e))} ${e.directed?'→':'—'}</strong><span>${esc(byId.get(e.target).name)}</span><small>${esc(e.time||'原表资料')} · 查看依据 ↗</small></button>`).join('');}
  function mobile(m){return m.edges.map(e=>`<article class="rr-mobile-relation">${companyCard(byId.get(e.source),e.source===m.focus)}<button class="rr-mobile-edge" data-edge="${esc(e.id)}" style="color:${colors[C.kind(e)]||colors.pending}"><b>${e.directed?'↓':'↔'} ${esc(label(e))}</b><span>${esc(e.time||'原表资料')} · 查看依据</span></button>${companyCard(byId.get(e.target),e.target===m.focus)}</article>`).join('');}
  function sync(){
-  const on=eligible(),peer=on&&isCategoryPeer();panel.hidden=!on;document.body.classList.toggle('relation-reader-mode',on);panel.classList.toggle('rr-peer-mode',peer);
+  const on=eligible(),peer=on&&isCategoryPeer();panel.hidden=!on;document.body.classList.toggle('relation-reader-mode',on);panel.classList.toggle('rr-peer-mode',peer);panel.classList.toggle('rr-peer-cards',peer&&state.peerView!=='relations');
   if($('#rrPeerBoard'))$('#rrPeerBoard').hidden=!peer;
   if(!on)return null;
-  if(peer){directory();window.AtlasPeerReader?.sync();return null;}
+  if(peer){directory();window.AtlasPeerReader?.sync();if(state.peerView!=='relations')return null;}
   $('#rrMain .rr-eyebrow').textContent='COMPANY RELATIONSHIPS';
   const m=model();directory();const root=byId.get(m.focus);
-  $('#rrTitle').textContent=state.focus?root.name+'的关联公司':m.group?.name||'公司关系';
-  $('#rrSummary').textContent=state.focus?'查看直接关联的公司与主体，点开连线可查来源。':(m.group?.description||'按已收录关系逐层查看。').replace(/不存在.*$/,'');
-  $('#rrScope').textContent=`聚焦 ${root.name} · ${state.readerExpanded?'整组':'直接'}关系 ${m.edges.length} 条 · ${m.nodes.length} 个主体`;
-  $('#rrExpand').textContent=state.readerExpanded?'收起为直接关系':m.remaining?'展开整组关系（另 '+m.remaining+' 条）':'已展示全部直接关系';
-  $('#rrExpand').disabled=!state.readerExpanded&&!m.remaining;
+  $('#rrTitle').textContent=peer?m.group.name.split(' · ')[0]+' · 关联图谱':state.focus?root.name+'的关联公司':m.group?.name||'公司关系';
+  $('#rrSummary').textContent=peer?'从当前品类公司向外连接投资、团队与业务关系；跨品类主体一并展示。':state.focus?'查看直接关联的公司与主体，点开连线可查来源。':(m.group?.summary||m.group?.description||'按已收录关系逐层查看。').replace(/不存在.*$/,'');
+  const publicCount=m.edges.filter(e=>e.evidenceLayer==='public').length;
+  $('#rrScope').textContent=`${m.nodes.length} 个主体 · ${m.edges.length} 条关系 · ${publicCount} 条公开来源${m.edges.length-publicCount?' / '+(m.edges.length-publicCount)+' 条原表记录':''}`;
+  $('#rrExpand').textContent=peer?(state.readerExpanded?'收起公司系延伸':'展开关联公司系'):state.readerExpanded?'收起为直接关系':m.remaining?'展开整组关系（另 '+m.remaining+' 条）':'已展示全部直接关系';
+  $('#rrExpand').disabled=!peer&&!state.readerExpanded&&!m.remaining;
   for(const b of panel.querySelectorAll('[data-rr-kind]')){b.classList.toggle('active',state.readerKind===b.dataset.rrKind);b.setAttribute('aria-pressed',String(state.readerKind===b.dataset.rrKind));}
   $('#rrMcp').checked=state.pending;$('#rrEmpty').hidden=!!m.edges.length;
   $('#rrEmpty').textContent=m.remaining?'当前聚焦公司没有此类直接关系；展开整组查看其余已收录关系。':'当前筛选下没有已收录关系，可切换关系类型或清除筛选。';
@@ -57,18 +58,31 @@
   const element=$('#rrGraph');element.style.width=width+'px';element.style.height='540px';
   const pairs=new Map();for(const e of m.edges){const k=[e.source,e.target].sort().join('|');pairs.set(k,[...(pairs.get(k)||[]),e.id]);}
   const parallel=[...pairs.values()].filter(ids=>ids.length>1).flat();
+  // Family levels follow distance from the chosen company; undirected personnel
+  // records must not push the root behind its subsidiaries in a DAG layout.
+  const family=m.group?.companyFamily&&!state.focus,positions=new Map();
+  if(family){
+   const depth=new Map([[m.focus,0]]),queue=[m.focus];for(let i=0;i<queue.length;i++){const id=queue[i];for(const e of m.edges){const next=e.source===id?e.target:e.target===id?e.source:null;if(next&&!depth.has(next)){depth.set(next,depth.get(id)+1);queue.push(next);}}}
+   const levels=new Map();for(const n of m.nodes){const level=depth.get(n.id)??0;if(!levels.has(level))levels.set(level,[]);levels.get(level).push(n);}
+   const descendants=id=>m.edges.filter(e=>e.source===id&&e.directed).length;
+   for(const [level,rows] of levels){rows.sort((a,b)=>(a.id===m.focus?-1:b.id===m.focus?1:0)||descendants(b.id)-descendants(a.id)||((a.tier||9)-(b.tier||9))||a.name.localeCompare(b.name,'zh'));rows.forEach((n,i)=>positions.set(n.id,{x:140+level*340,y:100+i*200}));}
+  }
+  const graphEdges=m.edges.map(e=>{
+   const a=positions.get(e.source),b=positions.get(e.target),sameColumn=family&&a&&b&&a.x===b.x;
+   return {id:e.id,source:e.source,target:e.target,...(sameColumn?{type:'polyline'}:{}),style:{labelText:label(e),stroke:colors[C.kind(e)]||colors.pending,endArrow:e.directed===true,lineDash:C.kind(e)==='people'||e.evidenceLayer!=='public'?[5,4]:undefined,...(sameColumn?{controlPoints:[[a.x+160,a.y],[b.x+160,b.y]],labelMaxWidth:84,labelFontSize:11}: {})}};
+  });
   const instance=new G6.Graph({container:element,width,height:540,animation:false,autoResize:false,padding:24,
-   data:{nodes:m.nodes.map(n=>({id:n.id,style:{innerHTML:companyCard(n,n.id===m.focus)}})),edges:m.edges.map(e=>({id:e.id,source:e.source,target:e.target,style:{labelText:label(e),stroke:colors[C.kind(e)]||colors.pending,endArrow:e.directed===true,lineDash:C.kind(e)==='people'||e.evidenceLayer!=='public'?[5,4]:undefined}}))},
+   data:{nodes:m.nodes.map(n=>({id:n.id,style:{innerHTML:companyCard(n,n.id===m.focus),...positions.get(n.id)}})),edges:graphEdges},
    node:{type:'html',style:{size:[232,132],dx:-116,dy:-66}},
    edge:{type:d=>d.type||'cubic-horizontal',style:{lineWidth:1.7,endArrowSize:8,labelFontSize:13,labelFontWeight:500,labelFill:'#304f65',labelAutoRotate:false,labelWordWrap:true,labelMaxWidth:170,labelMaxLines:3,labelBackground:true,labelBackgroundFill:'#f5f8fb',labelBackgroundRadius:5,labelPadding:[5,7],labelOffsetY:-14,cursor:'pointer'}},
-   layout:{type:'dagre',rankdir:'LR',nodesep:40,ranksep:190},transforms:parallel.length?[{type:'process-parallel-edges',mode:'bundle',edges:parallel,distance:70}]:[],behaviors:[]});
+   ...(family?{}:{layout:{type:'dagre',rankdir:'LR',nodesep:40,ranksep:190}}),transforms:parallel.length?[{type:'process-parallel-edges',mode:'bundle',edges:parallel,distance:70}]:[],behaviors:[]});
   graph=instance;
   instance.on('edge:click',ev=>{const e=DATA.links.find(e=>e.id===ev.target.id);if(e)showEdge(e);});
   try{
    await instance.render();if(ticket!==serial||instance.destroyed)return;
    const points=m.nodes.map(n=>instance.getElementPosition(n.id)),xs=points.map(p=>p[0]),ys=points.map(p=>p[1]);
    const naturalW=Math.max(width,Math.max(...xs)-Math.min(...xs)+296),naturalH=Math.max(310,Math.max(...ys)-Math.min(...ys)+196);
-   element.style.width=naturalW+'px';element.style.height=naturalH+'px';instance.setSize(naturalW,naturalH);await instance.fitCenter(false);graphReady=ticket===serial;
+   element.style.width=naturalW+'px';element.style.height=naturalH+'px';element.style.zoom=family?String(Math.max(.75,Math.min(1,width/naturalW))):'1';instance.setSize(naturalW,naturalH);await instance.fitCenter(false);graphReady=ticket===serial;
   }catch(err){if(ticket!==serial||instance.destroyed)return;console.error('Relationship renderer:',err);element.style.height='0px';$('#rrRows').open=true;signature='';}
  }
  function schedule(){cancelAnimationFrame(scheduled);resolveRender?.();renderTask=new Promise(resolve=>{resolveRender=resolve;scheduled=requestAnimationFrame(()=>draw().finally(resolve));});}
@@ -89,7 +103,7 @@
  const originalExport=$('#exportBtn').onclick;
  $('#exportBtn').onclick=async()=>{
   if(!eligible())return originalExport();
-  if(isCategoryPeer())return window.AtlasPeerReader.export();
+  if(isCategoryPeer()&&state.peerView!=='relations')return window.AtlasPeerReader.export();
   const m=model(),instance=graph;
   if(!m.edges.length){notify('当前筛选没有可导出的关系');return;}
   if(!graphReady){notify('图谱正在排版，请稍后保存');return;}
