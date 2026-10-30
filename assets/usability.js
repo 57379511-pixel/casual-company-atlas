@@ -1,6 +1,6 @@
 /* View history contains only UI state, never company data or evidence. */
 (()=>{
- const names={geo:'地域分布',graph:'关系图谱',list:'公司清单',audit:'证据与口径'};
+ const names={geo:'地域分布',graph:'公司关系图',list:'公司研究',audit:'证据与口径'};
  const keys=['mode','scope','genre','group','query','people','pending','selected','focus','listAll','navQuery','audience','peerPage','revenue','marketDirection','routeActive','routeFrom','routeTo','routeEvidence','routeDirection','routeKind','readerKind','readerExpanded','readerFocus','readerSearch','readerNetwork','peerView','readerComponent','readerAllLinks'];
  const scrollIds=['geoPane','geoRail','listPane','auditPane','companyNav','detail','stage','routePanel','atlasCanvas','rrMain','rrScroll','rrGroups','relationReader'];
  const session='atlas-'+Date.now();let entries=[],index=0,restoring=false,pending=null,detail=null,lastTrigger=null,urlReady=false;
@@ -11,13 +11,13 @@
  const snapshot=()=>({values:Object.fromEntries(keys.map(k=>[k,state[k]])),city:geoState.city,detail:$('#detail').classList.contains('open')?detail:null,transform:{...state.transform},scroll:Object.fromEntries(scrollIds.map(id=>[id,$('#'+id)?.scrollTop||0])),scrollX:Object.fromEntries(scrollIds.map(id=>[id,$('#'+id)?.scrollLeft||0])),focus:lastTrigger});
  const same=(a,b)=>JSON.stringify([a.values,a.city,a.detail])===JSON.stringify([b.values,b.city,b.detail]);
  const save=(s,replace=false)=>{try{history[replace?'replaceState':'pushState']({atlas:session,index,snapshot:s},'',urlReady&&location.protocol!=='file:'?AtlasShare.url(s):undefined);}catch{/* Local-file hosts may restrict history; in-page history still works. */}};
- const title=s=>s.detail?(s.detail.kind==='company'?byId.get(s.detail.id)?.name+'详情':'关系详情'):s.values.focus?byId.get(s.values.focus)?.name+'关系':s.city&&s.values.mode==='geo'?s.city+'名单':names[s.values.mode];
+ const title=s=>s.detail?(s.detail.kind==='company'?byId.get(s.detail.id)?.name+'详情':'关系详情'):s.values.focus?byId.get(s.values.focus)?.name+'关系':s.city&&s.values.mode==='geo'?s.city+'名单':AtlasNavigation.label(s.values);
  function chrome(){
   const s=snapshot(),prev=entries[index-1];$('#viewBack').disabled=index===0;$('#viewBack').title=prev?'返回'+title(prev):'当前为起始页';
-  const parts=[names[state.mode]];if(state.mode==='geo'&&geoState.city)parts.push(geoState.city);if(state.mode==='graph'&&state.focus)parts.push(byId.get(state.focus)?.name+'关系');if(state.mode==='graph'&&state.group&&!state.focus)parts.push(state.group.split(' · ')[0]);if(s.detail)parts.push(s.detail.kind==='company'?byId.get(s.detail.id)?.name:'关系详情');
+  const parts=[AtlasNavigation.label(state)];if(state.mode==='geo'&&geoState.city)parts.push(geoState.city);if(state.mode==='graph'&&state.focus)parts.push(byId.get(state.focus)?.name+'关系');if(state.mode==='graph'&&state.group&&!state.focus)parts.push(state.group.split(' · ')[0]);if(s.detail)parts.push(s.detail.kind==='company'?byId.get(s.detail.id)?.name:'关系详情');
   $('#viewPath').innerHTML=parts.map((p,i)=>`${i?'<span class="navigation-separator">/</span>':''}<${i===parts.length-1?'strong':'span'}>${esc(p)}</${i===parts.length-1?'strong':'span'}>`).join('');
   document.body.classList.toggle('detail-open',!!s.detail);
-  if(s.detail){let nav=$('#detail .detail-navigation');if(!nav){nav=document.createElement('div');nav.className='detail-navigation';$('#detail').prepend(nav);}nav.innerHTML=`<button data-history-back>${prev?'← 返回'+esc(title(prev)):'← 返回'+names[state.mode]}</button><button class="detail-dismiss" data-close aria-label="关闭详情，保留当前视图">关闭 ×</button>`;$('#detail').setAttribute('tabindex','-1');}
+  if(s.detail){let nav=$('#detail .detail-navigation');if(!nav){nav=document.createElement('div');nav.className='detail-navigation';$('#detail').prepend(nav);}nav.innerHTML=`<button data-history-back>${prev?'← 返回'+esc(title(prev)):'← 返回'+AtlasNavigation.label(state)}</button><button class="detail-dismiss" data-close aria-label="关闭详情，保留当前视图">关闭 ×</button>`;$('#detail').setAttribute('tabindex','-1');}
  }
  function begin(){if(restoring||pending)return;pending=snapshot();entries[index]=pending;save(pending,true);setTimeout(finish,0);}
  function finish(){if(!pending)return;const before=pending;pending=null;const after=snapshot();if(!same(before,after)){entries=entries.slice(0,index+1);entries.push(after);index++;save(after);}chrome();if(after.detail&&JSON.stringify(before.detail)!==JSON.stringify(after.detail))$('#detail [data-history-back]')?.focus({preventScroll:true});}
@@ -41,14 +41,14 @@
  renderGeo=()=>{native.renderGeo();if($('#geoBack'))$('#geoBack').textContent='← 全国概览';};
  // Capture before direct filter/city handlers mutate state. Input typing replaces
  // the current view when leaving it, rather than creating one entry per letter.
- document.addEventListener('click',e=>{const target=e.target.closest('button,[data-node],[data-company],.edge-hit');if(target){for(const attr of ['data-geo-company','data-company','data-node','data-edge'])if(target.hasAttribute(attr)){lastTrigger='['+attr+'="'+CSS.escape(target.getAttribute(attr))+'"]';break;}}
+ document.addEventListener('click',e=>{const target=e.target.closest('button,[data-node],[data-company],.edge-hit');if(target){for(const attr of ['data-geo-company','data-company','data-node','data-edge','data-peer-relations'])if(target.hasAttribute(attr)){lastTrigger='['+attr+'="'+CSS.escape(target.getAttribute(attr))+'"]';break;}}
   if(e.target.closest('[data-history-back]')){e.preventDefault();e.stopImmediatePropagation();back();return;}
   if(e.target.closest('#viewBack,#viewHome'))return;
-  if(e.target.closest('[data-mode],[data-scope],[data-geo-city],[data-city],[data-group],[data-company],[data-geo-company],[data-node],[data-focus],[data-edge],[data-close],#geoBack,#factionBack,#peopleToggle,#pendingToggle,#clearSearch,#auditShortcut,#peerPrev,#peerNext,#clearViewFilters,[data-picker-company],[data-rr-component],#rrAllLinks,[data-rr-group],[data-rr-kind],#rrExpand,#rrOldGraph,#rrReturn,[data-open-family],[data-peer-relations],[data-peer-view],[data-pr-tier],#prReset,#rrClearOptions,#routeFind,#routeClear,#routeSwap,[data-route-start],[data-route-end]'))begin();
+  if(e.target.closest('[data-section],#allCompanies,[data-mode],[data-scope],[data-geo-city],[data-city],[data-group],[data-company],[data-geo-company],[data-node],[data-focus],[data-edge],[data-close],#geoBack,#factionBack,#peopleToggle,#pendingToggle,#clearSearch,#auditShortcut,#peerPrev,#peerNext,#clearViewFilters,[data-picker-company],[data-rr-component],#rrAllLinks,[data-rr-group],[data-rr-kind],#rrExpand,#rrOldGraph,#rrReturn,[data-open-family],[data-peer-relations],[data-peer-view],[data-pr-tier],#prReset,#rrClearOptions,#routeFind,#routeClear,#routeSwap,[data-route-start],[data-route-end]'))begin();
  },true);
  document.addEventListener('change',e=>{if(e.target.closest('#prRole,#prCategory,#prTier,#rrMcp,#genre,#factionSelect,#audience,#graphTier,#peerRole,#peerCategory,#revenueFilter,#marketDirection,#routeFrom,#routeTo,#routeEvidence,#routeDirection,#routeKind'))begin();},true);
  document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!$('#method').open){if($('#sidebar').classList.contains('mobile-open')){$('#sidebar').classList.remove('mobile-open');e.stopImmediatePropagation();return;}if($('#detail').classList.contains('open')){e.preventDefault();e.stopImmediatePropagation();back();}}if(e.key==='Enter'&&e.target.matches('tr[data-company]')){e.preventDefault();selectCompany(e.target.dataset.company);}},true);
- $('#viewBack').onclick=back;$('#viewHome').onclick=()=>action(()=>{detail=null;geoState.city=null;native.reset();$('#routePanel').open=false;native.setMode('geo');refresh();});
+ $('#viewBack').onclick=back;$('#viewHome').onclick=()=>action(()=>{detail=null;geoState.city=null;native.reset();$('#routePanel').open=false;AtlasNavigation.home();});
  window.addEventListener('popstate',e=>{if(e.state?.atlas===session&&entries[e.state.index]){pending=null;index=e.state.index;restore(entries[index]);}});
  $('#factionBack').onclick=()=>action(()=>{$('#routePanel').open=false;state.routeActive=false;state.focus=null;state.selected=null;state.group='';state.scope='key';state.genre='all';state.query='';state.audience='all';scopeControl.value='all';state.listAll=false;$('#genre').value='all';$('#search').value='';detail=null;$('#detail').classList.remove('open');refresh();});
  $('.data-table thead th:last-child').textContent='角色与证据';

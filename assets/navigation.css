@@ -1,0 +1,14 @@
+/* Only three task-level entries; company categories and families have separate directories. */
+.toolbar .tab-set{gap:8px}.toolbar [data-section]{min-width:100px;font-size:15px;padding:14px 18px}
+.top-meta>[data-mode="audit"]{font-size:12px;font-weight:400}
+#allCompanies{width:100%;text-align:left;margin:16px 0 0;padding:13px 10px;border:0;border-top:1px solid #e1e8ef;background:none;color:#3b6d90;font:inherit;font-size:13px;cursor:pointer}
+.pr-view-switch{display:none!important}
+body[data-section="companies"] #rrAdvanced{margin:6px 0 14px;text-align:right}
+body[data-section="companies"] #rrAdvanced>summary{margin-left:auto}
+body[data-section="companies"] #rrAdvancedBody{text-align:left}
+body[data-section="companies"] #rrMain .rr-heading h2{font-size:25px}
+body[data-section="companies"] #rrMain .rr-heading p{font-size:12px}
+body[data-section="companies"] .rr-directory-title,body[data-section="relations"] .rr-directory-title{font-size:15px}
+#rrGroups .rr-group small{font-size:11px}
+#listPane .list-title{flex-wrap:wrap;gap:10px}
+@media(max-width:760px){.toolbar .tab-set{width:100%;gap:0}.toolbar [data-section]{flex:1;min-width:0;padding:12px 7px;font-size:14px}.top-meta>[data-mode="audit"]{display:none}#allCompanies{min-width:110px;margin:0;padding:12px 10px;border-top:0;white-space:nowrap}body[data-section="companies"] #rrMain .rr-heading h2{font-size:22px}.navigation-actions #viewHome{font-size:11px}}

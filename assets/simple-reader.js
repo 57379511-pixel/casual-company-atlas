@@ -25,7 +25,7 @@
   const active=document.body.classList.contains('relation-reader-mode'),peer=active&&isCategoryPeer();
   if(active&&research.parentElement!==body)body.insertBefore(research,clear);
   if(!active&&research.parentNode!==home.parentNode)home.after(research);
-  peerFilters.hidden=!peer;const tabs=$('.pr-view-switch');tabs.hidden=!peer;if(peer&&advanced.parentElement!==tabs)tabs.append(advanced);if(!peer&&advanced.parentElement===tabs)$('#rrMain .rr-heading').after(advanced);
+  peerFilters.hidden=!peer;const tabs=$('.pr-view-switch');tabs.hidden=true;if(advanced.parentElement===tabs)$('#rrMain .rr-heading').after(advanced);
   const view=[state.mode,state.group,state.focus,state.peerView,state.routeActive,state.readerNetwork].join('|');
   if(view!==lastView){advanced.open=false;if($('#rrMoreGroups'))$('#rrMoreGroups').open=false;lastView=view;}
   $('.rr-options').open=true;

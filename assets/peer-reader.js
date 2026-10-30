@@ -17,7 +17,7 @@
   const g=groupByName.get(state.group),nodes=selection();
   const universe=companyNodes.filter(genreMatch).filter(audienceMatch).filter(n=>groupMatch(n,state.group)).filter(matches);
   $('#rrMain .rr-eyebrow').textContent='CATEGORY BENCHMARKS';
-  $('#rrTitle').textContent=g.name.split(' · ')[0]+' · '+(state.audience==='developer'?'研发／研运对标':'品类公司对标');
+  $('#rrTitle').textContent=g.name.split(' · ')[0]+' · '+(state.audience==='developer'?'研发／研运公司':'品类公司');
   $('#rrSummary').textContent=`${nodes.length} 家公司 · 按原表梯队排序 · 产品对应当前品类；其他图标注明公司代表作`;
   viewSwitch.querySelector('[data-peer-view="cards"]').textContent='公司对标 · '+nodes.length;viewSwitch.querySelector('[data-peer-view="relations"]').textContent='公司关系图';
   const relations=state.peerView==='relations';for(const b of viewSwitch.querySelectorAll('[data-peer-view]'))b.setAttribute('aria-pressed',String(b.dataset.peerView===state.peerView));
@@ -33,9 +33,7 @@
  function change(){state.readerFocus='';state.readerComponent='';state.readerAllLinks=false;state.peerPage=0;state.selected=null;closeDetail();refresh();}
  viewSwitch.addEventListener('click',e=>{const b=e.target.closest('[data-peer-view]');if(!b)return;state.peerView=b.dataset.peerView;if(state.peerView==='relations'){state.pending=true;state.readerExpanded=true;}change();});
  board.addEventListener('click',e=>{const b=e.target.closest('[data-peer-relations]');if(!b)return;
-  const id=AtlasExecutive.canonical(b.dataset.peerRelations);Object.assign(state,{peerView:'relations',pending:true,readerExpanded:true,readerKind:'all',readerFocus:id,readerAllLinks:false,selected:null});
-  const m=AtlasRelationReader.model(),component=AtlasExecutive.components(m).find(c=>c.nodes.some(n=>n.id===id));
-  state.readerComponent=component?.id||'';closeDetail();refresh();$('#rrMain').scrollTop=0;
+  AtlasNavigation.openCompany(b.dataset.peerRelations);
  });
  const groupChange=$('#factionSelect').onchange;
  $('#factionSelect').onchange=e=>{state.readerComponent='';state.readerAllLinks=false;const g=groupByName.get(e.target.value);state.readerKind='all';state.readerExpanded=!g?.analysisType;if(!g?.analysisType)state.pending=true;groupChange(e);};
@@ -45,7 +43,7 @@
  $('#prReset').onclick=()=>{state.audience='developer';scopeControl.value='developer';state.genre='all';$('#genre').value='all';state.scope='all';state.query='';$('#search').value='';state.revenue='all';state.marketDirection='all';change();};
  const clearFilters=$('#clearViewFilters').onclick;
  const companyDetail=showDetail;showDetail=function(n){companyDetail(n);if(!n)return;const canonical=DATA.aliases[n.id]||n.id;const families=DATA.groups.filter(g=>g.companyFamily&&g.memberIds.some(id=>(DATA.aliases[id]||id)===canonical));if(families.length)$('#detail').insertAdjacentHTML('afterbegin','<div class="pr-family-links">'+families.map(g=>`<button class="btn" data-open-family="${esc(g.name)}">查看${esc(g.displayName||g.name)}完整关系 →</button>`).join('')+'</div>');};
- document.addEventListener('click',e=>{const b=e.target.closest('[data-open-family]');if(!b)return;state.focus=null;state.readerNetwork=false;$('#factionSelect').value=b.dataset.openFamily;$('#factionSelect').dispatchEvent(new Event('change',{bubbles:true}));setMode('graph');});
+ document.addEventListener('click',e=>{const b=e.target.closest('[data-open-family]');if(b)AtlasNavigation.openFamily(b.dataset.openFamily);});
  $('#clearViewFilters').onclick=()=>{if(state.mode==='graph'&&isCategoryPeer()&&!state.routeActive)$('#prReset').click();else clearFilters();};
  $('#prTierSummary').onclick=e=>{const b=e.target.closest('[data-pr-tier]');if(b){state.scope=String(state.scope)===b.dataset.prTier?'all':b.dataset.prTier;change();}};
  async function exportCards(){
@@ -68,7 +66,7 @@
      const g=groupByName.get(group),tags=String(n.category||'').split('、').filter(t=>g.selectionCategories.includes(t));text(tags.join(' · '),x+16,top+148,cw-32,1,11,'#607d92');text(r.label,x+16,top+174,cw-32,1,11,r.color);
     });y+=Math.ceil(band.rows.length/cols)*(ch+gap)+12;
    }
-   const blob=await new Promise(resolve=>canvas.toBlob(resolve,'image/png'));if(!blob)throw Error('PNG export failed');download(blob,title+'.png');notify('已保存当前品类对标卡片与产品图标');
+   const blob=await new Promise(resolve=>canvas.toBlob(resolve,'image/png'));if(!blob)throw Error('PNG export failed');download(blob,title+'.png');notify('已保存当前品类公司与产品图标');
   }catch(e){console.error('Peer card export:',e);notify('导出失败，请稍后重试');}finally{button.disabled=false;}
  }
  window.AtlasPeerReader={sync,selection,export:exportCards};
