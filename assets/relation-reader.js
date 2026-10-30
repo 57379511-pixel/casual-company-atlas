@@ -32,16 +32,16 @@
    '<div class="rr-relations-directory">'+(query?(results+section('相关公司系',ordered)+section('关系分组',raw)||'<p class="rr-no-results">没有匹配结果，试试公司简称或产品名。</p>'):section('关联公司与团队',ordered)+section('关系分组',raw))+'</div>';
   $('#rrSearch').value=state.readerSearch;
  }
- const label=e=>C.label(e)+(e.evidenceLayer==='public'?' · 公开来源':' · 原始记录');
+ const label=e=>C.shortLabel(e);
  const colors={capital:'#3a7e75',business:'#477fb0',people:'#8a68a3',pending:'#9b8050'};
  function companyCard(n,focus){const r=income(n);return `<button class="rr-company ${focus?'is-focus':''}" data-company="${esc(n.id)}" aria-label="查看 ${esc(n.name)} 的公司资料"><span class="rr-company-top"><strong>${esc(n.name)}</strong></span><span class="rr-company-product">${iconHTML(n)}<span>${esc(AtlasGrades.representative(n))}</span></span><span class="rr-company-bottom"><span class="revenue-${r.key}">${r.key==='unscoped'?'':'收入重心：'}${esc(r.label)}</span><span>${focus?'当前聚焦':'查看资料 ›'}</span></span></button>`;}
- function edgeRows(m){return m.edges.map(e=>`<button class="rr-edge-row" data-edge="${esc(e.id)}"><span>${esc(byId.get(e.source).name)}</span><strong style="color:${colors[C.kind(e)]||colors.pending}">${e.directed?'→':'—'} ${esc(label(e))} ${e.directed?'→':'—'}</strong><span>${esc(byId.get(e.target).name)}</span><small>${esc(e.time||'原表资料')} · 查看依据 ↗</small></button>`).join('');}
+ function edgeRows(m){return m.edges.map(e=>`<button class="rr-edge-row" data-edge="${esc(e.id)}"><span>${esc(byId.get(e.source).name)}</span><strong style="color:${colors[C.kind(e)]||colors.pending}">${e.directed?'→':'—'} ${esc(label(e))} ${e.directed?'→':'—'}</strong><span>${esc(byId.get(e.target).name)}</span><small>${esc(e.time||'')} · ${e.evidenceLayer==='public'?'公开来源':'原始记录'} · 查看依据 ↗</small></button>`).join('');}
  function mobile(m){
   const depth=new Map([[m.focus,0]]),queue=[m.focus];for(let i=0;i<queue.length;i++)for(const e of m.edges){const next=e.source===queue[i]?e.target:e.target===queue[i]?e.source:null;if(next&&!depth.has(next)){depth.set(next,depth.get(queue[i])+1);queue.push(next);}}
   const ordered=[...m.nodes].sort((a,b)=>(depth.get(a.id)??99)-(depth.get(b.id)??99)||(a.tier||9)-(b.tier||9)||a.name.localeCompare(b.name,'zh'));
   return ordered.map(n=>{
   const own=m.edges.filter(e=>e.source===n.id),incoming=m.edges.filter(e=>e.target===n.id);
-  return `<article class="rr-mobile-company">${companyCard(n,n.id===m.focus)}${own.length?`<details><summary>${own.length} 条发出／关联记录</summary>${own.map(e=>`<button class="rr-mobile-edge" data-edge="${esc(e.id)}"><b>${e.directed?'→':'↔'} ${esc(byId.get(e.target).name)}</b><span>${esc(label(e))}</span></button>`).join('')}</details>`:''}${incoming.length?`<small class="rr-mobile-incoming">${incoming.length} 条来自其他主体的记录，见来源公司</small>`:''}</article>`;
+  return `<article class="rr-mobile-company">${companyCard(n,n.id===m.focus)}${own.length?`<details><summary>${own.length} 条发出／关联记录</summary>${own.map(e=>`<button class="rr-mobile-edge" data-edge="${esc(e.id)}"><b>${e.directed?'→':'↔'} ${esc(byId.get(e.target).name)}</b><span>${esc(label(e))}${e.evidenceLayer==='public'?'':' · 原始记录'}</span></button>`).join('')}</details>`:''}${incoming.length?`<small class="rr-mobile-incoming">${incoming.length} 条来自其他主体的记录，见来源公司</small>`:''}</article>`;
  }).join('');}
  function presentation(m){
   const p=AtlasExecutive.plan(m),overview=$('#rrOverview'),bar=$('#rrReadingBar'),branches=$('#rrBranches');if(p.overview||!p.graph.edges.length)pan.hidden=true;
@@ -103,7 +103,7 @@
   const instance=new G6.Graph({container:element,width,height:540,animation:false,autoResize:false,padding:24,
    data:{nodes:m.nodes.map(n=>({id:n.id,style:{innerHTML:companyCard(n,n.id===m.focus),...positions.get(n.id)}})),edges:graphEdges},
    node:{type:'html',style:{size:[240,140],dx:-120,dy:-70}},
-   edge:{type:d=>d.type||'cubic-horizontal',style:{lineWidth:1.7,endArrowSize:8,labelFontSize:14,labelFontFamily:getComputedStyle(document.body).fontFamily,labelFontWeight:500,labelFill:'#304f65',labelAutoRotate:false,labelWordWrap:true,labelMaxWidth:180,labelMaxLines:4,labelBackground:true,labelBackgroundFill:'#f5f8fb',labelBackgroundRadius:5,labelPadding:[5,7],labelOffsetY:-14,cursor:'pointer'}},
+   edge:{type:d=>d.type||'cubic-horizontal',style:{lineWidth:1.7,endArrowSize:8,labelFontSize:14,labelFontFamily:getComputedStyle(document.body).fontFamily,labelFontWeight:500,labelFill:'#304f65',labelAutoRotate:false,labelWordWrap:true,labelMaxWidth:180,labelMaxLines:3,labelBackground:true,labelBackgroundFill:'#f5f8fb',labelBackgroundRadius:5,labelPadding:[5,7],labelOffsetY:-14,cursor:'pointer'}},
    ...(family?{}:{layout:{type:'dagre',rankdir:'LR',nodesep:38,ranksep:160}}),transforms:parallel.length?[{type:'process-parallel-edges',mode:'bundle',edges:parallel,distance:70}]:[],behaviors:[]});
   graph=instance;
   instance.on('edge:click',ev=>{const e=DATA.links.find(e=>e.id===ev.target.id);if(e)showEdge(e);});

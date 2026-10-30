@@ -26,5 +26,9 @@
   const time=String(e.time||'').trim();
   return type+(time&&!type.includes(time)?' · '+time:'');
  }
- root.AtlasRelations={select,kind,anchors,label};
+ // Graph labels describe the relationship; provenance stays in the evidence view.
+ function shortLabel(e){
+  return String(e.type||'关系记录').replace(/持股[\d.]+%（公开工商平台记录）/g,'投资／持股').replace(/（(?:原始MCP记录|原始记录|公开工商平台记录|企业披露|公开数据库转述|采访披露|平台署名)）/g,'').replace('共同任职／自然人关联','任职／自然人关联');
+ }
+ root.AtlasRelations={select,kind,anchors,label,shortLabel};
 })(typeof window==='undefined'?globalThis:window);
