@@ -15,19 +15,17 @@
   const research=isCategoryPeer()&&state.peerView!=='relations'&&!state.routeActive;
   const query=(state.readerSearch||state.query).trim().toLowerCase();
   const groups=DATA.groups.filter(g=>[g.name,...g.memberIds.map(id=>byId.get(id)?.name||'')].join(' ').toLowerCase().includes(query));
-  const section=(name,rows)=>rows.length?`<h3>${name}</h3>`+rows.map(g=>`<button class="rr-group ${!state.focus&&(state.group||defaultGroup)===g.name?'active':''}" data-rr-group="${esc(g.name)}"><strong>${esc((g.displayName||g.name).split(' · ')[0])}</strong><span>${esc(g.companyFamily?(g.groupLabel||'投资 · 团队 · 业务'):g.name.split(' · ')[1]||'公司关系')}</span><small>${g.analysisType==='categoryPeer'?(g.sourceCategory?'原表品类':'组合品类'):groupEdges(g).length+' 条关系'}</small></button>`).join(''):'';
+  const section=(name,rows)=>rows.length?`<h3>${name}</h3>`+rows.map(g=>`<button class="rr-group ${!state.focus&&(state.group||defaultGroup)===g.name?'active':''}" data-rr-group="${esc(g.name)}"><strong>${esc(g.displayName||(g.raw?g.name.replace(/^原表 · /,''):g.name.split(' · ')[0]))}</strong><span>${esc(g.companyFamily?(g.groupLabel||'投资 · 团队 · 业务'):g.name.split(' · ')[1]||'公司关系')}</span><small>${g.analysisType==='categoryPeer'?(g.sourceCategory?'原表品类':'组合品类'):groupEdges(g).length+' 条关系'}</small></button>`).join(''):'';
   const families=groups.filter(g=>g.companyFamily),primary=groups.filter(g=>!g.raw&&!g.analysisType&&!g.companyFamily),peers=groups.filter(g=>g.analysisType==='categoryPeer'),raw=groups.filter(g=>g.raw&&!g.companyFamily&&!g.supersededBy);
   const companies=query?DATA.nodes.filter(n=>(!research||AtlasGrades.tier(n)!==null)&&[n.name,n.full,n.id,n.alias,n.originalProducts,n.verifiedProducts].join(' ').toLowerCase().includes(query)):[];
   const results=companies.length?'<h3>匹配公司 · '+companies.length+'</h3>'+companies.slice(0,12).map(n=>`<button class="rr-search-company" data-company="${esc(n.id)}"><strong>${esc(n.name)}</strong><small>${esc(products(n)||n.full)}</small></button>`).join(''):'';
   const all=[...families,...primary],pinned=['指色系 · 投资与关联团队','腾讯 · 历史投资与团队','豪腾 · 产品与创业团队'];
-  const featured=pinned.map(name=>all.find(g=>g.name===name)).filter(Boolean),current=all.find(g=>g.name===state.group);
-  if(current&&!featured.includes(current))featured.push(current);
-  const more=all.filter(g=>!featured.includes(g)),open=$('#rrMoreGroups')?.open;
+  const featured=pinned.map(name=>all.find(g=>g.name===name)).filter(Boolean);
+  const ordered=[...featured,...all.filter(g=>!featured.includes(g))];
   const sourcePeers=peers.filter(g=>g.sourceCategory).sort((a,b)=>a.categoryOrder-b.categoryOrder),shortcuts=peers.filter(g=>!g.sourceCategory);
   const categoryRows=sourcePeers.map(g=>{const count=AtlasGrades.universe({group:g.name,genre:'all',query:''}).length;return `<button class="rr-group rr-source-category ${state.group===g.name?'active':''}" data-rr-group="${esc(g.name)}" title="${AtlasGrades.labels[state.gradeDirection]}分级 · 当前公司范围 ${count} 家"><strong>${esc(g.selectionCategories[0])}</strong><small>${count} 家</small></button>`;}).join('');
   $('#rrGroups').innerHTML=research?(query?results:'')+(sourcePeers.length?'<h3>原表主营品类</h3><div class="rr-category-grid">'+categoryRows+'</div>':'')+section('快捷汇总',shortcuts)+(query&&!results&&!peers.length?'<p class="rr-no-results">没有匹配结果。</p>':'')+'<button id="allCompanies">全部公司 →</button>':
-   query?(results+section('相关公司系',all)+section('原表分组',raw)||'<p class="rr-no-results">没有匹配结果，试试公司简称或产品名。</p>'):
-   section('公司系',featured)+`<details id="rrMoreGroups" ${open?'open':''}><summary>查看全部公司系</summary>${section('公司系与关联团队',more)}${section('其他原表分组',raw)}</details>`;
+   '<div class="rr-relations-directory">'+(query?(results+section('相关公司系',ordered)+section('原表关系分组',raw)||'<p class="rr-no-results">没有匹配结果，试试公司简称或产品名。</p>'):section('公司系与关联团队',ordered)+section('原表关系分组',raw))+'</div>';
   $('#rrSearch').value=state.readerSearch;
  }
  const label=e=>e.type.replace(/持股[\d.]+%（公开工商平台记录）/g,'投资／持股').replace(/（原始MCP记录）/g,'').replace('共同任职／自然人关联','共同任职').replace('同法定代表人线索','同法人记录')+(/^\d{4}(?:-\d{2})?(?:-\d{2})?$/.test(e.time||'')&&!e.type.includes(e.time.slice(0,4))?' · '+e.time:'')+(e.evidenceLayer==='public'?'':' · 原表');
