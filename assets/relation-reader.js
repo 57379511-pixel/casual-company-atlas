@@ -98,7 +98,7 @@
   const instance=new G6.Graph({container:element,width,height:540,animation:false,autoResize:false,padding:24,
    data:{nodes:m.nodes.map(n=>({id:n.id,style:{innerHTML:companyCard(n,n.id===m.focus),...positions.get(n.id)}})),edges:graphEdges},
    node:{type:'html',style:{size:[196,88],dx:-98,dy:-44}},
-   edge:{type:d=>d.type||'cubic-horizontal',style:{lineWidth:1.7,endArrowSize:8,labelFontSize:13,labelFontWeight:500,labelFill:'#304f65',labelAutoRotate:false,labelWordWrap:true,labelMaxWidth:170,labelMaxLines:3,labelBackground:true,labelBackgroundFill:'#f5f8fb',labelBackgroundRadius:5,labelPadding:[5,7],labelOffsetY:-14,cursor:'pointer'}},
+   edge:{type:d=>d.type||'cubic-horizontal',style:{lineWidth:1.7,endArrowSize:8,labelFontSize:13,labelFontFamily:getComputedStyle(document.body).fontFamily,labelFontWeight:500,labelFill:'#304f65',labelAutoRotate:false,labelWordWrap:true,labelMaxWidth:170,labelMaxLines:3,labelBackground:true,labelBackgroundFill:'#f5f8fb',labelBackgroundRadius:5,labelPadding:[5,7],labelOffsetY:-14,cursor:'pointer'}},
    ...(family?{}:{layout:{type:'dagre',rankdir:'LR',nodesep:38,ranksep:160}}),transforms:parallel.length?[{type:'process-parallel-edges',mode:'bundle',edges:parallel,distance:70}]:[],behaviors:[]});
   graph=instance;
   instance.on('edge:click',ev=>{const e=DATA.links.find(e=>e.id===ev.target.id);if(e)showEdge(e);});

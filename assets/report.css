@@ -1,5 +1,5 @@
 :root{--ink:#233d4e;--muted:#718494;--accent:#327d7a}
-body{color:var(--ink);background:#edf2f5;font-family:"Atlas Sans","Microsoft YaHei UI","Microsoft YaHei",sans-serif}
+body{color:var(--ink);background:#edf2f5;font-family:var(--atlas-font)}
 .top{background:#fff}.brand-mark{color:#397d7a}.kicker{letter-spacing:2px;color:#78918c}
 .date{font-variant-numeric:tabular-nums}.tab.active{color:#2d716d}.tab.active:after{background:#3c8880}
 .canvas-card{border-color:#dce6eb;box-shadow:0 8px 24px #243e4c04}.stage{background:#f7fafb}

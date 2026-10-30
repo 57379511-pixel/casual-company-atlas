@@ -1,6 +1,6 @@
 /* A readable type scale and predictable navigation, shared by all views. */
-:root{--atlas-font:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei UI","Microsoft YaHei","Atlas Sans",sans-serif;--ink:#243746;--muted:#526675}
-body,button,input,select,svg text{font-family:var(--atlas-font)}
+:root{--atlas-font:"Microsoft YaHei","微软雅黑","Microsoft YaHei UI","PingFang SC","Noto Sans CJK SC",system-ui,sans-serif;--ink:#243746;--muted:#526675}
+body,button,input,select,textarea,svg text{font-family:var(--atlas-font)}
 body{font-size:15px;line-height:1.65;color:var(--ink);font-weight:400}
 button,input,select{font-size:14px}button{touch-action:manipulation}
 button:focus-visible,a:focus-visible,select:focus-visible,input:focus-visible,[tabindex]:focus-visible{outline:2px solid #258278;outline-offset:3px}
