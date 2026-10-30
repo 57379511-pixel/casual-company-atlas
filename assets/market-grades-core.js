@@ -36,7 +36,7 @@
  function metric(n,d=state.gradeDirection){
   const e=entry(n,d);if(e?.tier==null)return '原表未给出本方向评级';const m=e.metrics;
   if(d==='domestic')return e.basis==='domestic_monitor_rule'?'消除类监控名单入选':`在榜 ${m.listedProducts} 款 · 最长 ${m.longestDays} 天`;
-  return [['休闲榜10Q',m.casual10QRevenueUSD,m.casual10QDownloads],['超休闲榜7Q',m.hypercasual7QRevenueUSD,m.hypercasual7QDownloads]].filter(([,a,b])=>a!=null||b!=null).map(([label,a,b])=>label+'：'+[a!=null?'收入 '+amount(a):'',b!=null?'下载 '+downloads(b):''].filter(Boolean).join(' · ')).join('\n');
+  return [['休闲榜累计（原表10Q）',m.casual10QRevenueUSD,m.casual10QDownloads],['超休闲榜7Q',m.hypercasual7QRevenueUSD,m.hypercasual7QDownloads]].filter(([,a,b])=>a!=null||b!=null).map(([label,a,b])=>label+'：'+[a!=null?'收入 '+amount(a):'',b!=null?'下载 '+downloads(b):''].filter(Boolean).join(' · ')).join('\n');
  }
  window.AtlasGrades={ledger,labels,record,entry,tier,pool,universe,select,metric,amount,downloads};
 })();

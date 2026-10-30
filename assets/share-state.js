@@ -2,10 +2,12 @@
 (()=>{
  const initial=new URL(location.href),defaults={...state,gradeDirection:'domestic'},params=initial.searchParams;
  const enums={gradeDirection:['domestic','overseas'],mode:['geo','graph','list','audit'],scope:['all','key','1','2','3','4','5'],audience:['all','developer'],revenue:['all','domestic','overseas','balanced','unscoped'],marketDirection:['all','国内市场','海外出海','国内外双线'],readerKind:['all','capital','business','people'],routeKind:['all','capital','business','people'],routeEvidence:['all','public'],routeDirection:['connectivity','directed'],peerView:['cards','relations']};
- const fields=['gradeDirection','mode','scope','genre','group','query','readerSearch','navQuery','people','pending','focus','listAll','audience','revenue','marketDirection','routeActive','routeFrom','routeTo','routeEvidence','routeDirection','routeKind','readerKind','readerExpanded','readerFocus','readerNetwork','readerComponent','readerAllLinks','peerView'];
+ const fields=['gradeDirection','mode','scope','genre','group','query','readerSearch','readerSearchPage','readerSourceCategory','navQuery','people','pending','focus','listAll','audience','revenue','marketDirection','routeActive','routeFrom','routeTo','routeEvidence','routeDirection','routeKind','readerKind','readerExpanded','readerFocus','readerNetwork','readerComponent','readerAllLinks','peerView'];
  function valid(key,v){
   if(enums[key])return enums[key].includes(v);
   if(['focus','readerFocus','routeFrom','routeTo','readerComponent'].includes(key))return !v||byId.has(v);
+  if(key==='readerSearchPage')return /^\d{1,4}$/.test(v);
+  if(key==='readerSourceCategory')return !v||groupByName.get(v)?.analysisType==='categoryPeer';
   if(key==='group')return !v||groupByName.has(v);
   if(key==='genre')return v==='all'||DATA.nodes.some(n=>String(n.category||'').split('、').includes(v));
   return typeof defaults[key]==='boolean'?['1','0'].includes(v):v.length<=200;
