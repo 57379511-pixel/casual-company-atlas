@@ -4,6 +4,20 @@
  const requested=new URLSearchParams(location.search).get('grading');
  state.gradeDirection=requested==='overseas'?'overseas':'domestic';state.gradeViews={};
  const labels={domestic:'国内',overseas:'海外'};
+ // Build navigation from actual source tags; keep the historical casual shortcut separate.
+ const sourceTags=new Set(DATA.nodes.filter(n=>n.originalRecord).flatMap(n=>String(n.category||'').split('、')).filter(c=>c&&c!=='SLG'));
+ const categoryOrder=[...new Set(['二合','三消','消除','解谜','超休闲','找茬','休闲综合',...sourceTags])].filter(c=>sourceTags.has(c));
+ const template=DATA.groups.find(g=>g.analysisType==='categoryPeer'&&g.selectionCategories.length===1);
+ for(const category of categoryOrder){
+  let g=DATA.groups.find(g=>g.analysisType==='categoryPeer'&&g.selectionCategories.length===1&&g.selectionCategories[0]===category);
+  if(!g){
+   const rows=DATA.nodes.filter(n=>n.originalRecord&&String(n.category||'').split('、').includes(category));
+   const rule='严格按原表主营品类“'+category+'”筛选；公司研发角色与国内／海外评级分别判断。';
+   g={...template,name:category+' · 原表品类',displayName:category,category,selectionCategories:[category],memberIds:rows.map(n=>n.id),researchMemberIds:rows.filter(n=>n.scope==='developer').map(n=>n.id),members:rows.map(n=>n.name).join('、'),description:rule,selectionRule:rule};
+   DATA.groups.push(g);groupByName.set(g.name,g);$('#factionSelect').add(new Option(g.name,g.name));
+  }
+  g.sourceCategory=true;g.categoryOrder=categoryOrder.indexOf(category);
+ }
  const record=n=>ledger.records[n.id];
  const entry=(n,d=state.gradeDirection)=>record(n)?.[d];
  const tier=(n,d=state.gradeDirection)=>entry(n,d)?.tier==null?null:entry(n,d).tier+1;
