@@ -2,9 +2,9 @@
 (function(root){
  function revenue(n,ledger){
   const r=ledger.records[n.id],assessment=ledger.directions?.records[n.id];
-  if(!r){const key=assessment?.key||'unscoped';return {key,label:{domestic:'国内为主',overseas:'海外为主',unscoped:'仅关系主体'}[key],color:{domestic:'#2777b8',overseas:'#9a5aaf',unscoped:'#82909f'}[key],record:null,assessment};}
-  const share=r.domestic/(r.domestic+r.overseas),key=share>.5?'domestic':share<.5?'overseas':'balanced';
-  return {key,label:{domestic:'国内为主',overseas:'海外为主',balanced:'收入均衡'}[key],color:{domestic:'#2777b8',overseas:'#9a5aaf',balanced:'#388579'}[key],domesticShare:share,record:r,assessment};
+  if(!r){const key=assessment?.key||'unscoped';return {key,label:{domestic:'国内为主',overseas:'海外为主',balanced:'国内海外并重',unscoped:'仅关系主体'}[key],color:{domestic:'#2777b8',overseas:'#9a5aaf',balanced:'#388579',unscoped:'#82909f'}[key],record:null,assessment};}
+  const share=r.domestic/(r.domestic+r.overseas),key=share>=.3&&share<=.7?'balanced':share>.7?'domestic':'overseas';
+  return {key,label:{domestic:'国内为主',overseas:'海外为主',balanced:'国内海外并重'}[key],color:{domestic:'#2777b8',overseas:'#9a5aaf',balanced:'#388579'}[key],domesticShare:share,record:r,assessment};
  }
  function matches(n,filters,ledger){return (!filters.revenue||filters.revenue==='all'||revenue(n,ledger).key===filters.revenue)&&(!filters.marketDirection||filters.marketDirection==='all'||n.market===filters.marketDirection);}
  // Lexicographic cost: fewer original-only edges first, then fewer hops. No synthetic alias/group edges.

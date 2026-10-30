@@ -1,9 +1,9 @@
 /* Source-specific market assessment; financial amounts remain separate. */
 window.ATLAS_DIRECTIONS = {
-  "reviewedAt": "2026-10-29",
+  "reviewedAt": "2026-10-30",
   "sourceFile": "国内休闲游戏公司图谱_整合版 (2).xlsx",
   "sourceWorkbookSHA256": "1e165679e883c656ba043155755d1d2e247de4c2e187adc2eb234910ff7c88b0",
-  "policy": "按源表收录主体和产品组合判断收入重心。先采用可比收入；没有完整收入拆分时，结合梯队依据中的国内/出海分级、主力产品与市场表现，不因两边有业务就归双线。前台仅显示方向，详情保留具体依据与口径。未用H5榜单数量、下载量替代收入分子分母。",
+  "policy": "按源表收录主体及产品组合区分国内为主、海外为主、国内海外并重。有同期间、同口径收入拆分时，两边各占30%至70%列为并重，其余按占比较高的一边分类；30%为本图谱的展示分组标准，不代表行业评级。没有完整拆分时，结合原表产品及国内/出海分级逐条判断：两边均有较强业务支撑的可列为并重，不因仅有产品上线或两边同级就自动归并重。并重不代表收入各占50%，不补造占比；具体依据及主体范围保留在详情中。",
   "records": {
     "G001": {
       "key": "domestic",
@@ -30,10 +30,10 @@ window.ATLAS_DIRECTIONS = {
       ]
     },
     "G002": {
-      "key": "overseas",
+      "key": "balanced",
       "method": "financial",
       "scope": "世纪华通集团合并营业收入",
-      "basis": "采用已披露的同期间、同口径国内外收入比较，详见收入拆分。",
+      "basis": "采用已披露的同期间、同口径国内外收入拆分，两边均占30%以上，按本图谱展示分组标准列为国内海外并重；完整占比、统计期和集团口径保留。",
       "limitations": "内销／外销；含非游戏业务，不代表点点单体",
       "signals": {
         "sourceRow": 3,
@@ -76,10 +76,10 @@ window.ATLAS_DIRECTIONS = {
       ]
     },
     "G004": {
-      "key": "domestic",
+      "key": "balanced",
       "method": "financial",
       "scope": "中文在线集团合并营业收入",
-      "basis": "采用已披露的同期间、同口径国内外收入比较，详见收入拆分。",
+      "basis": "采用已披露的同期间、同口径国内外收入拆分，两边均占30%以上，按本图谱展示分组标准列为国内海外并重；完整占比、统计期和集团口径保留。",
       "limitations": "海外地区收入及总收入差额；含网文、短剧等非游戏业务。国内51.97%，接近均衡，不宜解释为单一国内业务公司",
       "signals": {
         "sourceRow": 5,
@@ -5321,10 +5321,10 @@ window.ATLAS_DIRECTIONS = {
       ]
     },
     "G239": {
-      "key": "domestic",
-      "method": "product-review",
+      "key": "balanced",
+      "method": "dual-market-review",
       "scope": "源表所列主体／品牌及产品组合",
-      "basis": "原表国内T0、出海T1，国内62款H5在榜产品，国内等级与产品矩阵更强，因此归国内为主。海外样本收入保留，未把“海外出海”旧标签当作收入主次。",
+      "basis": "原表国内T0、出海T1，国内62款H5在榜产品，海外另有收入与下载规模证据，两边均有较强业务支撑，归国内海外并重。国内与出海梯队采用不同评价方法，不能由T0高于T1推定国内收入更多；未披露可比的完整收入拆分。",
       "limitations": "方向为源表产品组合和市场资料的研究判断，未披露完整境内外占比；空白收入不等于零，10Q与7Q样本不直接相加，未覆盖的广告及渠道收入不视为不存在。",
       "signals": {
         "sourceRow": 240,
@@ -5395,10 +5395,10 @@ window.ATLAS_DIRECTIONS = {
       ]
     },
     "G242": {
-      "key": "overseas",
-      "method": "product-review",
+      "key": "balanced",
+      "method": "dual-market-review",
       "scope": "源表所列主体／品牌及产品组合",
-      "basis": "原表国内T1、出海T1同级；出海分级依据列约0.4亿美元收入信号、主要渠道为海外App Store/Google Play，并收录Cell Survivor。以收入信号和主力海外产品作为同级时的判断依据，国内H5业务保留。",
+      "basis": "原表国内T1、出海T1，国内24款H5在榜产品，海外有Cell Survivor及收入样本，两边均有较强业务支撑，归国内海外并重。保留各自统计期，未把10Q与7Q样本直接相加，也不推定收入各占50%。",
       "limitations": "方向为源表产品组合和市场资料的研究判断，未披露完整境内外占比；空白收入不等于零，10Q与7Q样本不直接相加，未覆盖的广告及渠道收入不视为不存在。",
       "signals": {
         "sourceRow": 243,

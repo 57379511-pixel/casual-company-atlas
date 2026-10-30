@@ -6,7 +6,7 @@
  Object.assign(state,{revenue:'all',marketDirection:'all',routeActive:false,routeFrom:'',routeTo:'',routeEvidence:'public',routeDirection:'connectivity',routeKind:'all'});
  const income=n=>R.revenue(n,ledger),tag=n=>{const r=income(n);return `<span class="revenue-tag revenue-${r.key}">${esc(r.label)}${r.record?' · '+esc(r.record.period)+' · '+esc(r.record.scope):''}</span>`;};
  const bar=document.createElement('section');bar.className='research-bar';bar.setAttribute('aria-label','收入与市场方向');
- bar.innerHTML='<label>收入重心<select id="revenueFilter" aria-label="收入重心"><option value="all">全部收入方向</option><option value="domestic">国内为主</option><option value="overseas">海外为主</option><option value="unscoped">仅关系主体</option></select></label><details class="source-filter"><summary>原表检索</summary><label>原表市场方向<select id="marketDirection" aria-label="原表市场方向"><option value="all">全部原表方向</option><option>国内市场</option><option>海外出海</option><option>国内外双线</option></select></label></details><span id="revenueCoverage"></span>';
+ bar.innerHTML='<label>收入重心<select id="revenueFilter" aria-label="收入重心"><option value="all">全部收入方向</option><option value="domestic">国内为主</option><option value="overseas">海外为主</option><option value="balanced">国内海外并重</option><option value="unscoped">仅关系主体</option></select></label><details class="source-filter"><summary>原表检索</summary><label>原表市场方向<select id="marketDirection" aria-label="原表市场方向"><option value="all">全部原表方向</option><option>国内市场</option><option>海外出海</option><option>国内外双线</option></select></label></details><span id="revenueCoverage"></span>';
  $('#filters').after(bar);
  const sourceMatch=genreMatch;genreMatch=n=>sourceMatch(n)&&R.matches(n,state,ledger);
  const oldFiltered=filteredGraph;
@@ -32,7 +32,7 @@
   for(const key of ['routeEvidence','routeDirection','routeKind'])$('#'+key).value=state[key];
   for(const key of ['routeFrom','routeTo'])$('#'+key).value=state[key]&&byId.has(state[key])?state[key]+' · '+byId.get(state[key]).name:state[key]||'';
   const rows=DATA.nodes.filter(n=>n.originalRecord),known=rows.filter(n=>income(n).key!=='unscoped');
-  $('#revenueCoverage').textContent=`研究记录：国内为主 ${rows.filter(n=>income(n).key==='domestic').length} · 海外为主 ${rows.filter(n=>income(n).key==='overseas').length} · 仅关系主体 ${rows.length-known.length}`;
+  $('#revenueCoverage').textContent=`研究记录：国内为主 ${rows.filter(n=>income(n).key==='domestic').length} · 海外为主 ${rows.filter(n=>income(n).key==='overseas').length} · 国内海外并重 ${rows.filter(n=>income(n).key==='balanced').length} · 仅关系主体 ${rows.length-known.length}`;
   document.body.classList.toggle('route-mode',state.mode==='graph'&&state.routeActive);
   if(state.routeActive)panel.open=true;renderRoute();window.AtlasExperience?.sync();
  }
@@ -80,8 +80,8 @@
  for(const el of $$('#genre,#factionSelect,#audience,#graphTier,#peerRole,#peerCategory')){const handler=el.onchange;el.onchange=function(e){state.routeActive=false;return handler?.call(this,e);};}
  $('#search').addEventListener('input',()=>{if(state.routeActive){state.routeActive=false;refresh();}});
  $('#csvBtn').onclick=()=>{const rows=[['ID','公司','主体全称','主营品类','业务形态','梯队','核查角色','原表市场方向','收入判断','国内占比','海外占比','统计期','收入口径','依据','收入来源','原表产品','公开产品','核查结论','限制','原资料来源'],...sorted(baseSelection(true).filter(matches)).map(n=>{const r=income(n),d=r.record;return [n.id,n.name,n.full,n.category,n.business,n.originalTier,n.role,n.market,r.label,d?(r.domesticShare*100).toFixed(2)+'%':'',d?((1-r.domesticShare)*100).toFixed(2)+'%':'',d?.period||'源表产品组合',d?.scope||r.assessment?.scope,d?.basis||r.assessment?.basis,d?.sources.map(s=>s.url).join(' | ')||r.assessment?.sources.join(' | '),n.originalProducts,n.verifiedProducts,n.claim,[n.limitations,r.assessment?.limitations].filter(Boolean).join('；'),n.url];})];const cell=v=>'"'+String(v??'').replace(/^[=+@-]/,s=>"'"+s).replaceAll('"','""')+'"';download(new Blob(['\ufeff'+rows.map(r=>r.map(cell).join(',')).join('\r\n')],{type:'text/csv;charset=utf-8'}),'公司图谱-收入与市场方向.csv');};
- const beforeAudit=renderAudit;renderAudit=function(){beforeAudit();$('#auditGrid').insertAdjacentHTML('afterbegin',`<article class="audit-card"><div class="idline">2026-10-29 · 收入与关系路径</div><h3>收入方向单独取证</h3><p>${esc(ledger.directions.policy)}</p><p>363条原始记录逐条处理：327条国内为主，33条海外为主，3条无经营产品资料的关系端点单列。仅5条有可用的完整收入拆分，其余方向根据源表产品、国内/出海分级及市场资料判断，不补造占比。原表市场方向完整保留。路径只使用原有177条关系，公开关系也仅在所列事实、时点和主体范围内成立。</p></article>`);sync();};
- $('.top-meta .date').innerHTML='<i class="dot"></i>收入与关系路径版 · 2026.10.29';document.title='国内休闲游戏公司图谱 · 收入与关系路径';
+ const beforeAudit=renderAudit;renderAudit=function(){beforeAudit();$('#auditGrid').insertAdjacentHTML('afterbegin',`<article class="audit-card"><div class="idline">2026-10-30 · 收入方向分组</div><h3>收入方向单独取证</h3><p>${esc(ledger.directions.policy)}</p><p>363条原始记录逐条处理：${DATA.nodes.filter(n=>n.originalRecord&&income(n).key==='domestic').length}条国内为主，${DATA.nodes.filter(n=>n.originalRecord&&income(n).key==='overseas').length}条海外为主，${DATA.nodes.filter(n=>n.originalRecord&&income(n).key==='balanced').length}条国内海外并重，3条无经营产品资料的关系端点单列。仅5条有可用的完整收入拆分，其余方向根据源表产品、国内/出海分级及市场资料判断，不补造占比。原表市场方向完整保留。路径只使用原有177条关系，公开关系也仅在所列事实、时点和主体范围内成立。</p></article>`);sync();};
+ $('.top-meta .date').innerHTML='<i class="dot"></i>收入方向更新 · 2026.10.30';document.title='国内休闲游戏公司图谱 · 收入与关系路径';
  $('#methodContent').insertAdjacentHTML('afterbegin',`<p><strong>收入分类：</strong>${esc(ledger.directions.policy)}</p><p><strong>关系路径：</strong>查关联可反向走边；仅沿已记录方向不反转箭头。两种模式均不证明控制权。原始MCP边仅在主动选择时参与路径，先减少这类边，再减少跳数。</p>`);
  refresh();sync();
 })();

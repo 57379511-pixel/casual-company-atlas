@@ -10,7 +10,7 @@
   const scope=all||state.scope==='all'?'全部梯队':state.scope==='key'?'头部优先':({1:'T0 标杆',2:'T1 头部',3:'T2 中坚',4:'T3 长尾',5:'T4 观察'}[state.scope]||'头部优先');
   const geo=mode==='geo'?geoSelection():[],mapped=geo.filter(n=>geoCityOf(n));
   const count=mode==='geo'?(geoState.city?mapped.filter(n=>geoCityOf(n)===geoState.city).length:mapped.length):mode==='list'?baseSelection(true).filter(matches).length:mode==='graph'?filteredGraph().nodes.length:0;
-  const terms=[scope,state.genre!=='all'?state.genre:null,state.revenue!=='all'?{domestic:'国内为主',overseas:'海外为主',unscoped:'仅关系主体'}[state.revenue]:null,state.query?'搜索：'+state.query:null,geoState.city&&mode==='geo'?geoState.city:null].filter(Boolean);
+  const terms=[scope,state.genre!=='all'?state.genre:null,state.revenue!=='all'?{domestic:'国内为主',overseas:'海外为主',balanced:'国内海外并重',unscoped:'仅关系主体'}[state.revenue]:null,state.query?'搜索：'+state.query:null,geoState.city&&mode==='geo'?geoState.city:null].filter(Boolean);
   $('#revenueCoverage').textContent=`当前 ${count} ${mode==='geo'?'个地图入口':mode==='graph'?'个对象':'条记录'} · ${terms.join(' · ')}${mode==='geo'&&!geoState.city&&geo.length>mapped.length?' · 另有 '+(geo.length-mapped.length)+' 条境外／未定位记录':''}`;
   clean.hidden=!(state.query||state.genre!=='all'||state.revenue!=='all'||state.marketDirection!=='all'||state.group||state.audience!=='all'||geoState.city||(!all&&state.scope!=='key'));
   if(mode!=='graph')for(const b of $$('[data-scope]'))b.classList.toggle('active',b.dataset.scope===(all?'all':String(state.scope)));
