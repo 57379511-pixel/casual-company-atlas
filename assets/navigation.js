@@ -1,6 +1,6 @@
 /* Primary navigation follows research tasks. Existing data and renderers are reused. */
 (()=>{
- const defaultCompany='二合 · 国内研发对标',defaultFamily='指色系 · 投资与关联团队';
+ const defaultCompany='全部品类 · 公司总览',defaultFamily='指色系 · 投资与关联团队';
  const section=(s=state)=>s.mode==='geo'?'geo':s.mode==='audit'?'audit':s.mode==='list'||(s.mode==='graph'&&!s.routeActive&&!s.readerNetwork&&!s.focus&&groupByName.get(s.group)?.analysisType==='categoryPeer'&&s.peerView!=='relations')?'companies':'relations';
  const labels={companies:'公司研究',relations:'公司关系图',geo:'地域分布',audit:'证据与口径'};
  const retained=['mode','scope','genre','group','query','audience','revenue','marketDirection','listAll','readerSearch','navQuery','gradeDirection'];

@@ -31,6 +31,7 @@
   const g=groupByName.get(state.group),cats=g?.selectionCategories||[],raw=String(n.raw?.['品类依据']||'');
   const selected=state.genre!=='all'?[state.genre]:cats;
   const title=String(n.icon?.title||'');
+  if(g?.allCategories&&state.genre==='all')return {text:title||n.verifiedProducts||n.originalProducts||'',exact:false,basis:raw,url:n.icon?.store};
   if(selected.includes('三消')&&n.id==='G008')return {text:'Truck Star',exact:true,basis:'开发商官方 App Store 页面明确标注 Match-3',url:'https://apps.apple.com/us/app/truck-star/id6476976929',icon:{title:'Truck Star',data:'./assets/product-icons/truck-star.jpg',store:'https://apps.apple.com/us/app/truck-star/id6476976929'}};
   // Explicit product identity only: a generic company hit is not genre evidence.
   if(selected.includes('二合')&&/merge/i.test(title))return {text:title,exact:true,basis:'产品商店标题标注 Merge',url:n.icon.store};

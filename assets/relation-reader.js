@@ -24,9 +24,11 @@
   const all=[...families,...primary],pinned=['指色系 · 投资与关联团队','腾讯 · 历史投资与团队','豪腾 · 产品与创业团队'];
   const featured=pinned.map(name=>all.find(g=>g.name===name)).filter(Boolean);
   const ordered=[...featured,...all.filter(g=>!featured.includes(g))];
-  const sourcePeers=peers.filter(g=>g.sourceCategory).sort((a,b)=>a.categoryOrder-b.categoryOrder),shortcuts=peers.filter(g=>!g.sourceCategory);
-  const categoryRows=sourcePeers.map(g=>{const count=AtlasGrades.universe({group:g.name,genre:'all',query:''}).length;return `<button class="rr-group rr-source-category ${state.group===g.name?'active':''}" data-rr-group="${esc(g.name)}" title="${AtlasGrades.labels[state.gradeDirection]}分级 · 当前公司范围 ${count} 家"><strong>${esc(g.selectionCategories[0])}</strong><small>${count?count+' 家':'符合条件 0 家'}</small></button>`;}).join('');
-  $('#rrGroups').innerHTML=research?(query?results:'')+(sourcePeers.length?'<h3>主营品类</h3><p class="directory-count-note">家数：本方向评级 · 当前公司范围</p><div class="rr-category-grid">'+categoryRows+'</div>':'')+section('快捷汇总',shortcuts)+(query&&!results&&!peers.length?'<p class="rr-no-results">没有匹配结果。</p>':'')+'<button id="allCompanies">全部公司 →</button>':
+  const sourcePeers=peers.filter(g=>g.sourceCategory).sort((a,b)=>a.categoryOrder-b.categoryOrder),shortcuts=peers.filter(g=>!g.sourceCategory&&!g.allCategories);
+  const categoryRows=sourcePeers.map(g=>{const count=AtlasGrades.universe({group:g.name,genre:'all',query:''}).length;return `<button class="rr-group rr-source-category ${state.group===g.name?'active':''}" data-rr-group="${esc(g.name)}" title="${AtlasGrades.labels[state.gradeDirection]}分级 · 当前公司范围 ${count} 家"><strong>${esc(g.selectionCategories[0])}</strong><small>覆盖 ${count} 家</small></button>`;}).join('');
+  const allCount=AtlasGrades.universe({group:AtlasGrades.allGroup.name,genre:'all',query:''}).length;
+  const allRow=`<div class="rr-category-grid rr-all-categories"><button class="rr-group rr-source-category ${state.group===AtlasGrades.allGroup.name?'active':''}" data-rr-group="${esc(AtlasGrades.allGroup.name)}"><strong>全部品类</strong><small>${allCount} 家 · 去重</small></button></div>`;
+  $('#rrGroups').innerHTML=research?(query?results:'')+allRow+(sourcePeers.length?'<h3>业务品类</h3><p class="directory-count-note">本方向评级 · 当前公司范围<br>公司可跨品类，各项家数不相加</p><div class="rr-category-grid">'+categoryRows+'</div>':'')+section('快捷汇总',shortcuts)+(query&&!results&&!peers.length?'<p class="rr-no-results">没有匹配结果。</p>':'')+'<button id="allCompanies">完整资料名单 →</button>':
    '<div class="rr-relations-directory">'+(query?(results+section('相关公司系',ordered)+section('关系分组',raw)||'<p class="rr-no-results">没有匹配结果，试试公司简称或产品名。</p>'):section('公司系与关联团队',ordered)+section('关系分组',raw))+'</div>';
   $('#rrSearch').value=state.readerSearch;
  }

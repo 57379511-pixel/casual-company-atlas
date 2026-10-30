@@ -18,12 +18,25 @@
   }
   g.sourceCategory=true;g.categoryOrder=categoryOrder.indexOf(category);
  }
+ // One presentation row per existing canonical company; source records stay unchanged.
+ const companyMap=new Map();
+ for(const n of DATA.nodes.filter(n=>n.originalRecord)){
+  const id=AtlasExecutive.canonical(n.id);if(!companyMap.has(id))companyMap.set(id,[]);companyMap.get(id).push(n);
+ }
+ const companyRows=[...companyMap].map(([id,rows])=>{
+  const primary=rows.find(n=>n.id===id)||rows[0];
+  return {...primary,category:[...new Set(rows.flatMap(n=>String(n.category||'').split('、')).filter(Boolean))].join('、'),sourceRecordIds:rows.map(n=>n.id)};
+ });
+ const companyById=new Map(companyRows.map(n=>[n.id,n]));
+ const tags=n=>String((companyById.get(AtlasExecutive.canonical(n.id))||n).category||'').split('、').filter(c=>sourceTags.has(c));
+ const allGroup={...template,name:'全部品类 · 公司总览',displayName:'全部品类',category:'全部品类',allCategories:true,sourceCategory:false,selectionCategories:categoryOrder,memberIds:companyRows.map(n=>n.id),researchMemberIds:companyRows.filter(n=>n.scope==='developer').map(n=>n.id),description:'按公司去重，展示全部业务品类。',selectionRule:'公司按既有主体映射合并展示，评级按国内与海外方向独立排序。'};
+ DATA.groups.push(allGroup);groupByName.set(allGroup.name,allGroup);$('#factionSelect').add(new Option(allGroup.name,allGroup.name));
  const record=n=>ledger.records[n.id];
  const entry=(n,d=state.gradeDirection)=>record(n)?.[d];
  const tier=(n,d=state.gradeDirection)=>entry(n,d)?.tier==null?null:entry(n,d).tier+1;
  function pool(options={}){
   const group=groupByName.get(options.group??state.group),genre=options.genre??state.genre,role=options.audience??state.audience,query=String(options.query??state.query??'').trim().toLowerCase();
-  return DATA.nodes.filter(n=>n.originalRecord&&group?.selectionCategories.some(c=>String(n.category||'').split('、').includes(c))&&(genre==='all'||String(n.category||'').split('、').includes(genre))&&(role!=='developer'||n.scope==='developer')&&(!query||[n.name,n.full,n.originalProducts,n.verifiedProducts,n.id].join(' ').toLowerCase().includes(query)));
+  return companyRows.filter(n=>(group?.allCategories||group?.selectionCategories.some(c=>String(n.category||'').split('、').includes(c)))&&(genre==='all'||String(n.category||'').split('、').includes(genre))&&(role!=='developer'||n.scope==='developer')&&(!query||[n.name,n.full,n.originalProducts,n.verifiedProducts,n.id].join(' ').toLowerCase().includes(query)));
  }
  function universe(options={}){const d=options.direction??state.gradeDirection;return pool(options).filter(n=>tier(n,d)!==null);}
  function select(options={}){
@@ -38,5 +51,5 @@
   if(d==='domestic')return e.basis==='domestic_monitor_rule'?'消除类监控名单入选':`在榜 ${m.listedProducts} 款 · 最长 ${m.longestDays} 天`;
   return [['休闲榜累计',m.casual10QRevenueUSD,m.casual10QDownloads],['超休闲榜7Q',m.hypercasual7QRevenueUSD,m.hypercasual7QDownloads]].filter(([,a,b])=>a!=null||b!=null).map(([label,a,b])=>label+'：'+[a!=null?'收入 '+amount(a):'',b!=null?'下载 '+downloads(b):''].filter(Boolean).join(' · ')).join('\n');
  }
- window.AtlasGrades={ledger,labels,record,entry,tier,pool,universe,select,metric,amount,downloads};
+ window.AtlasGrades={companyRows,tags,allGroup,ledger,labels,record,entry,tier,pool,universe,select,metric,amount,downloads};
 })();

@@ -52,7 +52,7 @@ renderGeo=function(){
 const classificationDetail=showDetail;
 showDetail=function(n){
  classificationDetail(n);const section=document.createElement('section');section.className='detail-section classification-source';
- section.innerHTML=n.originalRecord?`<h3>主营业务</h3><dl class="facts">${field('主营品类',n.category)}${field('业务形态',n.business)}</dl>${n.categoryEvidence?`<details class="detail-reference"><summary>查看品类依据</summary><p>${esc(n.categoryEvidence)}</p><p>主营品类与公开核查角色分别展示，品类标签不等于已确认自研。</p></details>`:''}`:'<h3>关联主体</h3>';
+ section.innerHTML=n.originalRecord?`<h3>主营业务</h3><dl class="facts">${field('业务品类',window.AtlasGrades?AtlasGrades.tags(n).join('、'):n.category)}${field('业务形态',n.business)}</dl>${n.categoryEvidence?`<details class="detail-reference"><summary>查看品类依据</summary><p>${esc(n.categoryEvidence)}</p><p>主营品类与公开核查角色分别展示，品类标签不等于已确认自研。</p></details>`:''}`:'<h3>关联主体</h3>';
  if(n.id==='G007'||n.id==='G053')section.innerHTML+=`<button class="relationship" data-company="${n.id==='G007'?'G053':'G007'}">查看${n.id==='G007'?'柠檬曲奇':'柠檬微趣'}</button>`;
  const peer=groupByName.get(state.group);if(peer?.analysisType==='categoryPeer')section.innerHTML+=`<details class="detail-reference"><summary>查看本组纳入依据</summary><p>匹配品类：${esc(String(n.category||'').split('、').filter(c=>peer.selectionCategories.includes(c)).join('、'))}。核查角色：${esc(n.role)}。入组不等于该品类的每款产品均已确认自研。</p></details>`;
  $('#detail .detail-header').after(section);
