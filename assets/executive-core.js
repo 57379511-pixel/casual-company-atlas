@@ -18,7 +18,7 @@
  function plan(m){
   const groups=components(m),peer=m.group?.analysisType==='categoryPeer'&&!state.focus;
   const component=peer&&groups.find(g=>g.id===state.readerComponent);
-  const scope=component?{...m,nodes:component.nodes,edges:component.edges,focus:component.lead.id}:m;
+  const scope=component?{...m,nodes:component.nodes,edges:component.edges,focus:component.nodes.some(n=>n.id===state.readerFocus)?state.readerFocus:component.lead.id}:m;
   const overview=peer&&groups.length>1&&!component;
   const capital=scope.edges.filter(e=>AtlasRelations.kind(e)==='capital');
   const backbone=state.readerKind==='all'&&!state.readerAllLinks&&capital.length>0;

@@ -11,7 +11,7 @@
  $('#rrSearch').type='search';$('#rrSearch').placeholder='搜公司或代表产品';
  $('#rrSearch').setAttribute('aria-label','搜索公司或代表产品');
  $('.rr-directory-title').innerHTML='找公司，看关系';
- for(const b of $$('[data-peer-view]'))b.textContent=b.dataset.peerView==='relations'?'查看关联图谱 →':'← 返回分层对标';
+ for(const b of $$('[data-peer-view]'))b.textContent=b.dataset.peerView==='relations'?'关系总览':'公司对标';
  const clear=document.createElement('button');clear.className='btn';clear.id='rrClearOptions';clear.textContent='恢复默认';body.append(clear);
  clear.onclick=()=>{
   if(isCategoryPeer())$('#prReset').click();
@@ -25,7 +25,7 @@
   const active=document.body.classList.contains('relation-reader-mode'),peer=active&&isCategoryPeer();
   if(active&&research.parentElement!==body)body.insertBefore(research,clear);
   if(!active&&research.parentNode!==home.parentNode)home.after(research);
-  peerFilters.hidden=!peer;
+  peerFilters.hidden=!peer;const tabs=$('.pr-view-switch');tabs.hidden=!peer;if(peer&&advanced.parentElement!==tabs)tabs.append(advanced);if(!peer&&advanced.parentElement===tabs)$('#rrMain .rr-heading').after(advanced);
   const view=[state.mode,state.group,state.focus,state.peerView,state.routeActive,state.readerNetwork].join('|');
   if(view!==lastView){advanced.open=false;if($('#rrMoreGroups'))$('#rrMoreGroups').open=false;lastView=view;}
   $('.rr-options').open=true;
