@@ -3,7 +3,7 @@
  const R=window.AtlasResearch,ledger=window.ATLAS_REVENUE;
  ledger.directions=window.ATLAS_DIRECTIONS;
  $('.canvas-card').id='atlasCanvas';
- Object.assign(state,{revenue:'all',marketDirection:'all',routeActive:false,routeFrom:'',routeTo:'',routeEvidence:'public',routeDirection:'connectivity',routeKind:'all'});
+ Object.assign(state,{revenue:'all',marketDirection:'all',routeActive:false,routeFrom:'',routeTo:'',routeEvidence:'all',routeDirection:'connectivity',routeKind:'all'});
  const income=n=>R.revenue(n,ledger),tag=n=>{const r=income(n);return `<span class="revenue-tag revenue-${r.key}">${esc(r.label)}${r.record?' · '+esc(r.record.period)+' · '+esc(r.record.scope):''}</span>`;};
  const bar=document.createElement('section');bar.className='research-bar';bar.setAttribute('aria-label','收入与市场方向');
  bar.innerHTML='<label>收入重心<select id="revenueFilter" aria-label="收入重心"><option value="all">全部收入方向</option><option value="domestic">国内为主</option><option value="overseas">海外为主</option><option value="balanced">国内海外并重</option><option value="unscoped">仅关系主体</option></select></label><details class="source-filter"><summary>原表检索</summary><label>原表市场方向<select id="marketDirection" aria-label="原表市场方向"><option value="all">全部原表方向</option><option>国内市场</option><option>海外出海</option><option>国内外双线</option></select></label></details><span id="revenueCoverage"></span>';
@@ -24,7 +24,7 @@
  panel.innerHTML='<summary>查两家公司之间的关系路径</summary><div class="route-controls"><label>起点公司<input id="routeFrom" list="routeCompanies" placeholder="公司名称或 ID" autocomplete="off"></label><button class="btn" id="routeSwap" aria-label="交换起点终点">⇄</button><label>终点公司<input id="routeTo" list="routeCompanies" placeholder="公司名称或 ID" autocomplete="off"></label><label>证据范围<select id="routeEvidence"><option value="public">仅公开证据</option><option value="all">公开 + 原始 MCP</option></select></label><label>连接方式<select id="routeDirection"><option value="connectivity">查关联（允许反向查找）</option><option value="directed">仅沿已记录方向</option></select></label><label>关系类型<select id="routeKind"><option value="all">全部类型</option><option value="capital">股权／交易</option><option value="business">业务关联</option><option value="people">人员／履历</option></select></label><button class="btn primary" id="routeFind">查找路径</button><button class="btn" id="routeClear">退出路径</button></div><datalist id="routeCompanies"></datalist><p class="route-hint">在全量主体中查找，不受地图、品类和梯队筛选限制。优先使用公开证据，再选择较短路径；展示一条最优路径。连通不等于控制，历史交易不代表当前持股。</p><div id="routeResult" class="route-result" aria-live="polite"></div>';
  $('#factionEvidence').after(panel);
  $('#routeCompanies').innerHTML=sorted(DATA.nodes).map(n=>`<option value="${esc(n.id+' · '+n.name)}">${esc(n.full||n.name)}</option>`).join('');
- function resolve(value){value=value.trim();const id=value.split(' · ')[0];if(byId.has(id))return id;const found=DATA.nodes.filter(n=>n.name===value||n.full===value);return found.length===1?found[0].id:null;}
+ function resolve(value){value=value.trim();const id=value.split(' · ')[0];if(byId.has(id))return DATA.aliases[id]||id;const found=DATA.nodes.filter(n=>n.name===value||n.full===value);return found.length===1?(DATA.aliases[found[0].id]||found[0].id):null;}
  function sync(){
   $('#revenueFilter').value=state.revenue;$('#marketDirection').value=state.marketDirection;
   $('.source-filter summary').textContent=state.marketDirection==='all'?'原表检索':'原表：'+state.marketDirection;
@@ -66,7 +66,7 @@
   $('#detail .detail-header').after(section);
  };
  const beforeMode=setMode;setMode=function(mode){beforeMode(mode);sync();};
- const beforeReset=reset;reset=function(){Object.assign(state,{revenue:'all',marketDirection:'all',routeActive:false,routeFrom:'',routeTo:'',routeEvidence:'public',routeDirection:'connectivity',routeKind:'all'});beforeReset();sync();};
+ const beforeReset=reset;reset=function(){Object.assign(state,{revenue:'all',marketDirection:'all',routeActive:false,routeFrom:'',routeTo:'',routeEvidence:'all',routeDirection:'connectivity',routeKind:'all'});beforeReset();sync();};
  const beforeFocus=focusCompany;focusCompany=function(id){state.routeActive=false;beforeFocus(id);};
  for(const [id,key]of [['revenueFilter','revenue'],['marketDirection','marketDirection']])$('#'+id).onchange=e=>{state[key]=e.target.value;state.routeActive=false;state.focus=null;state.selected=null;state.peerPage=0;geoState.city=null;closeDetail();refresh();sync();panel.open=false;};
  $('#routeFind').onclick=()=>{const from=resolve($('#routeFrom').value),to=resolve($('#routeTo').value);if(!from||!to){$('#routeResult').textContent='请从建议列表选择公司，或输入唯一的公司全名／ID。';return;}Object.assign(state,{routeFrom:from,routeTo:to,routeActive:true,focus:null,selected:null,group:'',query:''});for(const key of ['routeEvidence','routeDirection','routeKind'])state[key]=$('#'+key).value;$('#search').value='';closeDetail();setMode('graph');refresh();$('#atlasCanvas').scrollTop=0;};
@@ -74,7 +74,7 @@
  $('#routeClear').onclick=()=>{state.routeActive=false;state.selected=null;closeDetail();refresh();sync();panel.open=false;};
  for(const key of ['routeEvidence','routeDirection','routeKind'])$('#'+key).onchange=e=>{state[key]=e.target.value;if(state.routeActive){closeDetail();refresh();}};
  for(const key of ['routeFrom','routeTo'])$('#'+key).onchange=e=>{state[key]=resolve(e.target.value)||'';if(state.routeActive){state.routeActive=false;refresh();} };
- document.addEventListener('click',e=>{const b=e.target.closest('[data-route-start],[data-route-end]');if(!b)return;state[b.dataset.routeStart?'routeFrom':'routeTo']=b.dataset.routeStart||b.dataset.routeEnd;state.routeActive=false;closeDetail();setMode('graph');panel.open=true;sync();$('#'+(b.dataset.routeStart?'routeTo':'routeFrom')).focus();});
+ document.addEventListener('click',e=>{const b=e.target.closest('[data-route-start],[data-route-end]');if(!b)return;state[b.dataset.routeStart?'routeFrom':'routeTo']=DATA.aliases[b.dataset.routeStart||b.dataset.routeEnd]||b.dataset.routeStart||b.dataset.routeEnd;if(b.dataset.routeStart)state.routeTo='';state.routeActive=false;closeDetail();setMode('graph');panel.open=true;sync();$('#'+(b.dataset.routeStart?'routeTo':'routeFrom')).focus();});
  // Ordinary navigation exits path isolation, so subsequent category controls work normally.
  for(const el of $$('[data-scope],#factionBack,#clearSearch')){const handler=el.onclick;el.onclick=function(e){state.routeActive=false;return handler?.call(this,e);};}
  for(const el of $$('#genre,#factionSelect,#audience,#graphTier,#peerRole,#peerCategory')){const handler=el.onchange;el.onchange=function(e){state.routeActive=false;return handler?.call(this,e);};}

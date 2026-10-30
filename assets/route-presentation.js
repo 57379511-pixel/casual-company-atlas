@@ -8,12 +8,12 @@
  const picker=document.createElement('dialog');picker.className='route-picker';picker.setAttribute('aria-labelledby','routePickerTitle');
  picker.innerHTML='<header><h2 id="routePickerTitle">选择公司</h2><button class="btn" data-picker-close aria-label="关闭公司选择">关闭 ×</button></header><input id="routePickerSearch" aria-label="搜索要关联的公司" placeholder="搜索公司名称、游戏产品" autocomplete="off"><p id="routePickerHint"></p><div id="routePickerList"></div>';
  document.body.append(picker);let picking='routeFrom',choices=[];
- function pickerList(){const q=$('#routePickerSearch').value.trim().toLowerCase(),rows=choices.filter(x=>[x.n.name,x.n.full,x.n.products,x.n.originalProducts,x.n.id].join(' ').toLowerCase().includes(q));
+ function pickerList(){const q=$('#routePickerSearch').value.trim().toLowerCase(),rows=choices.filter(x=>(q||!state[picking==='routeFrom'?'routeTo':'routeFrom']||Number.isFinite(x.hops))&&[x.n.name,x.n.full,x.n.products,x.n.originalProducts,x.n.id].join(' ').toLowerCase().includes(q));
   $('#routePickerList').innerHTML=rows.map(x=>`<button data-picker-company="${esc(x.n.id)}">${iconHTML(x.n)}<span><strong>${esc(x.n.name)}</strong><small>${esc(x.n.full||x.n.role||'')}</small></span><em>${esc(x.hint)}</em></button>`).join('')||'<p>没有匹配公司，请换个名称或产品搜索。</p>';
  }
  function openPicker(key){picking=key;const other=state[key==='routeFrom'?'routeTo':'routeFrom'];
-  choices=DATA.nodes.filter(n=>n.id!==other).map(n=>{const p=other?R.path(DATA.nodes,DATA.links,other,n.id,{evidence:state.routeEvidence,direction:'connectivity',kind:state.routeKind}):null;return {n,hops:p?.nodes.length?p.steps.length:Infinity,hint:!other?'选择':p?.nodes.length?(p.steps.length===1?'直接关联':'通过 '+(p.steps.length-1)+' 家主体关联'):'当前范围未收录连接'};}).sort((a,b)=>a.hops-b.hops||(a.n.tier||9)-(b.n.tier||9)||a.n.name.localeCompare(b.n.name,'zh'));
-  $('#routePickerTitle').textContent=other?'查看与'+byId.get(other).name+'的关系':'先选一家公司';$('#routePickerHint').textContent=other?'优先展示有连接的公司；点击即展开关系。':'可以搜索名称或代表游戏，点选后再选另一家公司。';$('#routePickerSearch').value='';pickerList();picker.showModal();$('#routePickerSearch').focus();
+  choices=DATA.nodes.filter(n=>n.id!==other&&!DATA.aliases[n.id]).map(n=>{const p=other?R.path(DATA.nodes,DATA.links,other,n.id,{evidence:state.routeEvidence,direction:'connectivity',kind:state.routeKind}):null;return {n,hops:p?.nodes.length?p.steps.length:Infinity,hint:!other?'选择':p?.nodes.length?(p.steps.length===1?'直接关联':'通过 '+(p.steps.length-1)+' 家主体关联'):'当前范围未收录连接'};}).sort((a,b)=>a.hops-b.hops||(a.n.tier||9)-(b.n.tier||9)||a.n.name.localeCompare(b.n.name,'zh'));
+  $('#routePickerTitle').textContent=other?'查看与'+byId.get(other).name+'的关系':'先选一家公司';$('#routePickerHint').textContent=other?'先展示有连接的公司；点击即展开。输入名称可搜索全部公司。':'可以搜索名称或代表游戏，点选后再选另一家公司。';$('#routePickerSearch').value='';pickerList();picker.showModal();$('#routePickerSearch').focus();
  }
  $('#routePickerSearch').addEventListener('input',pickerList);picker.querySelector('[data-picker-close]').onclick=()=>picker.close();
  picker.addEventListener('keydown',e=>{if(e.key==='Escape')e.stopPropagation();},true);
