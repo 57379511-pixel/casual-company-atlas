@@ -5,7 +5,7 @@
  const board=document.createElement('section');board.id='rrPeerBoard';board.hidden=true;
  board.innerHTML=`<div class="pr-controls"><label>公司范围<select id="prRole"><option value="developer">研发／研运公司</option><option value="all">全部原表品类公司</option></select></label><label>主营品类<select id="prCategory"></select></label><label>研究梯队<select id="prTier"><option value="all">全部梯队</option><option value="key">头部优先 · T0/T1</option>${[1,2,3,4,5].map(t=>`<option value="${t}">${tierNames[t]}</option>`).join('')}</select></label><button class="btn" id="prReset">重置本组</button></div><nav id="prTierSummary" aria-label="按研究梯队筛选"></nav><div id="prCards"></div><p class="pr-footnote">品类与梯队沿用原表；未明确对应的产品改为展示原表品类记录，具体产品与角色见公司资料。</p>`;
  $('#rrMain .rr-heading').after(board);
- board.insertAdjacentHTML('afterbegin','<nav class="pr-view-switch" aria-label="品类展示方式"><button data-peer-view="cards">分层对标</button><button data-peer-view="relations">关联图谱</button></nav>');
+ board.insertAdjacentHTML('afterbegin','<nav class="pr-view-switch" aria-label="品类展示方式"><button data-peer-view="cards">分层对标</button><button data-peer-view="relations">公司关系图</button></nav>');
  $('#relationReader .rr-directory-title').innerHTML='公司研究目录<small>品类对标 · 公司关系</small>';
  const viewSwitch=board.querySelector('.pr-view-switch');$('#rrMain .rr-heading').after(viewSwitch);
  const income=n=>AtlasResearch.revenue(n,window.ATLAS_REVENUE);
@@ -19,7 +19,7 @@
   $('#rrMain .rr-eyebrow').textContent='CATEGORY BENCHMARKS';
   $('#rrTitle').textContent=g.name.split(' · ')[0]+' · '+(state.audience==='developer'?'研发／研运对标':'品类公司对标');
   $('#rrSummary').textContent=`${nodes.length} 家公司 · 按原表梯队排序 · 产品对应当前品类；其他图标注明公司代表作`;
-  viewSwitch.querySelector('[data-peer-view="cards"]').textContent='公司对标 · '+nodes.length;viewSwitch.querySelector('[data-peer-view="relations"]').textContent='关系总览';
+  viewSwitch.querySelector('[data-peer-view="cards"]').textContent='公司对标 · '+nodes.length;viewSwitch.querySelector('[data-peer-view="relations"]').textContent='公司关系图';
   const relations=state.peerView==='relations';for(const b of viewSwitch.querySelectorAll('[data-peer-view]'))b.setAttribute('aria-pressed',String(b.dataset.peerView===state.peerView));
   $('#prCards').hidden=relations;$('#prTierSummary').hidden=relations;board.querySelector('.pr-footnote').hidden=relations;
   $('#prRole').value=state.audience==='developer'?'developer':'all';

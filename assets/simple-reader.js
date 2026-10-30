@@ -11,7 +11,7 @@
  $('#rrSearch').type='search';$('#rrSearch').placeholder='搜公司或代表产品';
  $('#rrSearch').setAttribute('aria-label','搜索公司或代表产品');
  $('.rr-directory-title').innerHTML='找公司，看关系';
- for(const b of $$('[data-peer-view]'))b.textContent=b.dataset.peerView==='relations'?'关系总览':'公司对标';
+ for(const b of $$('[data-peer-view]'))b.textContent=b.dataset.peerView==='relations'?'公司关系图':'公司对标';
  const clear=document.createElement('button');clear.className='btn';clear.id='rrClearOptions';clear.textContent='恢复默认';body.append(clear);
  clear.onclick=()=>{
   if(isCategoryPeer())$('#prReset').click();
