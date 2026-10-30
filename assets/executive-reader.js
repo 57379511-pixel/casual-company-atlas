@@ -16,7 +16,7 @@
   const sections=[...detail.querySelectorAll('.detail-section')],revenue=sections.find(s=>s.querySelector('h3')?.textContent==='收入重心');
   if(revenue){
    const facts=revenue.querySelector('.facts');
-   if(facts?.textContent.includes('样本')){const fold=document.createElement('details');fold.className='executive-sources';fold.innerHTML='<summary>原表收入样本与时间口径</summary><p class="tiny">样本统计期间与覆盖范围不同，不据此直接相加或计算国内／海外占比。</p>';facts.before(fold);fold.append(facts);}
+   if(facts?.textContent.includes('样本')){const fold=document.createElement('details');fold.className='executive-sources';fold.innerHTML='<summary>收入样本与统计口径</summary><p class="tiny">样本统计期间与覆盖范围不同，不据此直接相加或计算国内／海外占比。</p>';facts.before(fold);fold.append(facts);}
    const products=sections.find(s=>s.querySelector('h3')?.textContent==='代表产品');if(products)products.after(revenue);
   }
   const related=sections.find(s=>s.querySelector('h3')?.textContent.startsWith('公司关系'));

@@ -42,19 +42,19 @@ filteredGraph=function(){
 };
 const classificationGeo=renderGeo;
 renderGeo=function(){
- classificationGeo();$('#geoPane .geo-heading>p').textContent='标签与T0采用最新工作簿 · 柠檬体系在地图合并展示 · 关系图保留各主体';
+ classificationGeo();$('#geoPane .geo-heading>p').textContent='按地域查看公司与代表产品；同一公司的关联名称在地图合并展示';
  $('#geoStats .geo-stat small').textContent='个地图入口';
  $('#geoStats .geo-stat:last-child small').textContent='个标杆／头部入口';
  const matched=geoSelection().find(n=>n.id==='G007');
  if(matched){const button=$('#geoRail [data-geo-company="G007"]');if(button){const note=document.createElement('small');note.className='classification-note';note.textContent='合并柠檬微趣／柠檬曲奇；当前命中：'+matched.mapMatchedIds.map(id=>byId.get(id).name).join('、');button.querySelector('.company-info').append(note);}}
- const details=$('#geoRail details');if(details)details.innerHTML='<summary>地域、分类与合并口径</summary><p>主营品类、梯队严格采用新表。地图入口数不是工商主体数；柠檬曲奇归并至柠檬微趣入口，品类筛选仍按命中成员各自原始标签。关系图保留两条主体记录。城市不等同实际研发办公室。</p>';
+ const details=$('#geoRail details');if(details)details.innerHTML='<summary>地域、分类与合并口径</summary><p>按主营品类与公司梯队筛选。地图入口数不是工商主体数；柠檬曲奇归并至柠檬微趣入口，品类筛选仍按命中成员各自原始标签。关系图保留两条主体记录。城市不等同实际研发办公室。</p>';
 };
 const classificationDetail=showDetail;
 showDetail=function(n){
  classificationDetail(n);const section=document.createElement('section');section.className='detail-section classification-source';
- section.innerHTML=n.originalRecord?`<h3>主营业务</h3><dl class="facts">${field('主营品类',n.category)}${field('业务形态',n.business)}</dl>${n.categoryEvidence?`<details class="detail-reference"><summary>查看品类依据</summary><p>${esc(n.categoryEvidence)}</p><p>原表分类与公开核查角色分别保留，品类标签不等于已确认自研。</p></details>`:''}`:'<h3>关联主体</h3>';
+ section.innerHTML=n.originalRecord?`<h3>主营业务</h3><dl class="facts">${field('主营品类',n.category)}${field('业务形态',n.business)}</dl>${n.categoryEvidence?`<details class="detail-reference"><summary>查看品类依据</summary><p>${esc(n.categoryEvidence)}</p><p>主营品类与公开核查角色分别展示，品类标签不等于已确认自研。</p></details>`:''}`:'<h3>关联主体</h3>';
  if(n.id==='G007'||n.id==='G053')section.innerHTML+=`<button class="relationship" data-company="${n.id==='G007'?'G053':'G007'}">查看${n.id==='G007'?'柠檬曲奇':'柠檬微趣'}</button>`;
- const peer=groupByName.get(state.group);if(peer?.analysisType==='categoryPeer')section.innerHTML+=`<details class="detail-reference"><summary>查看本组纳入依据</summary><p>原表命中：${esc(String(n.category||'').split('、').filter(c=>peer.selectionCategories.includes(c)).join('、'))}。核查角色：${esc(n.role)}。入组不等于该品类的每款产品均已确认自研。</p></details>`;
+ const peer=groupByName.get(state.group);if(peer?.analysisType==='categoryPeer')section.innerHTML+=`<details class="detail-reference"><summary>查看本组纳入依据</summary><p>匹配品类：${esc(String(n.category||'').split('、').filter(c=>peer.selectionCategories.includes(c)).join('、'))}。核查角色：${esc(n.role)}。入组不等于该品类的每款产品均已确认自研。</p></details>`;
  $('#detail .detail-header').after(section);
 };
 const classificationGraph=renderGraph;
@@ -103,19 +103,19 @@ renderGraph=function(reset=true){
   $('#stageSubtitle').textContent=(pages>1?'本页 ':'')+summary+'。'+(allRoles?'含发行、运营、境外等其他角色，不等同研发商名单。':'品类按原表；公司研发资料不等于每个品类均已确认自研。')+' 图标为公司代表产品；向下滚动查看其余梯队。';
   $('#viewCount').textContent='显示 '+state.visible.length+' / 筛选 '+total+' 条 · '+state.edges.length+' 条本页关系';
   const summaryEl=$('#factionEvidence summary');if(summaryEl)summaryEl.textContent=g.name.split(' · ')[0]+' · 原表品类候选 '+g.memberIds.length+' 条 · 国内研发／研运资料 '+g.researchMemberIds.length+' 条';
-  $('#filterNote').textContent='原表标签决定品类；角色单独筛选';
+  $('#filterNote').textContent='主营品类与公司角色分别筛选';
   $('#peerPageInfo').textContent=(state.peerPage+1)+' / '+pages+' 页';$('#peerPrev').disabled=state.peerPage===0;$('#peerNext').disabled=state.peerPage+1>=pages;$('#peerPager').hidden=pages<=1;
   if(allRoles)for(const el of $$('#nodeLayer .node')){const n=byId.get(el.dataset.node),p=state.positions.get(n.id);el.append(svgEl('text',{y:p.r+32,'text-anchor':'middle',fill:'#647a8c','font-size':10,class:'peer-role-note'},({developer:'研发／研运资料',overseas:'境外主体',capital:'资本／平台关联',source:'原表资料'}[n.scope]||'发行／运营等资料')));}
   $('#emptyState h3').textContent='当前梯队或搜索条件下没有公司';$('#emptyText').textContent='请切换“全部梯队”或清空搜索；不会用其他品类公司补位。';
  }
 };
 const classificationAudit=renderAudit;
-renderAudit=function(){classificationAudit();const card=document.createElement('article');card.className='audit-card';card.innerHTML=`<div class="idline">2026-10-23 · 分类与T0修订</div><h3>${DATA.meta.t0SourceRecords}条T0记录 · ${DATA.meta.t0MapEntries}个T0地图入口</h3><p>${esc(DATA.meta.classificationPolicy)}</p><p>共${DATA.categories.length}个原表主营品类。${esc(DATA.meta.peerSelectionPolicy)} 公司层研发资料不等于所有主营品类均已独立确认自研。</p>`;$('#auditGrid').prepend(card);};
-$('#genre').setAttribute('aria-label','主营品类（严格按Excel）');
+renderAudit=function(){classificationAudit();const card=document.createElement('article');card.className='audit-card';card.innerHTML=`<div class="idline">2026-10-23 · 分类与T0修订</div><h3>${DATA.meta.t0SourceRecords}条T0记录 · ${DATA.meta.t0MapEntries}个T0地图入口</h3><p>主营品类用于划定公司范围；业务形态、研发角色与公司评级分别展示。</p><p>共收录${DATA.categories.length}个主营品类。研发／研运公司按公司层面的公开资料筛选，不等于其每个品类或每款产品均已确认自研。</p>`;$('#auditGrid').prepend(card);};
+$('#genre').setAttribute('aria-label','主营品类');
 $('#genre').options[0].textContent='全部主营品类';
 const graphTier=document.createElement('select');graphTier.id='graphTier';graphTier.setAttribute('aria-label','图谱研究梯队');graphTier.innerHTML='<option value="all">全部梯队</option><option value="key">头部优先（T0/T1）</option><option value="1">T0 标杆</option><option value="2">T1 头部</option><option value="3">T2 中坚</option><option value="4">T3 长尾</option><option value="5">T4 观察</option>';
 $('#filters').insertBefore(graphTier,$('#peopleToggle'));
-const peerControls=document.createElement('div');peerControls.className='peer-controls';peerControls.innerHTML='<select id="peerRole" aria-label="品类纳入范围"><option value="developer">国内研发／研运资料</option><option value="all">原表品类全量（含其他角色）</option></select><select id="peerCategory" aria-label="组内主营品类"></select><span id="peerPager" hidden><button id="peerPrev" aria-label="上一页品类公司">←</button><span id="peerPageInfo"></span><button id="peerNext" aria-label="下一页品类公司">→</button></span>';
+const peerControls=document.createElement('div');peerControls.className='peer-controls';peerControls.innerHTML='<select id="peerRole" aria-label="品类纳入范围"><option value="developer">国内研发／研运资料</option><option value="all">全部品类公司（含其他角色）</option></select><select id="peerCategory" aria-label="组内主营品类"></select><span id="peerPager" hidden><button id="peerPrev" aria-label="上一页品类公司">←</button><span id="peerPageInfo"></span><button id="peerNext" aria-label="下一页品类公司">→</button></span>';
 $('#filters').insertBefore(peerControls,graphTier);
 $('#peerRole').onchange=e=>{state.audience=e.target.value;scopeControl.value=state.audience;state.peerPage=0;state.selected=null;closeDetail();refresh();};
 $('#peerCategory').onchange=e=>{state.genre=e.target.value;$('#genre').value=state.genre;state.peerPage=0;state.selected=null;closeDetail();refresh();};
@@ -124,9 +124,9 @@ graphTier.onchange=()=>{state.scope=graphTier.value;state.peerPage=0;state.listA
 $('#genre').onchange=e=>{state.genre=e.target.value;state.group='';state.scope='all';state.listAll=false;state.focus=null;state.selected=null;closeDetail();refresh();};
 // Keep source labels intact; SLG is outside this atlas's selectable research scope.
 for(const option of [...$('#genre').options])if(option.value==='SLG')option.remove();
-$('#genre').title='按原表主营品类筛选；SLG不属于本次研究主题，不提供筛选入口';
-$('#methodContent').insertAdjacentHTML('afterbegin','<p>品类筛选不提供SLG选项；原表中的SLG标签仍保留在公司资料与导出中，不删除相关公司或关系。</p>');
-$('#methodContent').insertAdjacentHTML('afterbegin',`<p><strong>本版T0：${DATA.meta.t0SourceRecords}条原始记录；地图合并柠檬体系后为${DATA.meta.t0MapEntries}个入口。评级采用原表结果与V3标准，不自行重算或改档。</strong></p>`);
+$('#genre').title='按主营品类筛选；SLG不属于本次研究主题，不提供筛选入口';
+$('#methodContent').insertAdjacentHTML('afterbegin','<p>研究目录不展示SLG及棋牌，相关公司仍可通过全部公司检索。</p>');
+$('#methodContent').insertAdjacentHTML('afterbegin',`<p><strong>综合评级T0：${DATA.meta.t0SourceRecords}条公司记录；地图合并关联名称后为${DATA.meta.t0MapEntries}个入口。国内与海外评级分别展示。</strong></p>`);
 const classificationGroupChange=$('#factionSelect').onchange;
 $('#factionSelect').onchange=e=>{state.genre='all';state.scope='all';state.peerPage=0;state.audience=groupByName.get(e.target.value)?.defaultAudience||'all';state.listAll=false;$('#genre').value='all';scopeControl.value=state.audience;classificationGroupChange(e);};
 // Search can add/remove nodes: recalculate positions rather than reusing an old subset.

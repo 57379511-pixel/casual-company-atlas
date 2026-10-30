@@ -15,7 +15,7 @@
   const research=isCategoryPeer()&&state.peerView!=='relations'&&!state.routeActive;
   const query=(state.readerSearch||state.query).trim().toLowerCase();
   const groups=DATA.groups.filter(g=>[g.name,...g.memberIds.map(id=>byId.get(id)?.name||'')].join(' ').toLowerCase().includes(query));
-  const section=(name,rows)=>rows.length?`<h3>${name}</h3>`+rows.map(g=>`<button class="rr-group ${!state.focus&&(state.group||defaultGroup)===g.name?'active':''}" data-rr-group="${esc(g.name)}"><strong>${esc(g.displayName||(g.raw?g.name.replace(/^原表 · /,''):g.name.split(' · ')[0]))}</strong><span>${esc(g.companyFamily?(g.groupLabel||'投资 · 团队 · 业务'):g.name.split(' · ')[1]||'公司关系')}</span><small>${g.analysisType==='categoryPeer'?(g.sourceCategory?'原表品类':'组合品类'):groupEdges(g).length+' 条关系'}</small></button>`).join(''):'';
+  const section=(name,rows)=>rows.length?`<h3>${name}</h3>`+rows.map(g=>`<button class="rr-group ${!state.focus&&(state.group||defaultGroup)===g.name?'active':''}" data-rr-group="${esc(g.name)}"><strong>${esc(g.displayName||(g.raw?g.name.replace(/^原表 · /,''):g.name.split(' · ')[0]))}</strong><span>${esc(g.companyFamily?(g.groupLabel||'投资 · 团队 · 业务'):g.name.split(' · ')[1]||'公司关系')}</span><small>${g.analysisType==='categoryPeer'?(g.sourceCategory?'主营品类':'组合品类'):groupEdges(g).length+' 条关系'}</small></button>`).join(''):'';
   const families=groups.filter(g=>g.companyFamily),primary=groups.filter(g=>!g.raw&&!g.analysisType&&!g.companyFamily),peers=groups.filter(g=>g.analysisType==='categoryPeer'),raw=groups.filter(g=>g.raw&&!g.companyFamily&&!g.supersededBy);
   const results=query?'<p class="rr-no-results">完整公司搜索结果显示在右侧；下方为匹配分组。</p>':'';
   const all=[...families,...primary],pinned=['指色系 · 投资与关联团队','腾讯 · 历史投资与团队','豪腾 · 产品与创业团队'];
@@ -23,8 +23,8 @@
   const ordered=[...featured,...all.filter(g=>!featured.includes(g))];
   const sourcePeers=peers.filter(g=>g.sourceCategory).sort((a,b)=>a.categoryOrder-b.categoryOrder),shortcuts=peers.filter(g=>!g.sourceCategory);
   const categoryRows=sourcePeers.map(g=>{const count=AtlasGrades.universe({group:g.name,genre:'all',query:''}).length;return `<button class="rr-group rr-source-category ${state.group===g.name?'active':''}" data-rr-group="${esc(g.name)}" title="${AtlasGrades.labels[state.gradeDirection]}分级 · 当前公司范围 ${count} 家"><strong>${esc(g.selectionCategories[0])}</strong><small>${count?count+' 家':'符合条件 0 家'}</small></button>`;}).join('');
-  $('#rrGroups').innerHTML=research?(query?results:'')+(sourcePeers.length?'<h3>原表主营品类</h3><p class="directory-count-note">家数：本方向评级 · 当前公司范围</p><div class="rr-category-grid">'+categoryRows+'</div>':'')+section('快捷汇总',shortcuts)+(query&&!results&&!peers.length?'<p class="rr-no-results">没有匹配结果。</p>':'')+'<button id="allCompanies">全部公司 →</button>':
-   '<div class="rr-relations-directory">'+(query?(results+section('相关公司系',ordered)+section('原表关系分组',raw)||'<p class="rr-no-results">没有匹配结果，试试公司简称或产品名。</p>'):section('公司系与关联团队',ordered)+section('原表关系分组',raw))+'</div>';
+  $('#rrGroups').innerHTML=research?(query?results:'')+(sourcePeers.length?'<h3>主营品类</h3><p class="directory-count-note">家数：本方向评级 · 当前公司范围</p><div class="rr-category-grid">'+categoryRows+'</div>':'')+section('快捷汇总',shortcuts)+(query&&!results&&!peers.length?'<p class="rr-no-results">没有匹配结果。</p>':'')+'<button id="allCompanies">全部公司 →</button>':
+   '<div class="rr-relations-directory">'+(query?(results+section('相关公司系',ordered)+section('关系分组',raw)||'<p class="rr-no-results">没有匹配结果，试试公司简称或产品名。</p>'):section('公司系与关联团队',ordered)+section('关系分组',raw))+'</div>';
   $('#rrSearch').value=state.readerSearch;
  }
  const label=e=>e.type.replace(/持股[\d.]+%（公开工商平台记录）/g,'投资／持股').replace(/（原始MCP记录）/g,'').replace('共同任职／自然人关联','共同任职').replace('同法定代表人线索','同法人记录')+(/^\d{4}(?:-\d{2})?(?:-\d{2})?$/.test(e.time||'')&&!e.type.includes(e.time.slice(0,4))?' · '+e.time:'')+(e.evidenceLayer==='public'?' · 公开支持':' · 原始记录');
@@ -45,7 +45,7 @@
   overview.innerHTML=p.overview?`<p class="rr-overview-intro">${p.groups.length} 组已收录的关联网络 · 点击一组展开；同品类不代表相互关联。</p><div class="rr-component-grid">${p.groups.map(c=>`<button class="rr-component" data-rr-component="${esc(c.id)}"><span class="rr-component-heading">${iconHTML(c.lead)}<strong>${esc(c.lead.name)}等</strong><span>展开 →</span></span><span class="rr-component-names">${c.nodes.filter(n=>n.id!==c.lead.id).slice(0,4).map(n=>esc(n.name)).join(' · ')}${c.nodes.length>5?' …':''}</span><span class="rr-component-count">${c.nodes.length} 个主体 · ${c.edges.length} 条关系</span></button>`).join('')}</div>`:'';
   bar.innerHTML=`${p.component?'<button class="btn" data-rr-component="">← 返回本品类全部关系组</button>':''}<span class="rr-desktop-reading">${p.backbone?'投资与交易主线':'已收录关系'} · ${p.graph.nodes.length} 个主体 / ${p.graph.edges.length} 条${p.other.length?'；另有 '+p.other.length+' 条人员／业务记录':''}</span><span class="rr-mobile-reading">按公司逐条阅读 · ${p.scope.nodes.length} 个主体 / ${p.scope.edges.length} 条关系</span>${p.scope.edges.some(e=>AtlasRelations.kind(e)==='capital')&&p.scope.edges.some(e=>AtlasRelations.kind(e)!=='capital')?`<button class="btn" id="rrAllLinks">${state.readerAllLinks?'收起为投资主线':'所有关系叠加显示'}</button>`:''}`;
   branches.hidden=p.overview||!p.other.length;
-  branches.innerHTML=p.other.length?`<h3>其他关联 · ${p.other.length} 条</h3><p>以下单独列出，不并入投资层级。</p>`+['business','people','pending'].map(kind=>{const edges=p.other.filter(e=>AtlasRelations.kind(e)===kind);return edges.length?`<details><summary>${{business:'业务与产品关联',people:'人员与团队履历',pending:'原表其他关系'}[kind]} · ${edges.length} 条</summary>${edgeRows({...m,edges})}</details>`:'';}).join(''):'';
+  branches.innerHTML=p.other.length?`<h3>其他关联 · ${p.other.length} 条</h3><p>以下单独列出，不并入投资层级。</p>`+['business','people','pending'].map(kind=>{const edges=p.other.filter(e=>AtlasRelations.kind(e)===kind);return edges.length?`<details><summary>${{business:'业务与产品关联',people:'人员与团队履历',pending:'其他关系记录'}[kind]} · ${edges.length} 条</summary>${edgeRows({...m,edges})}</details>`:'';}).join(''):'';
   $('#rrMobile').innerHTML=mobile(p.scope);
   $('#rrEdges').innerHTML=edgeRows(p.scope);$('#rrRowsTitle').textContent=`逐条阅读与查证 · ${p.scope.edges.length} 条`;
   return p;
@@ -57,7 +57,7 @@
   if(peer){directory();window.AtlasPeerReader?.sync();if(state.peerView!=='relations')return null;}
   $('#rrMain .rr-eyebrow').textContent='COMPANY RELATIONSHIPS';
   const m=model();directory();const root=byId.get(m.focus);
-  $('#rrTitle').textContent=peer?m.group.name.split(' · ')[0]+' · 关联图谱':state.focus?root.name+'的关联公司':m.group?.name||'公司关系';
+  $('#rrTitle').textContent=peer?m.group.name.split(' · ')[0]+' · 关联图谱':state.focus?root.name+'的关联公司':m.group?.name.replace(/^原表 · /,'')||'公司关系';
   $('#rrSummary').textContent=peer?'从当前品类公司向外连接投资、团队与业务关系；跨品类主体一并展示。':state.focus?'查看直接关联的公司与主体，点开连线可查来源。':(m.group?.summary||m.group?.description||'按已收录关系逐层查看。').replace(/不存在.*$/,'');
   const publicCount=m.edges.filter(e=>e.evidenceLayer==='public').length;
   $('#rrScope').textContent=`${m.nodes.length} 个主体 · ${m.edges.length} 条关系 · ${publicCount} 条公开来源支持${m.edges.length-publicCount?' / '+(m.edges.length-publicCount)+' 条原始 MCP 记录':''}`;

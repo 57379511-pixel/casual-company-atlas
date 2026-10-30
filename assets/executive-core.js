@@ -34,13 +34,13 @@
   if(selected.includes('三消')&&n.id==='G008')return {text:'Truck Star',exact:true,basis:'开发商官方 App Store 页面明确标注 Match-3',url:'https://apps.apple.com/us/app/truck-star/id6476976929',icon:{title:'Truck Star',data:'./assets/product-icons/truck-star.jpg',store:'https://apps.apple.com/us/app/truck-star/id6476976929'}};
   // Explicit product identity only: a generic company hit is not genre evidence.
   if(selected.includes('二合')&&/merge/i.test(title))return {text:title,exact:true,basis:'产品商店标题标注 Merge',url:n.icon.store};
-  if(selected.includes('三消')&&n.id==='G050')return {text:'开心消消乐 · 海滨消消乐',exact:true,basis:'原表代表产品与三消记录',url:n.icon?.store};
-  if(selected.includes('三消')&&n.id==='G177')return {text:'梦幻庭院',exact:false,basis:'原表品类依据明确记载',url:''};
+  if(selected.includes('三消')&&n.id==='G050')return {text:'开心消消乐 · 海滨消消乐',exact:true,basis:'代表产品与三消业务记录',url:n.icon?.store};
+  if(selected.includes('三消')&&n.id==='G177')return {text:'梦幻庭院',exact:false,basis:'品类资料明确记载',url:''};
   const entries=selected.filter(c=>String(n.category||'').split('、').includes(c)).map(c=>{
    const start=raw.indexOf(c+'('),end=start<0?-1:raw.indexOf(')',start),entry=start<0?'':raw.slice(start,end<0?undefined:end+1),count=entry.match(/共(\d+)款/);
-   return c+(count?' · 原表收录 '+count[1]+' 款':' · 原表主营品类');
+   return c+(count?' · 收录 '+count[1]+' 款':' · 主营品类');
   });
-  return {text:entries.slice(0,2).join('；')||'查看原表品类依据',exact:false,basis:raw,url:''};
+  return {text:entries.slice(0,2).join('；')||'查看品类依据',exact:false,basis:raw,url:''};
  }
  const productNode=n=>product(n).icon?{...n,icon:product(n).icon}:n;
  window.AtlasExecutive={canonical,components,plan,product,productNode};
