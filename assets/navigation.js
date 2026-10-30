@@ -37,7 +37,7 @@
   const active=section();document.body.dataset.section=active;
   for(const b of $$('.tab-set [data-section]')){b.classList.toggle('active',b.dataset.section===active);b.setAttribute('aria-selected',String(b.dataset.section===active));}
   const title=$('.rr-directory-title');if(title)title.textContent=active==='companies'?AtlasGrades.labels[state.gradeDirection]+'分级 · 按品类找公司':'按公司系看关系';
-  $('#rrSearch').placeholder=active==='companies'?'搜本方向公司或产品':'搜公司或代表产品';
+  $('#rrSearch').placeholder='搜索公司或代表产品';
   if($('#viewHome'))$('#viewHome').textContent='公司研究首页';
   $('#geoPane .geo-heading h2').textContent='国内休闲游戏公司地域分布';
  }
