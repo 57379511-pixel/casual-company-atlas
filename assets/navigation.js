@@ -3,7 +3,7 @@
  const defaultCompany='二合 · 国内研发对标',defaultFamily='指色系 · 投资与关联团队';
  const section=(s=state)=>s.mode==='geo'?'geo':s.mode==='audit'?'audit':s.mode==='list'||(s.mode==='graph'&&!s.routeActive&&!s.readerNetwork&&!s.focus&&groupByName.get(s.group)?.analysisType==='categoryPeer'&&s.peerView!=='relations')?'companies':'relations';
  const labels={companies:'公司研究',relations:'公司关系图',geo:'地域分布',audit:'证据与口径'};
- const retained=['mode','scope','genre','group','query','audience','revenue','marketDirection','listAll','readerSearch','navQuery'];
+ const retained=['mode','scope','genre','group','query','audience','revenue','marketDirection','listAll','readerSearch','navQuery','gradeDirection'];
  let research=null;
  const audit=$('[data-mode="audit"]');audit.className='btn';audit.textContent='证据与口径';$('.top-meta').append(audit);
  $('.tab-set').innerHTML=Object.entries(labels).filter(([k])=>k!=='audit').map(([k,v])=>`<button class="tab" data-section="${k}" role="tab">${v}</button>`).join('');
@@ -36,7 +36,8 @@
  function sync(){
   const active=section();document.body.dataset.section=active;
   for(const b of $$('.tab-set [data-section]')){b.classList.toggle('active',b.dataset.section===active);b.setAttribute('aria-selected',String(b.dataset.section===active));}
-  const title=$('.rr-directory-title');if(title)title.textContent=active==='companies'?'按品类找公司':'按公司系看关系';
+  const title=$('.rr-directory-title');if(title)title.textContent=active==='companies'?AtlasGrades.labels[state.gradeDirection]+'分级 · 按品类找公司':'按公司系看关系';
+  $('#rrSearch').placeholder=active==='companies'?'搜本方向公司或产品':'搜公司或代表产品';
   if($('#viewHome'))$('#viewHome').textContent='公司研究首页';
   $('#geoPane .geo-heading h2').textContent='国内休闲游戏公司地域分布';
  }
@@ -47,7 +48,7 @@
  const oldMode=setMode;setMode=function(...args){const r=oldMode(...args);sync();return r;};
  const oldRender=renderGraph;renderGraph=function(...args){const r=oldRender(...args);sync();return r;};
  const oldRefresh=refresh;refresh=function(...args){const r=oldRefresh(...args);sync();return r;};
- window.AtlasNavigation={section,label:s=>labels[section(s)],home,open,openCompany,openFamily,sync};
+ window.AtlasNavigation={section,label:s=>labels[section(s)]+(section(s)==='companies'&&s.mode==='graph'?' · '+AtlasGrades.labels[s.gradeDirection||'domestic']+'分级':''),home,open,openCompany,openFamily,sync};
  window.addEventListener('DOMContentLoaded',()=>{const p=new URLSearchParams(location.search);if(!p.has('a')&&!p.has('peer')&&!p.has('family'))home();sync();});
  sync();
 })();

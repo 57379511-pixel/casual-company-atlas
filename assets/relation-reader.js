@@ -17,7 +17,7 @@
   const groups=DATA.groups.filter(g=>[g.name,...g.memberIds.map(id=>byId.get(id)?.name||'')].join(' ').toLowerCase().includes(query));
   const section=(name,rows)=>rows.length?`<h3>${name}</h3>`+rows.map(g=>`<button class="rr-group ${!state.focus&&(state.group||defaultGroup)===g.name?'active':''}" data-rr-group="${esc(g.name)}"><strong>${esc((g.displayName||g.name).split(' · ')[0])}</strong><span>${esc(g.companyFamily?(g.groupLabel||'投资 · 团队 · 业务'):g.name.split(' · ')[1]||'公司关系')}</span><small>${g.analysisType==='categoryPeer'?'原表品类':groupEdges(g).length+' 条关系'}</small></button>`).join(''):'';
   const families=groups.filter(g=>g.companyFamily),primary=groups.filter(g=>!g.raw&&!g.analysisType&&!g.companyFamily),peers=groups.filter(g=>g.analysisType==='categoryPeer'),raw=groups.filter(g=>g.raw&&!g.companyFamily&&!g.supersededBy);
-  const companies=query?DATA.nodes.filter(n=>[n.name,n.full,n.id,n.alias,n.originalProducts,n.verifiedProducts].join(' ').toLowerCase().includes(query)):[];
+  const companies=query?DATA.nodes.filter(n=>(!research||AtlasGrades.tier(n)!==null)&&[n.name,n.full,n.id,n.alias,n.originalProducts,n.verifiedProducts].join(' ').toLowerCase().includes(query)):[];
   const results=companies.length?'<h3>匹配公司 · '+companies.length+'</h3>'+companies.slice(0,12).map(n=>`<button class="rr-search-company" data-company="${esc(n.id)}"><strong>${esc(n.name)}</strong><small>${esc(products(n)||n.full)}</small></button>`).join(''):'';
   const all=[...families,...primary],pinned=['指色系 · 投资与关联团队','腾讯 · 历史投资与团队','豪腾 · 产品与创业团队'];
   const featured=pinned.map(name=>all.find(g=>g.name===name)).filter(Boolean),current=all.find(g=>g.name===state.group);

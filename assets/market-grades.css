@@ -1,0 +1,13 @@
+#gradeDirections{display:flex;gap:12px;margin:0 0 22px;max-width:650px}#gradeDirections[hidden],#gradeMethod[hidden]{display:none!important}
+#gradeDirections button{flex:1;text-align:left;border:1px solid #d7e3ed;background:white;border-radius:10px;padding:14px 18px;font:inherit;cursor:pointer;color:#567286}
+#gradeDirections strong{display:block;font-size:16px}#gradeDirections span{display:block;font-size:12px;margin-top:6px;color:#758b99}
+#gradeDirections [aria-pressed=true]{background:#eaf4ff;border-color:#4c89b4;color:#1d5d8a;box-shadow:inset 0 3px #347dac}
+body[data-grade-direction=overseas] #gradeDirections [aria-pressed=true]{background:#eaf7f1;border-color:#548d77;color:#286a51;box-shadow:inset 0 3px #367f63}
+#gradeMethod{font-size:12px;color:#748897;line-height:1.8;margin:8px 0}#gradeMethod>summary{width:max-content;cursor:pointer}#gradeMethod[open]{background:#fff;border:1px solid #dce6ee;border-radius:8px;padding:12px 16px}#gradeMethodBody p{margin:5px 0 10px}#gradeCsv{margin-top:12px}
+.grade-unlisted{display:flex;flex-wrap:wrap;gap:7px;padding:10px 0}.grade-unlisted button{border:1px solid #dce7ee;background:#f7fafc;border-radius:5px;padding:5px 8px;color:#4f6d81;font:inherit;cursor:pointer}
+.market-grade-mode #rrAdvanced .research-bar{display:none!important}.market-grade-mode .pr-company-foot{flex-wrap:wrap}.market-grade-mode .pr-company-foot .revenue-tag{font-size:10px;max-width:none}
+.pr-grade-tag{font-size:12px;color:#286a99;font-weight:600}.pr-grade-metric{display:block;color:#647e90;font-size:11px;line-height:1.7}.pr-grade-original{font-size:10px;color:#8a9aa5}
+body[data-grade-direction=overseas] .market-grade-label,body[data-grade-direction=overseas] .pr-grade-tag{color:#2e7658}
+.grade-detail-track{padding:12px;border:1px solid #dce6ed;border-radius:8px;margin:10px 0}.grade-detail-track>strong{font-size:14px;color:#2b6b97}.grade-detail-track.grade-overseas>strong{color:#2d785a}.grade-detail-track p{font-size:12px;line-height:1.8;margin:7px 0}.grade-detail-track summary{font-size:12px}
+.pr-grade-metric,.grade-detail-track>p{white-space:pre-line}.grade-thresholds{width:100%;border-collapse:collapse;margin:8px 0 12px;font-size:12px}.grade-thresholds caption{text-align:left;color:#365b72;font-weight:600;margin-bottom:8px}.grade-thresholds th,.grade-thresholds td{text-align:left;vertical-align:top;padding:8px;border-bottom:1px solid #e1eaf0}.grade-thresholds th:first-child{width:44px}.grade-thresholds td{line-height:1.7}
+@media(max-width:760px){#gradeDirections{gap:8px;margin-bottom:18px}#gradeDirections button{padding:12px}#gradeDirections strong{font-size:15px}#gradeDirections span{font-size:11px;line-height:1.6}.pr-grade-metric{font-size:12px}.rr-directory-title{line-height:1.7}}
