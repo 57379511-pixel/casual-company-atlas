@@ -2,7 +2,7 @@
 (()=>{
  const names={geo:'地域分布',graph:'关系图谱',list:'公司清单',audit:'证据与口径'};
  const keys=['mode','scope','genre','group','query','people','pending','selected','focus','listAll','navQuery','audience','peerPage','revenue','marketDirection','routeActive','routeFrom','routeTo','routeEvidence','routeDirection','routeKind','readerKind','readerExpanded','readerFocus','readerSearch','readerNetwork'];
- const scrollIds=['geoPane','geoRail','listPane','auditPane','companyNav','detail','stage','routePanel','atlasCanvas','rrMain','rrScroll','rrGroups'];
+ const scrollIds=['geoPane','geoRail','listPane','auditPane','companyNav','detail','stage','routePanel','atlasCanvas','rrMain','rrScroll','rrGroups','relationReader'];
  const session='atlas-'+Date.now();let entries=[],index=0,restoring=false,pending=null,detail=null,lastTrigger=null;
  const bar=document.createElement('nav');bar.className='navigation-bar';bar.setAttribute('aria-label','浏览路径');
  bar.innerHTML='<div class="navigation-actions"><button id="viewBack" aria-label="返回上一页" disabled>← 返回</button><button id="viewHome">全国概览</button></div><div class="navigation-path" id="viewPath" aria-live="polite"></div><span class="navigation-hint">返回后保留筛选与浏览位置</span>';
@@ -44,9 +44,9 @@
  document.addEventListener('click',e=>{const target=e.target.closest('button,[data-node],[data-company],.edge-hit');if(target){for(const attr of ['data-geo-company','data-company','data-node','data-edge'])if(target.hasAttribute(attr)){lastTrigger='['+attr+'="'+CSS.escape(target.getAttribute(attr))+'"]';break;}}
   if(e.target.closest('[data-history-back]')){e.preventDefault();e.stopImmediatePropagation();back();return;}
   if(e.target.closest('#viewBack,#viewHome'))return;
-  if(e.target.closest('[data-mode],[data-scope],[data-geo-city],[data-city],[data-group],[data-company],[data-geo-company],[data-node],[data-focus],[data-edge],[data-close],#geoBack,#factionBack,#peopleToggle,#pendingToggle,#clearSearch,#auditShortcut,#peerPrev,#peerNext,#clearViewFilters,[data-rr-group],[data-rr-kind],#rrExpand,#rrOldGraph,#rrReturn,#routeFind,#routeClear,#routeSwap,[data-route-start],[data-route-end]'))begin();
+  if(e.target.closest('[data-mode],[data-scope],[data-geo-city],[data-city],[data-group],[data-company],[data-geo-company],[data-node],[data-focus],[data-edge],[data-close],#geoBack,#factionBack,#peopleToggle,#pendingToggle,#clearSearch,#auditShortcut,#peerPrev,#peerNext,#clearViewFilters,[data-rr-group],[data-rr-kind],#rrExpand,#rrOldGraph,#rrReturn,[data-pr-tier],#prReset,#routeFind,#routeClear,#routeSwap,[data-route-start],[data-route-end]'))begin();
  },true);
- document.addEventListener('change',e=>{if(e.target.closest('#rrMcp,#genre,#factionSelect,#audience,#graphTier,#peerRole,#peerCategory,#revenueFilter,#marketDirection,#routeFrom,#routeTo,#routeEvidence,#routeDirection,#routeKind'))begin();},true);
+ document.addEventListener('change',e=>{if(e.target.closest('#prRole,#prCategory,#prTier,#rrMcp,#genre,#factionSelect,#audience,#graphTier,#peerRole,#peerCategory,#revenueFilter,#marketDirection,#routeFrom,#routeTo,#routeEvidence,#routeDirection,#routeKind'))begin();},true);
  document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!$('#method').open){if($('#sidebar').classList.contains('mobile-open')){$('#sidebar').classList.remove('mobile-open');e.stopImmediatePropagation();return;}if($('#detail').classList.contains('open')){e.preventDefault();e.stopImmediatePropagation();back();}}if(e.key==='Enter'&&e.target.matches('tr[data-company]')){e.preventDefault();selectCompany(e.target.dataset.company);}},true);
  $('#viewBack').onclick=back;$('#viewHome').onclick=()=>action(()=>{detail=null;geoState.city=null;native.reset();$('#routePanel').open=false;native.setMode('geo');refresh();});
  window.addEventListener('popstate',e=>{if(e.state?.atlas===session&&entries[e.state.index]){pending=null;index=e.state.index;restore(entries[index]);}});
