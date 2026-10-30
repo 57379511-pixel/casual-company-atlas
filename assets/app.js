@@ -6,7 +6,7 @@ const state={mode:'graph',scope:'key',genre:'all',group:'',query:'',people:true,
 const groupByName=new Map(DATA.groups.map(g=>[g.name,g]));
 const factionIds=new Set(DATA.groups.flatMap(g=>g.memberIds));
 const colors={1:'#c7a963',2:'#bd9959',3:'#7eacd9',4:'#a8a0c9',5:'#b6c4d2'};
-const tierName=n=>n.tier?n.rawTier:'关联主体';
+const tierName=n=>n.tier?'综合 T'+(n.tier-1):'关联主体';
 const tierClass=n=>({1:'head',2:'head',3:'second',4:'third'}[n.tier]||'');
 const initial=n=>/^[A-Za-z]/.test(n.name)?n.name.split(/\s+/).slice(0,2).map(s=>s[0]).join('').toUpperCase():n.name.slice(0,2);
 const iconHTML=(n,cls='mini-icon')=>n.icon?`<img class="${cls}" loading="lazy" decoding="async" src="${n.icon.data}" alt="${esc(n.icon.title)} 游戏图标">`:`<span class="${cls}">${esc(initial(n))}</span>`;

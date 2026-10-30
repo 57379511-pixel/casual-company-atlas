@@ -35,8 +35,9 @@
  }
  function sync(){
   const active=section();document.body.dataset.section=active;
+  $('#routePanel').hidden=active!=='relations'||state.mode!=='graph';if(active==='companies')$('#routePanel').open=false;
   for(const b of $$('.tab-set [data-section]')){b.classList.toggle('active',b.dataset.section===active);b.setAttribute('aria-selected',String(b.dataset.section===active));}
-  const title=$('.rr-directory-title');if(title)title.textContent=active==='companies'?AtlasGrades.labels[state.gradeDirection]+'分级 · 按品类找公司':'按公司系看关系';
+  const title=$('.rr-directory-title');if(title)title.textContent=active==='companies'?AtlasGrades.labels[state.gradeDirection]+'市场 · 按品类找公司':'按关联网络找公司';
   $('#rrSearch').placeholder='搜索公司或代表产品';
   if($('#viewHome'))$('#viewHome').textContent='公司研究首页';
   $('#geoPane .geo-heading h2').textContent='国内休闲游戏公司地域分布';
@@ -48,7 +49,7 @@
  const oldMode=setMode;setMode=function(...args){const r=oldMode(...args);sync();return r;};
  const oldRender=renderGraph;renderGraph=function(...args){const r=oldRender(...args);sync();return r;};
  const oldRefresh=refresh;refresh=function(...args){const r=oldRefresh(...args);sync();return r;};
- window.AtlasNavigation={section,label:s=>labels[section(s)]+(section(s)==='companies'&&s.mode==='graph'?' · '+AtlasGrades.labels[s.gradeDirection||'domestic']+'分级':''),home,open,openCompany,openFamily,sync};
+ window.AtlasNavigation={section,label:s=>labels[section(s)]+(section(s)==='companies'&&s.mode==='graph'?' · '+AtlasGrades.labels[s.gradeDirection||'domestic']+'市场表现':''),home,open,openCompany,openFamily,sync};
  window.addEventListener('DOMContentLoaded',()=>{const p=new URLSearchParams(location.search);if(!p.has('a')&&!p.has('peer')&&!p.has('family'))home();sync();});
  sync();
 })();

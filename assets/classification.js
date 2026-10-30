@@ -44,7 +44,7 @@ const classificationGeo=renderGeo;
 renderGeo=function(){
  classificationGeo();$('#geoPane .geo-heading>p').textContent='按地域查看公司与代表产品；同一公司的关联名称在地图合并展示';
  $('#geoStats .geo-stat small').textContent='个地图入口';
- $('#geoStats .geo-stat:last-child small').textContent='个标杆／头部入口';
+ $('#geoStats .geo-stat:last-child small').textContent='个综合T0／T1入口';
  const matched=geoSelection().find(n=>n.id==='G007');
  if(matched){const button=$('#geoRail [data-geo-company="G007"]');if(button){const note=document.createElement('small');note.className='classification-note';note.textContent='合并柠檬微趣／柠檬曲奇；当前命中：'+matched.mapMatchedIds.map(id=>byId.get(id).name).join('、');button.querySelector('.company-info').append(note);}}
  const details=$('#geoRail details');if(details)details.innerHTML='<summary>地域、分类与合并口径</summary><p>按主营品类与公司梯队筛选。地图入口数不是工商主体数；柠檬曲奇归并至柠檬微趣入口，品类筛选仍按命中成员各自原始标签。关系图保留两条主体记录。城市不等同实际研发办公室。</p>';
@@ -95,7 +95,7 @@ renderGraph=function(reset=true){
  if(!state.focus&&(state.genre!=='all'||g?.analysisType==='categoryPeer'))$('#stageSubtitle').textContent='按新表主营品类筛选；并列不代表资本关系。图标为公司代表产品，未按当前品类换图。';
  if(!state.focus&&state.genre!=='all'&&!state.group)$('#stageTitle').textContent=state.genre+' · 原表品类对象';
  if(isCategoryPeer()){
-  const names={1:'T0 · 标杆',2:'T1 · 头部',3:'T2 · 中坚',4:'T3 · 长尾',5:'T4 · 观察',0:'未分级'};
+  const names={1:'综合 T0',2:'综合 T1',3:'综合 T2',4:'综合 T3',5:'综合 T4',0:'未分级'};
   for(const b of state.tierBands||[]){$('#clusterLayer').append(svgEl('rect',{x:b.x,y:b.y,width:b.w,height:b.h,rx:12,fill:'#fff',stroke:colors[b.tier]||'#c8d2df','stroke-opacity':.4}));$('#clusterLayer').append(svgEl('text',{x:b.x+16,y:b.y+23,class:'tier-band-title',fill:'#405b70','font-size':13,'font-weight':600},names[b.tier]+' · '+b.count+' 家'));}
   const summary=[1,2,3,4,5].map(t=>{const count=state.visible.filter(n=>n.tier===t).length;return count?'T'+(t-1)+'：'+count+'家':'';}).filter(Boolean).join('　');
   const allRoles=state.audience!=='developer',total=state.peerTotal||0,pages=Math.max(1,Math.ceil(total/40));

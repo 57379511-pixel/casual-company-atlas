@@ -54,8 +54,23 @@
  const downloads=n=>n>=1e8?number(n/1e8)+'亿':n>=1e4?number(n/1e4)+'万':number(n);
  function metric(n,d=state.gradeDirection){
   const e=entry(n,d);if(e?.tier==null)return '未纳入该方向评级';const m=e.metrics;
-  if(d==='domestic')return e.basis==='domestic_monitor_rule'?'消除类监控名单入选':`在榜 ${m.listedProducts} 款 · 最长 ${m.longestDays} 天`;
+  if(d==='domestic')return e.basis==='domestic_monitor_rule'?'消除类监控名单入选':[['在榜',m.listedProducts,'款'],['登顶',m.numberOneProducts,'个'],['有效登顶',m.effectiveNumberOnes,'个'],['总在榜',m.totalDays,'天'],['最长',m.longestDays,'天']].filter(([,v])=>v!=null).map(([k,v,u])=>k+' '+v+' '+u).join(' · ');
   return [['休闲榜累计',m.casual10QRevenueUSD,m.casual10QDownloads],['超休闲榜7Q',m.hypercasual7QRevenueUSD,m.hypercasual7QDownloads]].filter(([,a,b])=>a!=null||b!=null).map(([label,a,b])=>label+'：'+[a!=null?'收入 '+amount(a):'',b!=null?'下载 '+downloads(b):''].filter(Boolean).join(' · ')).join('\n');
  }
- window.AtlasGrades={companyRows,tags,allGroup,mergedGroup,ledger,labels,record,entry,tier,pool,universe,select,metric,amount,downloads};
+ // Explain the recorded grade without changing it or adding unlike samples.
+ function basis(n,d=state.gradeDirection){
+  const e=entry(n,d);if(e?.tier==null)return '';
+  if(d==='domestic')return e.basis==='domestic_monitor_rule'?'消除类监控名单':'在榜与登顶表现';
+  if(e.tier>=3)return '海外收入／下载样本';
+  const thresholds=[[3e8,1.5e8],[5e7,2e7],[1e7,5e6]][e.tier],m=e.metrics;
+  const revenue=Math.max(m.casual10QRevenueUSD||0,(m.hypercasual7QRevenueUSD||0)*10/7),downloads=Math.max(m.casual10QDownloads||0,(m.hypercasual7QDownloads||0)*10/7);
+  const hits=[revenue>=thresholds[0]?'收入':'',downloads>=thresholds[1]?'下载':''].filter(Boolean);
+  return hits.length?hits.join('、')+(hits.length===2?'均':'')+'达T'+e.tier+'门槛':'分级记录见依据';
+ }
+ function representative(n){
+  const text=String(n.icon?.title||n.verifiedProducts||n.originalProducts||'查看产品资料');
+  const short=String(n.verifiedProducts||n.originalProducts||'').split(/[；;、\n]/).map(v=>v.trim()).find(v=>v.length>=2&&v.length<20&&text.startsWith(v));
+  return (text.length>24&&short?short:text).replace(/ - 官方预约 - TapTap$/,'').replace(/（抖音投放榜与运营署名）/g,'').split(/[；;、\n]/)[0].replace(/等$/,'').trim();
+ }
+ window.AtlasGrades={companyRows,tags,allGroup,mergedGroup,ledger,labels,record,entry,tier,pool,universe,select,metric,basis,representative,amount,downloads};
 })();

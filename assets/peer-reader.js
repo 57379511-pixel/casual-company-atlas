@@ -1,22 +1,22 @@
 /* Category peers share a card directory with relationship views, but never
    imply relationships between companies just because they share a category. */
 (()=>{
- const tierNames={1:'T0 · 标杆',2:'T1 · 头部',3:'T2 · 中坚',4:'T3 · 长尾',5:'T4 · 观察',0:'未分级'};
+ const tierNames={1:'T0',2:'T1',3:'T2',4:'T3',5:'T4',0:'未分级'};
  const board=document.createElement('section');board.id='rrPeerBoard';board.hidden=true;
- board.innerHTML=`<div class="pr-controls"><label>公司范围<select id="prRole"><option value="developer">研发／研运公司</option><option value="all">全部品类公司</option></select></label><label>业务品类<select id="prCategory"></select></label><label><span id="prTierLabel">分轨梯队</span><select id="prTier"><option value="all">全部梯队</option><option value="key">头部优先 · T0/T1</option>${[1,2,3,4,5].map(t=>`<option value="${t}">${tierNames[t]}</option>`).join('')}</select></label><button class="btn" id="prReset">重置本组</button></div><nav id="prTierSummary" aria-label="按研究梯队筛选"></nav><div id="prCards"></div><p class="pr-footnote">公司评级反映整体表现，详细资料点击公司查看。</p>`;
+ board.innerHTML=`<div class="pr-controls"><label>公司范围<select id="prRole"><option value="developer">研发／研运公司</option><option value="all">全部品类公司</option></select></label><label>业务品类<select id="prCategory"></select></label><label><span id="prTierLabel">分轨梯队</span><select id="prTier"><option value="all">全部梯队</option><option value="key">T0 / T1</option>${[1,2,3,4,5].map(t=>`<option value="${t}">${tierNames[t]}</option>`).join('')}</select></label><button class="btn" id="prReset">重置本组</button></div><nav id="prTierSummary" aria-label="按研究梯队筛选"></nav><div id="prCards"></div><p class="pr-footnote">评级对应公司在所选市场的样本表现；品类仅用于检索。</p>`;
  $('#rrMain .rr-heading').after(board);
  board.insertAdjacentHTML('afterbegin','<nav class="pr-view-switch" aria-label="品类展示方式"><button data-peer-view="cards">分层对标</button><button data-peer-view="relations">公司关系图</button></nav>');
  $('#relationReader .rr-directory-title').innerHTML='公司研究目录<small>品类对标 · 公司关系</small>';
  const viewSwitch=board.querySelector('.pr-view-switch');$('#rrMain .rr-heading').after(viewSwitch);
  const income=n=>AtlasResearch.revenue(n,window.ATLAS_REVENUE);
  const selection=()=>AtlasGrades.select();
- const representative=n=>String(n.icon?.title||n.verifiedProducts||n.originalProducts||'查看产品资料').replace(/ - 官方预约 - TapTap$/,'');
- function card(n){const r=income(n),id=AtlasExecutive.canonical(n.id),count=DATA.links.filter(e=>e.source===id||e.target===id).length;return `<article class="pr-company-tile" data-directory-company="${esc(n.id)}"><button class="pr-company" data-company="${esc(n.id)}" data-peer-company="${esc(n.id)}" aria-label="查看 ${esc(n.name)} 的公司资料"><span class="pr-company-head"><span title="公司代表作图标：${esc(n.icon?.title||n.name)}">${iconHTML(n)}</span><span><strong>${esc(n.name)}</strong><small>公司代表作：${esc(representative(n))}</small></span></span></button><div class="pr-company-foot"><span class="pr-grade-tag">公司${AtlasGrades.labels[state.gradeDirection]}评级 T${AtlasGrades.entry(n).tier}</span><span class="revenue-tag revenue-${r.key}">${esc(r.label)}</span></div><div class="pr-card-actions">${count?`<button data-peer-relations="${esc(n.id)}" aria-label="查看 ${esc(n.name)} 的关系">看关系 →</button>`:'<span class="pr-no-relations">未收录关系</span>'}</div></article>`;}
+ const representative=n=>AtlasGrades.representative(n);
+ function card(n){const r=income(n),id=AtlasExecutive.canonical(n.id),count=DATA.links.filter(e=>e.source===id||e.target===id).length;return `<article class="pr-company-tile" data-directory-company="${esc(n.id)}"><button class="pr-company" data-company="${esc(n.id)}" data-peer-company="${esc(n.id)}" aria-label="查看 ${esc(n.name)} 的公司资料"><span class="pr-company-head"><span title="公司代表作图标：${esc(representative(n))}">${iconHTML(n)}</span><span><strong>${esc(n.name)}</strong><small>公司代表作：${esc(representative(n))}</small></span></span></button><div class="pr-company-foot"><span class="pr-grade-tag">公司${AtlasGrades.labels[state.gradeDirection]}评级 T${AtlasGrades.entry(n).tier}</span>${state.gradeDirection==='overseas'?`<small class="pr-grade-basis">${esc(AtlasGrades.basis(n))}</small>`:''}<span class="revenue-tag revenue-${r.key}">收入重心：${esc(r.label)}</span></div><div class="pr-card-actions">${count?`<button data-peer-relations="${esc(n.id)}" aria-label="查看 ${esc(n.name)} 的关系">看关系 →</button>`:'<span class="pr-no-relations">未收录关系</span>'}</div></article>`;}
  function sync(){
   const g=groupByName.get(state.group),nodes=selection();
   const universe=AtlasGrades.universe();
   $('#rrMain .rr-eyebrow').textContent='CATEGORY BENCHMARKS';
-  $('#rrTitle').textContent=AtlasGrades.labels[state.gradeDirection]+'分级 · '+(g.allCategories?'公司总览':g.name.split(' · ')[0])+(g.navigationBundle&&state.genre!=='all'?' · '+state.genre:'');
+  $('#rrTitle').textContent=AtlasGrades.labels[state.gradeDirection]+'市场表现 · '+(g.allCategories?'公司总览':g.name.split(' · ')[0])+(g.navigationBundle&&state.genre!=='all'?' · '+state.genre:'');
   $('#rrSummary').textContent=`${nodes.length} 家公司 · ${state.audience==='developer'?'研发／研运':'全部角色'} · 按公司${AtlasGrades.labels[state.gradeDirection]}评级排序`;
   viewSwitch.querySelector('[data-peer-view="cards"]').textContent='公司对标 · '+nodes.length;viewSwitch.querySelector('[data-peer-view="relations"]').textContent='公司关系图';
   const relations=state.peerView==='relations';for(const b of viewSwitch.querySelectorAll('[data-peer-view]'))b.setAttribute('aria-pressed',String(b.dataset.peerView===state.peerView));
@@ -64,7 +64,7 @@
      const icon=icons.get(n.id);if(icon){c.save();c.beginPath();c.roundRect(x+16,top+17,44,44,10);c.clip();c.drawImage(icon,x+16,top+17,44,44);c.restore();}else text(initial(n),x+20,top+45,36,1,15,'#7b8f9e');
      text(n.name,x+72,top+32,cw-88,2,18,'#29475b',600);
      text('公司代表作：'+representative(n),x+16,top+88,cw-32,2,14,'#526777');
-     text('公司'+AtlasGrades.labels[direction]+'评级 T'+AtlasGrades.entry(n,direction).tier,x+16,top+132,cw-32,1,13,'#29475b',600);text('收入重心：'+r.label,x+16,top+156,cw-32,1,13,r.color);
+     text('公司'+AtlasGrades.labels[direction]+'评级 T'+AtlasGrades.entry(n,direction).tier+(direction==='overseas'?' · '+AtlasGrades.basis(n,direction):''),x+16,top+132,cw-32,1,13,'#29475b',600);text('收入重心：'+r.label,x+16,top+156,cw-32,1,13,r.color);
 
     });y+=Math.ceil(band.rows.length/cols)*(ch+gap)+12;
    }

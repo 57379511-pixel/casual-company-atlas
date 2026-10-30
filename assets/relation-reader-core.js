@@ -21,5 +21,10 @@
   const visible=new Set(edges.flatMap(e=>[e.source,e.target]));if(!options.seedIds&&byId.has(focus))visible.add(focus);
   return {group:g,focus,nodes:data.nodes.filter(n=>visible.has(n.id)),edges,available,remaining:pool.length-edges.length};
  }
- root.AtlasRelations={select,kind,anchors};
+ function label(e){
+  const type=String(e.type||'关系记录').replace(/持股[\d.]+%（公开工商平台记录）/g,'投资／持股').replace(/（原始MCP记录）/g,'').replace('共同任职／自然人关联','共同任职');
+  const time=String(e.time||'').trim();
+  return type+(time&&!type.includes(time)?' · '+time:'');
+ }
+ root.AtlasRelations={select,kind,anchors,label};
 })(typeof window==='undefined'?globalThis:window);

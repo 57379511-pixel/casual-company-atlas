@@ -2,7 +2,7 @@
  const previous=showDetail;
  showDetail=function(n){previous(n);if(!n)return;
   const detail=$('#detail'),canonical=AtlasExecutive.canonical(n.id);
-  const income=AtlasResearch.revenue(n,window.ATLAS_REVENUE);detail.querySelector('.detail-header .badges')?.insertAdjacentHTML('beforeend','<span class="revenue-tag revenue-'+income.key+'">'+esc(income.label)+'</span>');
+  const income=AtlasResearch.revenue(n,window.ATLAS_REVENUE);detail.querySelector('.detail-header .badges')?.insertAdjacentHTML('beforeend','<span class="revenue-tag revenue-'+income.key+'">'+(income.key==='unscoped'?'':'收入重心：')+esc(income.label)+'</span>');
   const families=DATA.groups.filter(g=>g.companyFamily&&g.memberIds.some(id=>AtlasExecutive.canonical(id)===canonical));
   const preferred=families.find(g=>g.name===state.group)||families[0];
   const genreProduct=state.mode==='graph'&&isCategoryPeer()?AtlasExecutive.product(n):null;
