@@ -5,7 +5,7 @@
  state.gradeDirection=requested==='overseas'?'overseas':'domestic';state.gradeViews={};
  const labels={domestic:'国内',overseas:'海外'};
  // Build navigation from actual source tags; keep the historical casual shortcut separate.
- const sourceTags=new Set(DATA.nodes.filter(n=>n.originalRecord).flatMap(n=>String(n.category||'').split('、')).filter(c=>c&&c!=='SLG'));
+ const sourceTags=new Set(DATA.nodes.filter(n=>n.originalRecord).flatMap(n=>String(n.category||'').split('、')).filter(c=>c&&!['SLG','棋牌'].includes(c)));
  const categoryOrder=[...new Set(['二合','三消','消除','解谜','超休闲','找茬','休闲综合',...sourceTags])].filter(c=>sourceTags.has(c));
  const template=DATA.groups.find(g=>g.analysisType==='categoryPeer'&&g.selectionCategories.length===1);
  for(const category of categoryOrder){
